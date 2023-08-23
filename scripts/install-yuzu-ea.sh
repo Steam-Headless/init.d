@@ -14,7 +14,7 @@ set -e
 # Config
 package_name="Yuzu-EA"
 package_description="Nintendo Switch Emulator"
-package_icon_url=""
+package_icon_url="https://raw.githubusercontent.com/yuzu-emu/yuzu-assets/master/icons/icon.png"
 package_path="${USER_HOME:?}/.local/share/${package_name:?}"
 
 
