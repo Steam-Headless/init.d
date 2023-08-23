@@ -20,7 +20,7 @@ package_path="${USER_HOME:?}/.local/share/${package_name:?}"
 
 # Run
 __registry_package_json=$(curl -s https://api.github.com/repos/yuzu-emu/yuzu-mainline/releases/latest)
-__latest_package_version=$(echo ${__registry_package_json} | jq -r ".assets[2] | .name" | cut -d "-" -f 4 | cut -d "." -f 1)
+__latest_package_version=$(echo ${__registry_package_json} | jq -r ".assets[2] | .name" | cut -d "-" -f 3 | cut -d "." -f 1)
 __latest_package_id=$(echo ${__registry_package_json} | jq -r ".assets[2] | .name" | cut -d "-" -f 2,3)
 echo "Latest ${package_name:?} version: ${__latest_package_version:?}"
 
