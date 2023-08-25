@@ -17,3 +17,12 @@ ln -sf "${USER_HOME:?}/init.d/scripts/install-es-de.sh" "${USER_HOME:?}/init.d/i
 ```
 
 Restart the container.
+
+---
+
+## Auto update these scripts
+
+To setup an automatic update of the scripts in this repository, create a symlink of the `00-auto-update-init-scripts.sh` script:
+```
+ln -sf "${USER_HOME:?}/init.d/scripts/00-auto-update-init-scripts.sh" "${USER_HOME:?}/init.d/00-auto-update-init-scripts.sh"
+```
