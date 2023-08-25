@@ -5,8 +5,17 @@
 # File Created: Wednesday, 23rd August 2023 7:16:02 pm
 # Author: Josh.5 (jsunnex@gmail.com)
 # -----
-# Last Modified: Friday, 25th August 2023 5:02:06 pm
+# Last Modified: Saturday, 26th August 2023 11:44:28 am
 # Modified By: Josh.5 (jsunnex@gmail.com)
+###
+#
+# About:
+#   Install EmulationStation-DE during container startup
+#
+# Guide:
+#   Add this script to your startup scripts by running:
+#       $ ln -sf "${USER_HOME:?}/init.d/scripts/install-es-de.sh" "${USER_HOME:?}/init.d/install-es-de.sh"
+#
 ###
 
 
@@ -52,3 +61,26 @@ if [[ ! -f "${USER_HOME:?}/.cache/init.d/installed_packages/.${package_name:?}-$
 else
     print_step_header "Latest version of ${package_name:?} version ${__latest_package_version:?} already installed"
 fi
+
+
+# Generate EmulationStation directory structure
+romsPath="/mnt/games/Emulation/roms"
+toolsPath="/mnt/games/Emulation/tools"
+mkdir -p \
+    "${USER_HOME:?}"/.emulationstation \
+    "${romsPath:?}" \
+    "${toolsPath:?}"/downloaded_media
+
+# Configure EmulationStation DE defaults
+if [ ! -f "${USER_HOME:?}/.emulationstation/es_settings.xml" ]; then
+    cat << 'EOF' > "${USER_HOME:?}/.emulationstation/es_settings.xml"
+<?xml version="1.0"?>
+<string name="MediaDirectory" value="/mnt/games/Emulation/tools/downloaded_media" />
+<string name="ROMDirectory" value="/mnt/games/Emulation/roms/" />
+<string name="ScreensaverSlideshowImageDir" value="~/.emulationstation/slideshow/custom_images" />
+EOF
+fi
+
+# Configure Sunshine entry
+print_step_header "Adding sunshine entry for ${package_name:?}"
+ensure_sunshine_entry "flatpak-spawn --host /usr/bin/sunshine-run /home/default/Applications/EmulationStation-DE-x64.AppImage"
