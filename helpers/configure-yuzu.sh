@@ -5,7 +5,7 @@
 # File Created: Friday, 25th August 2023 7:27:26 pm
 # Author: Josh.5 (jsunnex@gmail.com)
 # -----
-# Last Modified: Friday, 25th August 2023 7:29:48 pm
+# Last Modified: Saturday, 26th August 2023 10:49:34 am
 # Modified By: Josh.5 (jsunnex@gmail.com)
 ###
 
@@ -58,7 +58,7 @@ fi
 
 # Configure EmulationStation DE
 mkdir -p "${romsPath:?}/switch"
-cat << 'EOF' > ${romsPath:?}/switch/systeminfo.txt
+cat << 'EOF' > "${romsPath:?}/switch/systeminfo.txt"
 System name:
 switch
 

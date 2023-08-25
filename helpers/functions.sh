@@ -5,7 +5,7 @@
 # File Created: Friday, 25th August 2023 4:26:49 pm
 # Author: Josh.5 (jsunnex@gmail.com)
 # -----
-# Last Modified: Friday, 25th August 2023 7:14:07 pm
+# Last Modified: Saturday, 26th August 2023 11:46:02 am
 # Modified By: Josh.5 (jsunnex@gmail.com)
 ###
 
@@ -15,6 +15,10 @@ function print_package_name {
 
 function print_step_header {
     echo "  - ${@:?}"
+}
+
+function print_step_error {
+    echo -e "    \e[31mERROR: \e[33m${@:?}\e[0m"
 }
 
 function fetch_appimage_and_make_executable {
@@ -27,19 +31,23 @@ function fetch_appimage_and_make_executable {
     chown -R ${PUID:?}:${PGID:?} "${package_executable:?}"
 }
 
-function ensure_menu_shortcut {
-    mkdir -p "${USER_HOME:?}/.local/share/applications"
-
-    # Download an icon image
-    __local_package_icon_path="${USER_HOME:?}/.cache/init.d/package_icons/${package_name:?}-icon.png"
-    if [[ ! -f "${__local_package_icon_path:?}" && "X${package_icon_url:-}" != "X" ]]; then
-        wget -O "${__local_package_icon_path:?}" \
+function ensure_icon_exists {
+    if [[ ! -f "${package_icon_path:?}" && "X${package_icon_url:-}" != "X" ]]; then
+        wget -O "${package_icon_path:?}" \
             --quiet -o /dev/null \
             --no-verbose --show-progress \
             --progress=bar:force:noscroll \
             "${package_icon_url:?}"
         chown -R ${PUID:?}:${PGID:?} "${package_icon_url:?}"
     fi
+}
+
+function ensure_menu_shortcut {
+    mkdir -p "${USER_HOME:?}/.local/share/applications"
+
+    # Download an icon image
+    package_icon_path="${USER_HOME:?}/.cache/init.d/package_icons/${package_name:?}-icon.png"
+    ensure_icon_exists
 
     # Generate the desktop shortcut
     if ! grep -ri "${package_executable:?}" "${USER_HOME:?}/.local/share/applications/" &>/dev/null; then
@@ -60,4 +68,61 @@ EOF
         chown -R ${PUID:?}:${PGID:?} "${menu_shortcut:?}"
         chmod 644 "${menu_shortcut:?}"
     fi
+}
+
+function ensure_sunshine_entry {
+    __exec_cmd="${@:?}"
+
+    # Ensure a sunshine config exists
+    if [ ! -f "${USER_HOME:?}/.config/sunshine/apps.json" ]; then
+        return
+    fi
+
+    # Ensure config file can be parsed by jq
+    if ! cat "${USER_HOME:?}/.config/sunshine/apps.json" | jq &> /dev/null; then
+        print_step_error "Unable to parse JSON in file '${USER_HOME:?}/.config/sunshine/apps.json'"
+        return
+    fi
+
+    # Read current sunshine config
+    __json=$(cat "${USER_HOME:?}/.config/sunshine/apps.json")
+
+    # Check if an entry with the new cmd value already exists
+    __exists=$(echo "${__json:?}" \
+        | jq --arg new_cmd "${__exec_cmd:?}" \
+        '.apps | map(.cmd) | contains([$new_cmd])')
+    if [ "${__exists:?}" = "true" ]; then
+        return
+    fi
+
+    # Check if an entry with the name value already exists (remove it if it does)
+    __exists=$(echo "${__json:?}" \
+        | jq --arg new_name "${package_name:?}" \
+        '.apps | map(.name) | contains([$new_name])')
+    if [ "${__exists:?}" = "true" ]; then
+        __json=$(echo "${__json:?}" | jq --arg name_to_remove "${package_name:?}" '.apps |= map(select(.name != $name_to_remove))')
+    fi
+
+    # Download an icon image
+    package_icon_path="${USER_HOME:?}/.cache/init.d/package_icons/${package_name:?}-icon.png"
+    ensure_icon_exists
+
+    # Generate updated JSON for Sunshine's app.json file
+    __updated_json=$(echo "$__json" | jq \
+        --arg package_name "${package_name:?}" \
+        --arg new_cmd "${__exec_cmd:?}" \
+        --arg package_icon_path "${package_icon_path:?}" \
+        --arg working_dir "${USER_HOME:?}" \
+        '.apps += [{
+            "name": $package_name,
+            "output": "",
+            "cmd": $new_cmd,
+            "exclude-global-prep-cmd": "false",
+            "elevated": "false",
+            "image-path": $package_icon_path,
+            "working-dir": $working_dir
+    }]')
+
+    # Override Sunshine's app.json config file
+    echo "${__updated_json:?}" > "${USER_HOME:?}/.config/sunshine/apps.json"
 }
