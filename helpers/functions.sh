@@ -5,7 +5,7 @@
 # File Created: Friday, 25th August 2023 4:26:49 pm
 # Author: Josh.5 (jsunnex@gmail.com)
 # -----
-# Last Modified: Friday, 25th August 2023 4:59:47 pm
+# Last Modified: Friday, 25th August 2023 7:14:07 pm
 # Modified By: Josh.5 (jsunnex@gmail.com)
 ###
 
@@ -24,6 +24,7 @@ function fetch_appimage_and_make_executable {
         --progress=bar:force:noscroll \
         "${@:?}"
     chmod +x "${package_executable:?}"
+    chown -R ${PUID:?}:${PGID:?} "${package_executable:?}"
 }
 
 function ensure_menu_shortcut {
@@ -37,6 +38,7 @@ function ensure_menu_shortcut {
             --no-verbose --show-progress \
             --progress=bar:force:noscroll \
             "${package_icon_url:?}"
+        chown -R ${PUID:?}:${PGID:?} "${package_icon_url:?}"
     fi
 
     # Generate the desktop shortcut

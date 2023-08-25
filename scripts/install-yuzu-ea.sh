@@ -5,7 +5,7 @@
 # File Created: Wednesday, 23rd August 2023 7:16:02 pm
 # Author: Josh.5 (jsunnex@gmail.com)
 # -----
-# Last Modified: Friday, 25th August 2023 4:55:56 pm
+# Last Modified: Friday, 25th August 2023 7:29:14 pm
 # Modified By: Josh.5 (jsunnex@gmail.com)
 ###
 
@@ -50,3 +50,5 @@ if [[ ! -f "${USER_HOME:?}/.cache/init.d/installed_packages/.${package_name:?}-$
 else
     print_step_header "Latest version of ${package_name:?} version ${__latest_package_version:?} already installed"
 fi
+
+[[ -f "${USER_HOME:?}/init.d/helpers/configure-yuzu.sh" ]] && source "${USER_HOME:?}/init.d/helpers/configure-yuzu.sh"
