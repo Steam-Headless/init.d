@@ -1,75 +1,52 @@
 #!/usr/bin/env bash
 ###
-# File: install-es-de.sh
+# File: install-yuzu-ea.sh
 # Project: scripts
 # File Created: Wednesday, 23rd August 2023 7:16:02 pm
 # Author: Josh.5 (jsunnex@gmail.com)
 # -----
-# Last Modified: Wednesday, 23rd August 2023 7:51:39 pm
+# Last Modified: Friday, 25th August 2023 4:55:56 pm
 # Modified By: Josh.5 (jsunnex@gmail.com)
 ###
 
-set -e
 
 # Config
 package_name="Yuzu-EA"
 package_description="Nintendo Switch Emulator"
 package_icon_url="https://raw.githubusercontent.com/yuzu-emu/yuzu-assets/master/icons/icon.png"
-package_path="${USER_HOME:?}/.local/share/${package_name:?}"
+package_executable="${USER_HOME:?}/Applications/${package_name:?}.AppImage"
+package_category="Game"
+package_icon="${USER_HOME:?}/.cache/init.d/package_icons/${package_name:?}-icon.png"
 
 
-# Run
-__registry_package_json=$(curl -s https://api.github.com/repos/pineappleEA/pineapple-src/releases/latest)
-__latest_package_version=$(echo ${__registry_package_json} | jq -r ".assets[0] | .name" | cut -d "-" -f 4 | cut -d "." -f 1)
-__latest_package_id=$(echo ${__registry_package_json} | jq -r ".assets[0] | .name" | cut -d "-" -f 2,3)
-echo "Latest ${package_name:?} version: ${__latest_package_version:?}"
+[[ -f "${USER_HOME:?}/init.d/helpers/setup-directories.sh" ]] && source "${USER_HOME:?}/init.d/helpers/setup-directories.sh"
+[[ -f "${USER_HOME:?}/init.d/helpers/functions.sh" ]] && source "${USER_HOME:?}/init.d/helpers/functions.sh"
+print_package_name
 
-mkdir -p "${package_path:?}"
-__local_package_path="${package_path:?}/${package_name}-${__latest_package_version:?}.AppImage"
-__local_package_icon_path="${package_path:?}/icon.png"
 
-# Only install if it does not already exist
-if [[ ! -f "${__local_package_path:?}" ]]; then
-    echo "**** Installing ${package_name} version ${__latest_package_version:?} ****"
+# Check for a new version to install
+__registry_package_json=$(wget -O - -o /dev/null https://api.github.com/repos/pineappleEA/pineapple-src/releases/latest)
+__latest_package_version=$(echo ${__registry_package_json:?} | jq -r ".assets[0] | .name" | cut -d "-" -f 4 | cut -d "." -f 1)
+__latest_package_id=$(echo ${__registry_package_json:?} | jq -r ".assets[0] | .name" | cut -d "-" -f 2,3)
+print_step_header "Latest ${package_name:?} version: ${__latest_package_version:?}"
 
+
+# Only install if the latest version does not already exist locally
+if [[ ! -f "${USER_HOME:?}/.cache/init.d/installed_packages/.${package_name:?}-${__latest_package_version:?}" ]]; then
     # Fetch download links
-    __latest_url=$(curl -s https://api.github.com/repos/pineappleEA/pineapple-src/releases/latest | jq -r ".assets[0] | .browser_download_url")
+    print_step_header "Fetching download link for ${package_name:?} version ${__latest_package_version:?}"
+    __latest_url=$(wget -O - -o /dev/null https://api.github.com/repos/pineappleEA/pineapple-src/releases/latest | jq -r ".assets[0] | .browser_download_url")
 
-    # Download Appimage
-    wget -O "${__local_package_path:?}" \
-        --no-verbose --show-progress \
-        --progress=bar:force:noscroll \
-        ${__latest_url}
-    chmod +x "${__local_package_path:?}"
+    # Download Appimage to Applications directory
+    print_step_header "Downloading ${package_name:?} version ${__latest_package_version:?}"
+    fetch_appimage_and_make_executable "${__latest_url:?}"
 
-    # Download an icon image
-    if [[ ! -f "${__local_package_icon_path:?}" && "X${package_icon_url:-}" != "X" ]]; then
-        wget -O "${__local_package_icon_path:?}" \
-            --no-verbose --show-progress \
-            --progress=bar:force:noscroll \
-            "${package_icon_url:?}"
-    fi
+    # Ensure this package has a start menu link (will create it if missing)
+    print_step_header "Ensuring menu short is present for ${package_name:?}"
+    ensure_menu_shortcut
 
-    # Write a start menu link
-    if ! grep -ri "${__local_package_path:?}" "${USER_HOME:?}/.local/share/applications/"; then
-        mkdir -p "${USER_HOME:?}/.local/share/applications"
-        menu_shortcut="${USER_HOME:?}/.local/share/applications/${package_name:?}.desktop"
-        echo '#!/usr/bin/env xdg-open' > "${menu_shortcut:?}"
-        echo '[Desktop Entry]' >> "${menu_shortcut:?}"
-        echo 'Name='${package_name:?} >> "${menu_shortcut:?}"
-        echo 'Exec="'${__local_package_path:?}'" %U' >> "${menu_shortcut:?}"
-        echo 'Comment="'${package_description:?}'"' >> "${menu_shortcut:?}"
-        echo 'Icon='${__local_package_icon_path:?} >> "${menu_shortcut:?}"
-        echo 'Type=Application' >> "${menu_shortcut:?}"
-        echo 'Categories=Game;' >> "${menu_shortcut:?}"
-        echo 'TryExec='${__local_package_path:?} >> "${menu_shortcut:?}"
-        echo 'Terminal=false' >> "${menu_shortcut:?}"
-        echo 'StartupNotify=false' >> "${menu_shortcut:?}"
-        chown -R ${PUID:?}:${PGID:?} "${menu_shortcut:?}"
-        chmod 644 "${menu_shortcut:?}"
-    fi
-
-    chown -R ${PUID:?}:${PGID:?} "${package_path:?}"
+    # Mark this version as installed
+    touch "${USER_HOME:?}/.cache/init.d/installed_packages/.${package_name:?}-${__latest_package_version:?}"
 else
-    echo "**** Latest version of ${package_name} version ${__latest_package_version:?} already installed ****"
+    print_step_header "Latest version of ${package_name:?} version ${__latest_package_version:?} already installed"
 fi
