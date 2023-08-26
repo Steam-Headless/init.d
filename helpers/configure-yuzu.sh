@@ -5,7 +5,7 @@
 # File Created: Friday, 25th August 2023 7:27:26 pm
 # Author: Josh.5 (jsunnex@gmail.com)
 # -----
-# Last Modified: Saturday, 26th August 2023 10:49:34 am
+# Last Modified: Saturday, 26th August 2023 3:10:44 pm
 # Modified By: Josh.5 (jsunnex@gmail.com)
 ###
 
@@ -21,38 +21,39 @@ mkdir -p \
 
 # Configure yuzu installation for Emulation directory structure
 if [ ! -L "${USER_HOME:?}/.local/share/yuzu/keys" ]; then
-    [ -e "${USER_HOME:?}/.local/share/yuzu/keys" ] && unlink "${USER_HOME:?}/.local/share/yuzu/keys" 2>/dev/null
+    [ -d "${USER_HOME:?}/.local/share/yuzu/keys" ] && rm -rf "${USER_HOME:?}/.local/share/yuzu/keys"
     ln -snf "${biosPath:?}/yuzu/keys" "${USER_HOME:?}/.local/share/yuzu/keys"
+    echo "Place both 'title.keys' and 'prod.keys' files here." > "${biosPath:?}/yuzu/keys/putkeyshere.txt"
 fi
 if [ ! -L "${USER_HOME:?}/.local/share/yuzu/dump" ]; then
-    [ -e "${USER_HOME:?}/.local/share/yuzu/dump" ] && unlink "${USER_HOME:?}/.local/share/yuzu/dump" 2>/dev/null
+    [ -d "${USER_HOME:?}/.local/share/yuzu/dump" ] && rm -rf "${USER_HOME:?}/.local/share/yuzu/dump"
     ln -snf "${storagePath:?}/yuzu/dump" "${USER_HOME:?}/.local/share/yuzu/dump"
 fi
 if [ ! -L "${USER_HOME:?}/.local/share/yuzu/load" ]; then
-    [ -e "${USER_HOME:?}/.local/share/yuzu/load" ] && unlink "${USER_HOME:?}/.local/share/yuzu/load" 2>/dev/null
+    [ -d "${USER_HOME:?}/.local/share/yuzu/load" ] && rm -rf "${USER_HOME:?}/.local/share/yuzu/load"
     ln -snf "${storagePath:?}/yuzu/load" "${USER_HOME:?}/.local/share/yuzu/load"
 fi
 if [ ! -L "${USER_HOME:?}/.local/share/yuzu/nand" ]; then
-    [ -e "${USER_HOME:?}/.local/share/yuzu/nand" ] && unlink "${USER_HOME:?}/.local/share/yuzu/nand" 2>/dev/null
+    [ -d "${USER_HOME:?}/.local/share/yuzu/nand" ] && rm -rf "${USER_HOME:?}/.local/share/yuzu/nand"
     ln -snf "${storagePath:?}/yuzu/nand" "${USER_HOME:?}/.local/share/yuzu/nand"
 fi
 if [ ! -L "${USER_HOME:?}/.local/share/yuzu/screenshots" ]; then
-    [ -e "${USER_HOME:?}/.local/share/yuzu/screenshots" ] && unlink "${USER_HOME:?}/.local/share/yuzu/screenshots" 2>/dev/null
+    [ -d "${USER_HOME:?}/.local/share/yuzu/screenshots" ] && rm -rf "${USER_HOME:?}/.local/share/yuzu/screenshots"
     ln -snf "${storagePath:?}/yuzu/screenshots" "${USER_HOME:?}/.local/share/yuzu/screenshots"
 fi
 if [ ! -L "${USER_HOME:?}/.local/share/yuzu/sdmc" ]; then
-    [ -e "${USER_HOME:?}/.local/share/yuzu/sdmc" ] && unlink "${USER_HOME:?}/.local/share/yuzu/sdmc" 2>/dev/null
+    [ -d "${USER_HOME:?}/.local/share/yuzu/sdmc" ] && rm -rf "${USER_HOME:?}/.local/share/yuzu/sdmc"
     ln -snf "${storagePath:?}/yuzu/sdmc" "${USER_HOME:?}/.local/share/yuzu/sdmc"
 fi
 if [ ! -L "${USER_HOME:?}/.local/share/yuzu/tas" ]; then
-    [ -e "${USER_HOME:?}/.local/share/yuzu/tas" ] && unlink "${USER_HOME:?}/.local/share/yuzu/tas" 2>/dev/null
+    [ -d "${USER_HOME:?}/.local/share/yuzu/tas" ] && rm -rf "${USER_HOME:?}/.local/share/yuzu/tas"
     ln -snf "${storagePath:?}/yuzu/tas" "${USER_HOME:?}/.local/share/yuzu/tas"
 fi
 
 mkdir -p "${storagePath:?}/yuzu/nand/system/Contents/registered"
 touch "${storagePath:?}/yuzu/nand/system/Contents/registered/putfirmwarehere.txt"
 if [ ! -L "${biosPath}/yuzu/firmware" ]; then
-    [ -e "${biosPath}/yuzu/firmware" ] && unlink "${biosPath}/yuzu/firmware" 2>/dev/null
+    [ -d "${biosPath}/yuzu/firmware" ] && rm -rf "${biosPath}/yuzu/firmware"
     ln -snf "${storagePath:?}/yuzu/nand/system/Contents/registered" "${biosPath}/yuzu/firmware"
 fi
 
