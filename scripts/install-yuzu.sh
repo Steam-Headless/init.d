@@ -5,7 +5,7 @@
 # File Created: Wednesday, 23rd August 2023 7:16:02 pm
 # Author: Josh.5 (jsunnex@gmail.com)
 # -----
-# Last Modified: Saturday, 26th August 2023 2:42:30 pm
+# Last Modified: Saturday, 26th August 2023 7:34:41 pm
 # Modified By: Josh.5 (jsunnex@gmail.com)
 ###
 #
@@ -24,13 +24,13 @@
 package_name="Yuzu"
 package_description="Nintendo Switch Emulator"
 package_icon_url="https://raw.githubusercontent.com/yuzu-emu/yuzu-assets/master/icons/icon.png"
-package_executable="${USER_HOME:?}/Applications/${package_name:?}.AppImage"
+package_executable="${USER_HOME:?}/Applications/${package_name,,}.AppImage"
 package_category="Game"
 package_icon="${USER_HOME:?}/.cache/init.d/package_icons/${package_name:?}-icon.png"
 
 
-[[ -f "${USER_HOME:?}/init.d/helpers/setup-directories.sh" ]] && source "${USER_HOME:?}/init.d/helpers/setup-directories.sh"
-[[ -f "${USER_HOME:?}/init.d/helpers/functions.sh" ]] && source "${USER_HOME:?}/init.d/helpers/functions.sh"
+[ -f "${USER_HOME:?}/init.d/helpers/setup-directories.sh" ] && source "${USER_HOME:?}/init.d/helpers/setup-directories.sh"
+[ -f "${USER_HOME:?}/init.d/helpers/functions.sh" ] && source "${USER_HOME:?}/init.d/helpers/functions.sh"
 print_package_name
 
 
@@ -42,7 +42,7 @@ print_step_header "Latest ${package_name:?} version: ${__latest_package_version:
 
 
 # Only install if the latest version does not already exist locally
-if [[ ! -f "${USER_HOME:?}/.cache/init.d/installed_packages/.${package_name:?}-${__latest_package_version:?}" ]]; then
+if [ ! -f "${package_executable:?}" ] || [ ! -f "${USER_HOME:?}/.cache/init.d/installed_packages/.${package_name:?}-${__latest_package_version:?}" ]; then
     # Fetch download links
     print_step_header "Fetching download link for ${package_name:?} version ${__latest_package_version:?}"
     __latest_url=$(wget -O - -o /dev/null https://api.github.com/repos/yuzu-emu/yuzu-mainline/releases/latest | jq -r ".assets[2] | .browser_download_url")
@@ -61,6 +61,6 @@ else
     print_step_header "Latest version of ${package_name:?} version ${__latest_package_version:?} already installed"
 fi
 
-[[ -f "${USER_HOME:?}/init.d/helpers/configure-yuzu.sh" ]] && source "${USER_HOME:?}/init.d/helpers/configure-yuzu.sh"
+[ -f "${USER_HOME:?}/init.d/helpers/configure-yuzu.sh" ] && source "${USER_HOME:?}/init.d/helpers/configure-yuzu.sh"
 
 echo "DONE"

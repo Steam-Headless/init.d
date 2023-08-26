@@ -5,7 +5,7 @@
 # File Created: Wednesday, 23rd August 2023 7:16:02 pm
 # Author: Josh.5 (jsunnex@gmail.com)
 # -----
-# Last Modified: Saturday, 26th August 2023 7:20:46 pm
+# Last Modified: Saturday, 26th August 2023 7:35:28 pm
 # Modified By: Josh.5 (jsunnex@gmail.com)
 ###
 #
@@ -30,8 +30,8 @@ package_category="Game"
 package_icon="${USER_HOME:?}/.cache/init.d/package_icons/${package_name:?}-icon.png"
 
 
-[[ -f "${USER_HOME:?}/init.d/helpers/setup-directories.sh" ]] && source "${USER_HOME:?}/init.d/helpers/setup-directories.sh"
-[[ -f "${USER_HOME:?}/init.d/helpers/functions.sh" ]] && source "${USER_HOME:?}/init.d/helpers/functions.sh"
+[ -f "${USER_HOME:?}/init.d/helpers/setup-directories.sh" ] && source "${USER_HOME:?}/init.d/helpers/setup-directories.sh"
+[ -f "${USER_HOME:?}/init.d/helpers/functions.sh" ] && source "${USER_HOME:?}/init.d/helpers/functions.sh"
 print_package_name
 
 
@@ -43,7 +43,7 @@ print_step_header "Latest ${package_name:?} version: ${__latest_package_version:
 
 
 # Only install if the latest version does not already exist locally
-if [[ ! -f "${USER_HOME:?}/.cache/init.d/installed_packages/.${package_name:?}-${__latest_package_version:?}" ]]; then
+if [ ! -f "${package_executable:?}" ] || [ ! -f "${USER_HOME:?}/.cache/init.d/installed_packages/.${package_name:?}-${__latest_package_version:?}" ]; then
     # Fetch download links
     print_step_header "Fetching download link for ${package_name:?} version ${__latest_package_version:?}"
     __latest_package_files_json=$(wget -O - -o /dev/null https://gitlab.com/api/v4/projects/es-de%2Femulationstation-de/packages/${__latest_package_id:?}/package_files)
