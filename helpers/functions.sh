@@ -5,7 +5,7 @@
 # File Created: Friday, 25th August 2023 4:26:49 pm
 # Author: Josh.5 (jsunnex@gmail.com)
 # -----
-# Last Modified: Saturday, 26th August 2023 11:46:02 am
+# Last Modified: Saturday, 26th August 2023 4:18:10 pm
 # Modified By: Josh.5 (jsunnex@gmail.com)
 ###
 
@@ -58,7 +58,7 @@ function ensure_menu_shortcut {
 Name=${package_name:?}
 Exec="${package_executable:?}" %U
 Comment="${package_description:?}"
-Icon="${__local_package_icon_path:?}"
+Icon=${__local_package_icon_path:?}
 Type=Application
 Categories=${package_category:?};
 TryExec=${package_executable:?}
