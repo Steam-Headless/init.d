@@ -5,7 +5,7 @@
 # File Created: Friday, 25th August 2023 7:27:26 pm
 # Author: Josh.5 (jsunnex@gmail.com)
 # -----
-# Last Modified: Saturday, 26th August 2023 5:30:32 pm
+# Last Modified: Sunday, 27th August 2023 12:07:14 am
 # Modified By: Josh.5 (jsunnex@gmail.com)
 ###
 
@@ -70,8 +70,8 @@ sdmc_directory=${storagePath:?}/yuzu/sdmc
 tas_directory=/home/default/.local/share/yuzu/tas
 
 [Renderer]
-resolution_setup=4
-resolution_setup\default=false
+resolution_setup=2
+resolution_setup\default=true
 
 [UI]
 Paths\gamedirs\1\deep_scan=false
