@@ -5,7 +5,7 @@
 # File Created: Wednesday, 23rd August 2023 7:16:02 pm
 # Author: Josh.5 (jsunnex@gmail.com)
 # -----
-# Last Modified: Saturday, 26th August 2023 7:34:41 pm
+# Last Modified: Saturday, 26th August 2023 7:40:44 pm
 # Modified By: Josh.5 (jsunnex@gmail.com)
 ###
 #
@@ -53,6 +53,7 @@ if [ ! -f "${package_executable:?}" ] || [ ! -f "${USER_HOME:?}/.cache/init.d/in
 
     # Ensure this package has a start menu link (will create it if missing)
     print_step_header "Ensuring menu short is present for ${package_name:?}"
+    rm -f "${USER_HOME:?}/.local/share/applications/${package_name:?}.desktop"
     ensure_menu_shortcut
 
     # Mark this version as installed
