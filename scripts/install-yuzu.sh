@@ -5,7 +5,7 @@
 # File Created: Wednesday, 23rd August 2023 7:16:02 pm
 # Author: Josh.5 (jsunnex@gmail.com)
 # -----
-# Last Modified: Saturday, 26th August 2023 11:53:59 am
+# Last Modified: Saturday, 26th August 2023 2:42:30 pm
 # Modified By: Josh.5 (jsunnex@gmail.com)
 ###
 #
@@ -62,3 +62,5 @@ else
 fi
 
 [[ -f "${USER_HOME:?}/init.d/helpers/configure-yuzu.sh" ]] && source "${USER_HOME:?}/init.d/helpers/configure-yuzu.sh"
+
+echo "DONE"

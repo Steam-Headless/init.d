@@ -5,7 +5,7 @@
 # File Created: Wednesday, 23rd August 2023 7:16:02 pm
 # Author: Josh.5 (jsunnex@gmail.com)
 # -----
-# Last Modified: Saturday, 26th August 2023 11:53:37 am
+# Last Modified: Saturday, 26th August 2023 2:42:40 pm
 # Modified By: Josh.5 (jsunnex@gmail.com)
 ###
 #
@@ -86,3 +86,5 @@ fi
 # Configure Sunshine entry
 print_step_header "Adding sunshine entry for ${package_name:?}"
 ensure_sunshine_entry "flatpak-spawn --host /usr/bin/sunshine-run /home/default/Applications/EmulationStation-DE-x64.AppImage"
+
+echo "DONE"
