@@ -5,7 +5,7 @@
 # File Created: Friday, 25th August 2023 7:27:26 pm
 # Author: Josh.5 (jsunnex@gmail.com)
 # -----
-# Last Modified: Sunday, 27th August 2023 12:07:14 am
+# Last Modified: Sunday, 27th August 2023 8:09:57 am
 # Modified By: Josh.5 (jsunnex@gmail.com)
 ###
 
@@ -124,7 +124,7 @@ Shortcuts\Main%20Window\Exit%20Fullscreen\KeySeq=Esc
 Shortcuts\Main%20Window\Exit%20Fullscreen\KeySeq\default=true
 Shortcuts\Main%20Window\Exit%20yuzu\Context=1
 Shortcuts\Main%20Window\Exit%20yuzu\Context\default=true
-Shortcuts\Main%20Window\Exit%20yuzu\Controller_KeySeq=Minus+Plus
+Shortcuts\Main%20Window\Exit%20yuzu\Controller_KeySeq=Minus+X
 Shortcuts\Main%20Window\Exit%20yuzu\Controller_KeySeq\default=false
 Shortcuts\Main%20Window\Exit%20yuzu\KeySeq=Ctrl+Q
 Shortcuts\Main%20Window\Exit%20yuzu\KeySeq\default=true
