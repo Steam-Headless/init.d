@@ -5,12 +5,14 @@
 # File Created: Wednesday, 23rd August 2023 7:16:02 pm
 # Author: Josh.5 (jsunnex@gmail.com)
 # -----
-# Last Modified: Saturday, 26th August 2023 11:44:28 am
+# Last Modified: Saturday, 26th August 2023 11:53:37 am
 # Modified By: Josh.5 (jsunnex@gmail.com)
 ###
 #
 # About:
-#   Install EmulationStation-DE during container startup
+#   Install EmulationStation-DE during container startup.
+#   This will also configure EmulationStation-DE with some default options for Steam Headless.
+#   It will also configure an entry into Sunshine's apps.
 #
 # Guide:
 #   Add this script to your startup scripts by running:

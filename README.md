@@ -16,7 +16,9 @@ Create a symlink of any scripts that you wish to use from the `${USER_HOME:?}/in
 ln -sf "${USER_HOME:?}/init.d/scripts/install-es-de.sh" "${USER_HOME:?}/init.d/install-es-de.sh"
 ```
 
-Restart the container.
+Each script in the `./scripts` directory should have instructions on what it does and how to use it. Read each one before creating a symlink.
+
+Once you have configured this `~/init.d` directory with the scripts you wish for it to run, restart the container.
 
 ---
 

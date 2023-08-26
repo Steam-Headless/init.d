@@ -5,8 +5,18 @@
 # File Created: Friday, 25th August 2023 2:27:28 pm
 # Author: Josh.5 (jsunnex@gmail.com)
 # -----
-# Last Modified: Friday, 25th August 2023 2:32:46 pm
+# Last Modified: Saturday, 26th August 2023 12:00:28 pm
 # Modified By: Josh.5 (jsunnex@gmail.com)
+###
+#
+# About:
+#   Automatically pull the latest changes from the https://github.com/Steam-Headless/init.d/.
+#   NOTE: This is prefixed with `00-` in order to ensure it is run before any other scripts.
+#
+# Guide:
+#   Add this script to your startup scripts by running:
+#       $ ln -sf "${USER_HOME:?}/init.d/scripts/00-auto-update-init-scripts.sh" "${USER_HOME:?}/init.d/00-auto-update-init-scripts.sh"
+#
 ###
 
 set -euo pipefail
