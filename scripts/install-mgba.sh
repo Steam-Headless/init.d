@@ -5,7 +5,7 @@
 # File Created: Sunday, 27th August 2023 8:28:04 am
 # Author: Josh.5 (jsunnex@gmail.com)
 # -----
-# Last Modified: Sunday, 27th August 2023 10:47:27 am
+# Last Modified: Sunday, 27th August 2023 10:52:09 am
 # Modified By: Josh.5 (jsunnex@gmail.com)
 ###
 
@@ -48,5 +48,42 @@ if [ ! -f "${package_executable:?}" ] || [ ! -f "${USER_HOME:?}/.cache/init.d/in
 else
     print_step_header "Latest version of ${package_name:?} version ${__latest_package_version:?} already installed"
 fi
+
+
+# Configure EmulationStation DE
+romsPath="/mnt/games/Emulation/roms"
+mkdir -p "${romsPath:?}/gba"
+cat << 'EOF' > "${romsPath:?}/gba/systeminfo.txt"
+System name:
+gba
+
+Full system name:
+Nintendo Game Boy Advance
+
+Supported file extensions:
+.agb .AGB .bin .BIN .cgb .CGB .dmg .DMG .gb .GB .gba .GBA .gbc .GBC .sgb .SGB .7z .7Z .zip .ZIP
+
+Launch command:
+%EMULATOR_RETROARCH% -L %CORE_RETROARCH%/mgba_libretro.so %ROM%
+
+Alternative launch commands:
+%EMULATOR_MGBA% -f %ROM%
+%EMULATOR_RETROARCH% -L %CORE_RETROARCH%/vbam_libretro.so %ROM%
+%EMULATOR_VBA-M% -f %ROM%
+%EMULATOR_RETROARCH% -L %CORE_RETROARCH%/vba_next_libretro.so %ROM%
+%EMULATOR_RETROARCH% -L %CORE_RETROARCH%/gpsp_libretro.so %ROM%
+
+Platform (for scraping):
+gba
+
+Theme folder:
+gba
+EOF
+if ! grep -ri "gba:" "${romsPath:?}/systems.txt" &>/dev/null; then
+    print_step_header "Adding 'gba' path to '${romsPath:?}/systems.txt'"
+    echo "gba: " >> "${romsPath:?}/systems.txt"
+    chown -R ${PUID:?}:${PGID:?} "${romsPath:?}/systems.txt"
+fi
+sed -i 's|^gba:.*$|gba: Nintendo Game Boy Advance|' "${romsPath:?}/systems.txt"
 
 echo "DONE"
