@@ -15,8 +15,8 @@ romsPath="/mnt/games/Emulation/roms"
 biosPath="/mnt/games/Emulation/bios"
 storagePath="/mnt/games/Emulation/storage"
 mkdir -p \
-    "${USER_HOME:?}"/.config/rpcs3 \
-    "${storagePath:?}"/rpcs3/home}
+    "${USER_HOME:?}"/.config/rpcs3/dev_hdd0/home \
+    "${storagePath:?}"/rpcs3/home
 
 # Configure yuzu installation for Emulation directory structure
 if [ ! -L "${USER_HOME:?}/.config/rpcs3/dev_hdd0/home" ]; then

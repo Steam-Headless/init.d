@@ -81,6 +81,6 @@ if ! grep -ri "ps3:" "${romsPath:?}/systems.txt" &>/dev/null; then
 fi
 sed -i 's|^ps3:.*$|ps3: Sony Playstation 3|' "${romsPath:?}/systems.txt"
 
-#[ -f "${USER_HOME:?}/init.d/helpers/configure-rpcs3.sh" ] && source "${USER_HOME:?}/init.d/helpers/configure-rpcs3.sh"
+[ -f "${USER_HOME:?}/init.d/helpers/configure-rpcs3.sh" ] && source "${USER_HOME:?}/init.d/helpers/configure-rpcs3.sh"
 
 echo "DONE"
