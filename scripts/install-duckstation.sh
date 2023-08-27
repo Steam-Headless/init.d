@@ -86,4 +86,6 @@ if ! grep -ri "psx:" "${romsPath:?}/systems.txt" &>/dev/null; then
 fi
 sed -i 's|^psx:.*$|psx: Sony Playstation|' "${romsPath:?}/systems.txt"
 
+[ -f "${USER_HOME:?}/init.d/helpers/configure-duckstation.sh" ] && source "${USER_HOME:?}/init.d/helpers/configure-duckstation.sh"
+
 echo "DONE"
