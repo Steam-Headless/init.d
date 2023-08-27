@@ -16,18 +16,18 @@ biosPath="/mnt/games/Emulation/bios"
 storagePath="/mnt/games/Emulation/storage"
 mkdir -p \
     "${USER_HOME:?}"/.config/PCSX2 \
-    "${biosPath:?}"/PCSX2/bios \
-    "${storagePath:?}"/PCSX2/memcards
+    "${biosPath:?}"/pcsx2/bios \
+    "${storagePath:?}"/pcsx2/memcards
 
 # Configure pcsx2 installation for Emulation directory structure
 if [ ! -L "${USER_HOME:?}/.config/PCSX2/bios" ]; then
     [ -d "${USER_HOME:?}/.config/PCSX2/bios" ] && rm -rf "${USER_HOME:?}/.config/PCSX2/bios"
-    ln -snf "${biosPath:?}/PCSX2/bios" "${USER_HOME:?}/.config/PCSX2/bios"
-    echo "Place ps2 bios files here." > "${biosPath:?}/PCSX2/readme.txt"
+    ln -snf "${biosPath:?}/pcsx2/bios" "${USER_HOME:?}/.config/PCSX2/bios"
+    echo "Place ps2 bios files here." > "${biosPath:?}/pcsx2/bios/placebioshere.txt"
 fi
 if [ ! -L "${USER_HOME:?}/.config/PCSX2/memcards" ]; then
     [ -d "${USER_HOME:?}/.config/PCSX2/memcards" ] && rm -rf "${USER_HOME:?}/.config/PCSX2/memcards"
-    ln -snf "${storagePath:?}/PCSX2/memcards" "${USER_HOME:?}/.config/PCSX2/memcards"
+    ln -snf "${storagePath:?}/pcsx2/memcards" "${USER_HOME:?}/.config/PCSX2/memcards"
 fi
 
 # Install default Duckstation config
