@@ -5,7 +5,7 @@
 # File Created: Sunday, 27th August 2023 8:28:04 am
 # Author: Josh.5 (jsunnex@gmail.com)
 # -----
-# Last Modified: Monday, 28th August 2023 11:10:59 am
+# Last Modified: Monday, 28th August 2023 11:16:05 am
 # Modified By: Josh.5 (jsunnex@gmail.com)
 ###
 
@@ -200,12 +200,25 @@ if ! grep -ri "gba:" "${romsPath:?}/systems.txt" &>/dev/null; then
     chown -R ${PUID:?}:${PGID:?} "${romsPath:?}/systems.txt"
 fi
 sed -i 's|^gba:.*$|gba: Nintendo Game Boy Advance|' "${romsPath:?}/systems.txt"
+mkdir -p "${USER_HOME:?}"/.emulationstation/gamelists/gba
+if [ ! -f "${USER_HOME:?}/.emulationstation/gamelists/gba/gamelist.xml" ]; then
+    # TODO: Make this edit the xml file rather than just create it if missing
+    cat << EOF > "${USER_HOME:?}/.emulationstation/gamelists/gba/gamelist.xml"
+<?xml version="1.0"?>
+<alternativeEmulator>
+	<label>mGBA (Standalone)</label>
+</alternativeEmulator>
+<gameList>
+</gameList>
+EOF
+fi
 
 # Set correct ownership of created paths
 chown -R ${PUID:?}:${PGID:?} \
     "${USER_HOME:?}"/.config/mgba \
     "${savesPath:?}"/mgba \
     "${storagePath:?}"/mgba \
-    "${romsPath:?}"/gba
+    "${romsPath:?}"/gba \
+    "${USER_HOME:?}"/.emulationstation
 
 echo "DONE"
