@@ -23,7 +23,7 @@ mkdir -p \
 if [ ! -L "${USER_HOME:?}/.local/share/duckstation/bios" ]; then
     [ -d "${USER_HOME:?}/.local/share/duckstation/bios" ] && rm -rf "${USER_HOME:?}/.local/share/duckstation/bios"
     ln -snf "${biosPath:?}/duckstation/bios" "${USER_HOME:?}/.local/share/duckstation/bios"
-    echo "Place ps2 bios files here." > "${biosPath:?}/duckstation/bios/readme.txt"
+    echo "Place psx bios files here." > "${biosPath:?}/duckstation/bios/readme.txt"
 fi
 if [ ! -L "${USER_HOME:?}/.local/share/duckstation/memcards" ]; then
     [ -d "${USER_HOME:?}/.local/share/duckstation/memcards" ] && rm -rf "${USER_HOME:?}/.local/share/duckstation/memcards"
