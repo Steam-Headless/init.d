@@ -11,7 +11,7 @@
 
 
 # Config
-package_name="Duckstation"
+package_name="duckstation"
 package_description="Playstation Emulator"
 package_icon_url="https://cdn2.steamgriddb.com/file/sgdb-cdn/icon/e1f581b9f9af4ca9be996aa40da6759e/32/24x24.png"
 package_executable="${USER_HOME:?}/Applications/${package_name:?}.AppImage"
