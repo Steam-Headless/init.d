@@ -13,7 +13,7 @@
 # Config
 package_name="PCSX2"
 package_description="Sony Playstation 2 Emulator"
-package_icon_url=""
+package_icon_url="https://cdn2.steamgriddb.com/file/sgdb-cdn/icon/9a32ff36c65e8ba30915a21b7bd76506/32/24x24.png"
 package_executable="${USER_HOME:?}/Applications/${package_name:?}.AppImage"
 package_category="Game"
 package_icon="${USER_HOME:?}/.cache/init.d/package_icons/${package_name:?}-icon.png"
