@@ -5,7 +5,7 @@
 # File Created: Sunday, 27th August 2023 8:28:04 am
 # Author: Josh.5 (jsunnex@gmail.com)
 # -----
-# Last Modified: Monday, 28th August 2023 11:16:05 am
+# Last Modified: Monday, 28th August 2023 12:23:04 pm
 # Modified By: Josh.5 (jsunnex@gmail.com)
 ###
 
@@ -19,8 +19,9 @@ package_category="Game"
 package_icon="${USER_HOME:?}/.cache/init.d/package_icons/${package_name:?}-icon.png"
 
 
-[ -f "${USER_HOME:?}/init.d/helpers/setup-directories.sh" ] && source "${USER_HOME:?}/init.d/helpers/setup-directories.sh"
-[ -f "${USER_HOME:?}/init.d/helpers/functions.sh" ] && source "${USER_HOME:?}/init.d/helpers/functions.sh"
+source "${USER_HOME:?}/init.d/helpers/setup-directories.sh"
+source "${USER_HOME:?}/init.d/helpers/functions.sh"
+source "${USER_HOME:?}/init.d/helpers/functions-es-de-config.sh"
 print_package_name
 
 
@@ -200,18 +201,7 @@ if ! grep -ri "gba:" "${romsPath:?}/systems.txt" &>/dev/null; then
     chown -R ${PUID:?}:${PGID:?} "${romsPath:?}/systems.txt"
 fi
 sed -i 's|^gba:.*$|gba: Nintendo Game Boy Advance|' "${romsPath:?}/systems.txt"
-mkdir -p "${USER_HOME:?}"/.emulationstation/gamelists/gba
-if [ ! -f "${USER_HOME:?}/.emulationstation/gamelists/gba/gamelist.xml" ]; then
-    # TODO: Make this edit the xml file rather than just create it if missing
-    cat << EOF > "${USER_HOME:?}/.emulationstation/gamelists/gba/gamelist.xml"
-<?xml version="1.0"?>
-<alternativeEmulator>
-	<label>mGBA (Standalone)</label>
-</alternativeEmulator>
-<gameList>
-</gameList>
-EOF
-fi
+ensure_esde_alternative_emulator_configured "gba" "mGBA (Standalone)"
 
 # Set correct ownership of created paths
 chown -R ${PUID:?}:${PGID:?} \

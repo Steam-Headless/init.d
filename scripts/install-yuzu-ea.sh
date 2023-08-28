@@ -5,7 +5,7 @@
 # File Created: Wednesday, 23rd August 2023 7:16:02 pm
 # Author: Josh.5 (jsunnex@gmail.com)
 # -----
-# Last Modified: Saturday, 26th August 2023 7:40:25 pm
+# Last Modified: Monday, 28th August 2023 12:23:24 pm
 # Modified By: Josh.5 (jsunnex@gmail.com)
 ###
 #
@@ -29,8 +29,8 @@ package_category="Game"
 package_icon="${USER_HOME:?}/.cache/init.d/package_icons/${package_name:?}-icon.png"
 
 
-[ -f "${USER_HOME:?}/init.d/helpers/setup-directories.sh" ] && source "${USER_HOME:?}/init.d/helpers/setup-directories.sh"
-[ -f "${USER_HOME:?}/init.d/helpers/functions.sh" ] && source "${USER_HOME:?}/init.d/helpers/functions.sh"
+source "${USER_HOME:?}/init.d/helpers/setup-directories.sh"
+source "${USER_HOME:?}/init.d/helpers/functions.sh"
 print_package_name
 
 
