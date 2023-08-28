@@ -5,8 +5,19 @@
 # File Created: Sunday, 27th August 2023 8:28:04 am
 # Author: Josh.5 (jsunnex@gmail.com)
 # -----
-# Last Modified: Monday, 28th August 2023 12:23:04 pm
+# Last Modified: Monday, 28th August 2023 12:40:36 pm
 # Modified By: Josh.5 (jsunnex@gmail.com)
+###
+#
+# About:
+#   Install mGBA during container startup.
+#   This will also configure mGBA with some default options for Steam Headless.
+#   It will also configure the mGBA AppImage as the default emulator for GBA ROMs in ES-DE.
+#
+# Guide:
+#   Add this script to your startup scripts by running:
+#       $ ln -sf "${USER_HOME:?}/init.d/scripts/install-mgba.sh" "${USER_HOME:?}/init.d/install-mgba.sh"
+#
 ###
 
 
