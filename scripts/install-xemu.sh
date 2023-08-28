@@ -5,8 +5,18 @@
 # File Created: Sunday, 27th August 2023 3:53:57 pm
 # Author: Josh.5 (jsunnex@gmail.com)
 # -----
-# Last Modified: Sunday, 27th August 2023 5:04:21 pm
+# Last Modified: Monday, 28th August 2023 12:39:48 pm
 # Modified By: Josh.5 (jsunnex@gmail.com)
+###
+#
+# About:
+#   Install xemu during container startup.
+#   This will also configure xemu with some default options for Steam Headless.
+#
+# Guide:
+#   Add this script to your startup scripts by running:
+#       $ ln -sf "${USER_HOME:?}/init.d/scripts/install-xemu.sh" "${USER_HOME:?}/init.d/install-xemu.sh"
+#
 ###
 
 
@@ -19,8 +29,8 @@ package_category="Game"
 package_icon="${USER_HOME:?}/.cache/init.d/package_icons/${package_name:?}-icon.png"
 
 
-[ -f "${USER_HOME:?}/init.d/helpers/setup-directories.sh" ] && source "${USER_HOME:?}/init.d/helpers/setup-directories.sh"
-[ -f "${USER_HOME:?}/init.d/helpers/functions.sh" ] && source "${USER_HOME:?}/init.d/helpers/functions.sh"
+source "${USER_HOME:?}/init.d/helpers/setup-directories.sh"
+source "${USER_HOME:?}/init.d/helpers/functions.sh"
 print_package_name
 
 
