@@ -5,7 +5,7 @@
 # File Created: Monday, 28th August 2023 11:35:55 am
 # Author: Josh.5 (jsunnex@gmail.com)
 # -----
-# Last Modified: Monday, 28th August 2023 12:21:12 pm
+# Last Modified: Monday, 28th August 2023 12:26:58 pm
 # Modified By: Josh.5 (jsunnex@gmail.com)
 ###
 
@@ -19,7 +19,7 @@ function ensure_esde_alternative_emulator_configured {
         # Check if alternativeEmulator exists in the file
         if grep -q '<alternativeEmulator>' "${__xml_file:?}"; then
             # Use sed to replace the content if alternativeEmulator exists
-            sed -i "\#<alternativeEmulator>#,\#</alternativeEmulator>#c\<alternativeEmulator>\n\t<label>${alternative_emulator_label:?}<\/label>\n<\/alternativeEmulator>" "${__xml_file:?}"
+            sed -i "\#<alternativeEmulator>#,\#</alternativeEmulator>#c\<alternativeEmulator>\n\t<label>${__alternative_emulator_label:?}<\/label>\n<\/alternativeEmulator>" "${__xml_file:?}"
         else
             # Generate a base file if not already configured
             if ! grep -q '<gameList>' "${__xml_file:?}"; then
@@ -27,7 +27,7 @@ function ensure_esde_alternative_emulator_configured {
                 echo '<gameList></gameList>' >> "${__xml_file:?}"
             fi
             # Add alternativeEmulator block if it doesn't exist
-            sed -i "s#<gameList>#<alternativeEmulator>\n\t<label>${alternative_emulator_label:?}<\/label>\n<\/alternativeEmulator>\n<gameList>#" "${__xml_file:?}"
+            sed -i "s#<gameList>#<alternativeEmulator>\n\t<label>${__alternative_emulator_label:?}<\/label>\n<\/alternativeEmulator>\n<gameList>#" "${__xml_file:?}"
         fi
     else
         mkdir -p "$(dirname ${__xml_file:?})"
@@ -35,7 +35,7 @@ function ensure_esde_alternative_emulator_configured {
         cat << EOF > "${__xml_file:?}"
 <?xml version="1.0"?>
 <alternativeEmulator>
-	<label>${alternative_emulator_label:?}</label>
+	<label>${__alternative_emulator_label:?}</label>
 </alternativeEmulator>
 <gameList>
 </gameList>
