@@ -57,7 +57,16 @@ storagePath="/mnt/games/Emulation/storage"
 mkdir -p \
     "${USER_HOME:?}"/.config/rpcs3/dev_hdd0/home \
     "${storagePath:?}"/rpcs3/home \
+    "${savesPath:?}"/rpcs3/savedata \
     "${romsPath:?}"/ps3
+
+
+# Generate a default config if missing
+if [ ! -f "${USER_HOME:?}/.config/rpcs3/config.yml" ]; then
+    cat << EOF > "${USER_HOME:?}/.config/rpcs3/config.yml"
+
+EOF
+fi
 
 # Configure EmulationStation DE
 mkdir -p "${romsPath:?}/ps3"
@@ -93,6 +102,7 @@ ensure_esde_alternative_emulator_configured "ps3" "RPCS3 Directory (Standalone)"
 # Set correct ownership of created paths
 chown -R ${PUID:?}:${PGID:?} \
     "${USER_HOME:?}"/.config/rpcs3/dev_hdd0/home \
+    "${savesPath:?}"/rpcs3/savedata \
     "${storagePath:?}"/rpcs3/home \
     "${romsPath:?}"/ps3
 
