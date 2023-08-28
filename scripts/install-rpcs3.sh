@@ -19,8 +19,9 @@ package_category="Game"
 package_icon="${USER_HOME:?}/.cache/init.d/package_icons/${package_name:?}-icon.png"
 
 
-[ -f "${USER_HOME:?}/init.d/helpers/setup-directories.sh" ] && source "${USER_HOME:?}/init.d/helpers/setup-directories.sh"
-[ -f "${USER_HOME:?}/init.d/helpers/functions.sh" ] && source "${USER_HOME:?}/init.d/helpers/functions.sh"
+source "${USER_HOME:?}/init.d/helpers/setup-directories.sh"
+source "${USER_HOME:?}/init.d/helpers/functions.sh"
+source "${USER_HOME:?}/init.d/helpers/functions-es-de-config.sh"
 print_package_name
 
 
@@ -49,9 +50,16 @@ else
     print_step_header "Latest version of ${package_name:?} version ${__latest_package_version:?} already installed"
 fi
 
+# Generate rpcs3 Emulation directory structure
+romsPath="/mnt/games/Emulation/roms"
+savesPath="/mnt/games/Emulation/saves"
+storagePath="/mnt/games/Emulation/storage"
+mkdir -p \
+    "${USER_HOME:?}"/.config/rpcs3/dev_hdd0/home \
+    "${storagePath:?}"/rpcs3/home \
+    "${romsPath:?}"/ps3
 
 # Configure EmulationStation DE
-romsPath="/mnt/games/Emulation/roms"
 mkdir -p "${romsPath:?}/ps3"
 cat << 'EOF' > "${romsPath:?}/ps3/systeminfo.txt"
 System name:
@@ -80,7 +88,12 @@ if ! grep -ri "ps3:" "${romsPath:?}/systems.txt" &>/dev/null; then
     chown -R ${PUID:?}:${PGID:?} "${romsPath:?}/systems.txt"
 fi
 sed -i 's|^ps3:.*$|ps3: Sony Playstation 3|' "${romsPath:?}/systems.txt"
+ensure_esde_alternative_emulator_configured "ps3" "RPCS3 Directory (Standalone)"
 
-[ -f "${USER_HOME:?}/init.d/helpers/configure-rpcs3.sh" ] && source "${USER_HOME:?}/init.d/helpers/configure-rpcs3.sh"
+# Set correct ownership of created paths
+chown -R ${PUID:?}:${PGID:?} \
+    "${USER_HOME:?}"/.config/rpcs3/dev_hdd0/home \
+    "${storagePath:?}"/rpcs3/home \
+    "${romsPath:?}"/ps3
 
 echo "DONE"
