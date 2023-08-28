@@ -291,14 +291,14 @@ DumpVRAMWriteHeightThreshold = 128
 
 
 [Folders]
-Cache = ${storagePath:?}/duckstation//mnt/games/Emulation/storage/duckstation/cache
+Cache = ${storagePath:?}/duckstation/cache
 Cheats = cheats
-Covers = ${storagePath:?}/duckstation//mnt/games/Emulation/storage/duckstation/covers
+Covers = ${storagePath:?}/duckstation/covers
 Dumps = dump
 GameSettings = gamesettings
 InputProfiles = inputprofiles
 SaveStates = ${savesPath:?}/duckstation/states
-Screenshots = ${storagePath:?}/duckstation//mnt/games/Emulation/storage/duckstation/screenshots
+Screenshots = ${storagePath:?}/duckstation/screenshots
 Shaders = shaders
 Textures = textures
 
