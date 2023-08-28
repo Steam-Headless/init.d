@@ -8,6 +8,17 @@
 # Last Modified: Sunday, 27th August 2023 10:52:09 am
 # Modified By: Josh.5 (jsunnex@gmail.com)
 ###
+#
+# About:
+#   Install PCSX2 during container startup.
+#   This will also configure PCSX2 with some default options for Steam Headless.
+#   It will also configure the PCSX2 AppImage as the default emulator for PS2 ROMs in ES-DE.
+#
+# Guide:
+#   Add this script to your startup scripts by running:
+#       $ ln -sf "${USER_HOME:?}/init.d/scripts/install-pcsx2.sh" "${USER_HOME:?}/init.d/install-pcsx2.sh"
+#
+###
 
 
 # Config
@@ -19,10 +30,10 @@ package_category="Game"
 package_icon="${USER_HOME:?}/.cache/init.d/package_icons/${package_name:?}-icon.png"
 
 
-[ -f "${USER_HOME:?}/init.d/helpers/setup-directories.sh" ] && source "${USER_HOME:?}/init.d/helpers/setup-directories.sh"
-[ -f "${USER_HOME:?}/init.d/helpers/functions.sh" ] && source "${USER_HOME:?}/init.d/helpers/functions.sh"
+source "${USER_HOME:?}/init.d/helpers/setup-directories.sh"
+source "${USER_HOME:?}/init.d/helpers/functions.sh"
+source "${USER_HOME:?}/init.d/helpers/functions-es-de-config.sh"
 print_package_name
-
 
 # Check for a new version to install
 __registry_package_json=$(wget -O - -o /dev/null https://api.github.com/repos/PCSX2/pcsx2/releases/latest)
@@ -49,9 +60,48 @@ else
     print_step_header "Latest version of ${package_name:?} version ${__latest_package_version:?} already installed"
 fi
 
+# Generate duckstation Emulation directory structure
+romsPath="/mnt/games/Emulation/roms"
+biosPath="/mnt/games/Emulation/bios"
+savesPath="/mnt/games/Emulation/saves"
+storagePath="/mnt/games/Emulation/storage"
+mkdir -p \
+    "${USER_HOME:?}"/.config/PCSX2/inis \
+    "${savesPath:?}"/pcsx2/memcards \
+    "${savesPath:?}"/pcsx2/sstates \
+    "${biosPath:?}"/pcsx2 \
+    "${storagePath:?}"/pcsx2/snaps \
+    "${storagePath:?}"/pcsx2/cheats \
+    "${romsPath:?}"/ps2
+
+# Generate a default config if missing
+if [ ! -f "${USER_HOME:?}/.config/PCSX2/inis/PCSX2_ui.ini" ]; then
+    cat << EOF > "${USER_HOME:?}/.config/PCSX2/inis/PCSX2_ui.ini"
+[Folders]
+UseDefaultBios=disabled
+UseDefaultSnapshots=disabled
+UseDefaultSavestates=disabled
+UseDefaultMemoryCards=disabled
+UseDefaultLogs=enabled
+UseDefaultLangs=enabled
+UseDefaultPluginsFolder=enabled
+UseDefaultCheats=disabled
+UseDefaultCheatsWS=enabled
+Bios=${biosPath:?}/pcsx2
+Snapshots=${storagePath:?}/pcsx2/snaps
+Savestates=${savesPath:?}/pcsx2/sstates
+MemoryCards=${savesPath:?}/pcsx2/memcards
+Logs=/home/default/.config/PCSX2/logs
+Langs=/tmp/.mount_pcsx2.ZlU2iM/usr/lib32/Langs
+Cheats=${storagePath:?}pcsx2/cheats
+CheatsWS=/home/default/.config/PCSX2/cheats_ws
+PluginsFolder=/tmp/.mount_pcsx2.ZlU2iM/usr/lib32/pcsx2
+RunIso=${romsPath:?}/ps2
+RunELF=/home/default/.config/PCSX2
+EOF
+fi
 
 # Configure EmulationStation DE
-romsPath="/mnt/games/Emulation/roms"
 mkdir -p "${romsPath:?}/ps2"
 cat << 'EOF' > "${romsPath:?}/ps2/systeminfo.txt"
 System name:
@@ -83,7 +133,16 @@ if ! grep -ri "ps2:" "${romsPath:?}/systems.txt" &>/dev/null; then
     chown -R ${PUID:?}:${PGID:?} "${romsPath:?}/systems.txt"
 fi
 sed -i 's|^ps2:.*$|ps2: Sony Playstation 2|' "${romsPath:?}/systems.txt"
+ensure_esde_alternative_emulator_configured "ps2" "PCSX2 (Standalone)"
 
-[ -f "${USER_HOME:?}/init.d/helpers/configure-pcsx2.sh" ] && source "${USER_HOME:?}/init.d/helpers/configure-pcsx2.sh"
+# Set correct ownership of created paths
+chown -R ${PUID:?}:${PGID:?} \
+    "${USER_HOME:?}"/.config/PCSX2 \
+    "${savesPath:?}"/pcsx2/memcards \
+    "${savesPath:?}"/pcsx2/sstates \
+    "${biosPath:?}"/pcsx2 \
+    "${storagePath:?}"/pcsx2/snaps \
+    "${storagePath:?}"/pcsx2/cheats \
+    "${romsPath:?}"/ps2
 
 echo "DONE"
