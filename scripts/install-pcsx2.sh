@@ -18,8 +18,6 @@
 #   Add this script to your startup scripts by running:
 #       $ ln -sf "${USER_HOME:?}/init.d/scripts/install-pcsx2.sh" "${USER_HOME:?}/init.d/install-pcsx2.sh"
 #
-#   IMPORTANT: Please run PCSX2 once and select to import pre-existing config
-#
 ###
 
 
