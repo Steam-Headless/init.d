@@ -38,7 +38,8 @@ source "${USER_HOME:?}/init.d/helpers/functions-es-de-config.sh"
 print_package_name
 
 # Check for a new version to install
-__registry_package_json=$(wget -O - -o /dev/null https://api.github.com/repos/PCSX2/pcsx2/releases/latest)
+__latest_registery_url=$(wget -O - -o /dev/null https://api.github.com/repos/PCSX2/pcsx2/releases | jq -r '.[0].url')
+__registry_package_json=$(wget -O - -o /dev/null $(echo ${__latest_registery_url}))
 __latest_package_version=$(echo ${__registry_package_json:?} | jq -r '.tag_name')
 __latest_package_id=$(echo ${__registry_package_json:?} | jq -r '.assets[] | select(.name | test("\\.appimage$"; "i"))' | jq -r '.id')
 __latest_package_url=$(echo ${__registry_package_json:?} | jq -r '.assets[] | select(.name | test("\\.appimage$"; "i"))' | jq -r '.browser_download_url')
@@ -74,93 +75,79 @@ mkdir -p \
     "${biosPath:?}"/pcsx2 \
     "${storagePath:?}"/pcsx2/snaps \
     "${storagePath:?}"/pcsx2/cheats \
+    "${storagePath:?}"/pcsx2/cache \
+    "${storagePath:?}"/pcsx2/covers \
     "${romsPath:?}"/ps2
 
 # Generate a default config if missing
 # Currently need to run PCSX2 once to import the config, can't figure out how to bypass it
-if [ ! -f "${USER_HOME:?}/.config/PCSX2/inis/OnePAD2.ini" ]; then
-    cat << EOF > "${USER_HOME:?}/.config/PCSX2/inis/OnePAD2.ini"
-first_time_wizard = 0
-log = 0
-options = 0
-mouse_sensibility = 100
-ff_intensity = 32767
-uid[0] = 0
-uid[1] = 0
-EOF
-fi
-if [ ! -f "${USER_HOME:?}/.config/PCSX2/inis/PCSX2_vm.ini" ]; then
-    cat << EOF > "${USER_HOME:?}/.config/PCSX2/inis/PCSX2_vm.ini"
-[EmuCore]
-CdvdVerboseReads=disabled
-CdvdDumpBlocks=disabled
-CdvdShareWrite=disabled
-EnablePatches=enabled
-EnableCheats=disabled
-EnableWideScreenPatches=true
-ConsoleToStdio=disabled
-HostFs=disabled
-BackupSavestate=enabled
-McdEnableEjection=enabled
-McdFolderAutoManage=enabled
-MultitapPort0_Enabled=disabled
-MultitapPort1_Enabled=disabled
-EOF
-fi
-if [ ! -f "${USER_HOME:?}/.config/PCSX2/inis/GSdx.ini" ]; then
-    cat << EOF > "${USER_HOME:?}/.config/PCSX2/inis/GSdx.ini"
-UserHacks = 1
-UserHacks_AutoFlush = 0
-UserHacks_CPU_FB_Conversion = 0
-UserHacks_DisableDepthSupport = 0
-UserHacks_DisablePartialInvalidation = 0
-UserHacks_Disable_Safe_Features = 0
-UserHacks_HalfPixelOffset = 1
-UserHacks_Half_Bottom_Override = -1
-UserHacks_SkipDraw = 0
-UserHacks_SkipDraw_Offset = 0
-UserHacks_TCOffsetX = 0
-UserHacks_TCOffsetY = 0
-UserHacks_TriFilter = 0
-UserHacks_WildHack = 0
-UserHacks_align_sprite_X = 1
-UserHacks_merge_pp_sprite = 1
-UserHacks_round_sprite_offset = 0
-shaderfx = 0
-shaderfx_conf = shaders/GSdx_FX_Settings.ini
-shaderfx_glsl = shaders/GSdx.fx
-upscale_multiplier = 3
-wrap_gs_mem = 0
-EOF
-fi
-if [ ! -f "${USER_HOME:?}/.config/PCSX2/inis/PCSX2_ui.ini" ]; then
-    cat << EOF > "${USER_HOME:?}/.config/PCSX2/inis/PCSX2_ui.ini"
+if [ ! -f "${USER_HOME:?}/.config/PCSX2/inis/PCSX2.ini" ]; then
+    cat << EOF > "${USER_HOME:?}/.config/PCSX2/inis/PCSX2.ini"
+[UI]
+SettingsVersion = 1
+InhibitScreensaver = true
+ConfirmShutdown = false
+StartPaused = false
+PauseOnFocusLoss = false
+StartFullscreen = true
+DoubleClickTogglesFullscreen = true
+HideMouseCursor = true
+RenderToSeparateWindow = false
+HideMainWindowWhenRunning = false
+DisableWindowResize = false
+Theme = darkfusion
+SetupWizardIncomplete = false
+
+
 [Folders]
-UseDefaultBios=disabled
-UseDefaultSnapshots=disabled
-UseDefaultSavestates=disabled
-UseDefaultMemoryCards=disabled
-UseDefaultLogs=enabled
-UseDefaultLangs=enabled
-UseDefaultPluginsFolder=enabled
-UseDefaultCheats=disabled
-UseDefaultCheatsWS=enabled
-Bios=${biosPath:?}/pcsx2
-Snapshots=${storagePath:?}/pcsx2/snaps
-Savestates=${savesPath:?}/pcsx2/sstates
-MemoryCards=${savesPath:?}/pcsx2/memcards
-Logs=/home/default/.config/PCSX2/logs
-Langs=/tmp/.mount_pcsx2.i5w9Tp/usr/lib32/Langs
-Cheats=${storagePath:?}/cheats
-CheatsWS=/home/default/.config/PCSX2/cheats_ws
-PluginsFolder=/tmp/.mount_pcsx2.i5w9Tp/usr/lib32/pcsx2
-RunIso=${romsPath:?}/ps2
-RunELF=/home/default/.config/PCSX2
+Bios = ${biosPath:?}/pcsx2
+Snapshots = ${storagePath:?}/pcsx2/snaps
+SaveStates = ${savesPath:?}/pcsx2/sstates
+MemoryCards = ${savesPath:?}/pcsx2/memcards
+Logs = logs
+Cheats = ${storagePath:?}/pcsx2/cheats
+Patches = patches
+Cache = ${storagePath:?}/pcsx2/cache
+Textures = textures
+InputProfiles = inputprofiles
+Videos = videos
+Covers = ${storagePath:?}/pcsx2/covers
+
+
+[Hotkeys]
+ToggleFullscreen = Keyboard/Alt & Keyboard/Return
+CycleAspectRatio = Keyboard/F6
+CycleInterlaceMode = Keyboard/F5
+CycleMipmapMode = Keyboard/Insert
+GSDumpMultiFrame = Keyboard/Control & Keyboard/Shift & Keyboard/F8
+Screenshot = Keyboard/F8
+GSDumpSingleFrame = Keyboard/Shift & Keyboard/F8
+ToggleSoftwareRendering = Keyboard/F9
+ZoomIn = Keyboard/Control & Keyboard/Plus
+ZoomOut = Keyboard/Control & Keyboard/Minus
+InputRecToggleMode = Keyboard/Shift & Keyboard/R
+LoadStateFromSlot = Keyboard/F3
+SaveStateToSlot = Keyboard/F1
+NextSaveStateSlot = Keyboard/F2
+PreviousSaveStateSlot = Keyboard/Shift & Keyboard/F2
+OpenPauseMenu = Keyboard/Escape
+ToggleFrameLimit = Keyboard/F4
+TogglePause = Keyboard/Space
+ToggleSlowMotion = Keyboard/Shift & Keyboard/Backtab
+ToggleTurbo = Keyboard/Tab
+HoldTurbo = Keyboard/Period
+
+
+[AutoUpdater]
+CheckAtStartup = false
+
+
+[GameList]
+RecursivePaths = ${romsPath:?}/ps2
 EOF
 fi
 
 # Configure EmulationStation DE
-mkdir -p "${romsPath:?}/ps2"
 cat << 'EOF' > "${romsPath:?}/ps2/systeminfo.txt"
 System name:
 ps2
@@ -201,6 +188,8 @@ chown -R ${PUID:?}:${PGID:?} \
     "${biosPath:?}"/pcsx2 \
     "${storagePath:?}"/pcsx2/snaps \
     "${storagePath:?}"/pcsx2/cheats \
+    "${storagePath:?}"/pcsx2/cache \
+    "${storagePath:?}"/pcsx2/covers \
     "${romsPath:?}"/ps2
 
 echo "DONE"
