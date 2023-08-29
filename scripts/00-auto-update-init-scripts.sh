@@ -5,7 +5,7 @@
 # File Created: Friday, 25th August 2023 2:27:28 pm
 # Author: Josh.5 (jsunnex@gmail.com)
 # -----
-# Last Modified: Saturday, 26th August 2023 2:43:27 pm
+# Last Modified: Wednesday, 30th August 2023 12:37:16 am
 # Modified By: Josh.5 (jsunnex@gmail.com)
 ###
 #
@@ -26,6 +26,6 @@ if [[ ! -d "${USER_HOME:?}/init.d/" ]]; then
     exit 1
 fi
 
-su - default -c "cd ${USER_HOME:?}/init.d/ && git checkout master && git pull origin master"
+su - default -c "cd ${USER_HOME:?}/init.d/ && git checkout . && git checkout master && git pull origin master"
 
 echo "DONE"
