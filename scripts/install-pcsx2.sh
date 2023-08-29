@@ -18,6 +18,8 @@
 #   Add this script to your startup scripts by running:
 #       $ ln -sf "${USER_HOME:?}/init.d/scripts/install-pcsx2.sh" "${USER_HOME:?}/init.d/install-pcsx2.sh"
 #
+#   IMPORTANT: Please run PCSX2 once and select to import pre-existing config
+#
 ###
 
 
@@ -75,6 +77,62 @@ mkdir -p \
     "${romsPath:?}"/ps2
 
 # Generate a default config if missing
+# Currently need to run PCSX2 once to import the config, can't figure out how to bypass it
+if [ ! -f "${USER_HOME:?}/.config/PCSX2/inis/OnePAD2.ini" ]; then
+    cat << EOF > "${USER_HOME:?}/.config/PCSX2/inis/OnePAD2.ini"
+first_time_wizard = 0
+log = 0
+options = 0
+mouse_sensibility = 100
+ff_intensity = 32767
+uid[0] = 0
+uid[1] = 0
+EOF
+fi
+if [ ! -f "${USER_HOME:?}/.config/PCSX2/inis/PCSX2_vm.ini" ]; then
+    cat << EOF > "${USER_HOME:?}/.config/PCSX2/inis/PCSX2_vm.ini"
+[EmuCore]
+CdvdVerboseReads=disabled
+CdvdDumpBlocks=disabled
+CdvdShareWrite=disabled
+EnablePatches=enabled
+EnableCheats=disabled
+EnableWideScreenPatches=true
+ConsoleToStdio=disabled
+HostFs=disabled
+BackupSavestate=enabled
+McdEnableEjection=enabled
+McdFolderAutoManage=enabled
+MultitapPort0_Enabled=disabled
+MultitapPort1_Enabled=disabled
+EOF
+fi
+if [ ! -f "${USER_HOME:?}/.config/PCSX2/inis/GSdx.ini" ]; then
+    cat << EOF > "${USER_HOME:?}/.config/PCSX2/inis/GSdx.ini"
+UserHacks = 1
+UserHacks_AutoFlush = 0
+UserHacks_CPU_FB_Conversion = 0
+UserHacks_DisableDepthSupport = 0
+UserHacks_DisablePartialInvalidation = 0
+UserHacks_Disable_Safe_Features = 0
+UserHacks_HalfPixelOffset = 1
+UserHacks_Half_Bottom_Override = -1
+UserHacks_SkipDraw = 0
+UserHacks_SkipDraw_Offset = 0
+UserHacks_TCOffsetX = 0
+UserHacks_TCOffsetY = 0
+UserHacks_TriFilter = 0
+UserHacks_WildHack = 0
+UserHacks_align_sprite_X = 1
+UserHacks_merge_pp_sprite = 1
+UserHacks_round_sprite_offset = 0
+shaderfx = 0
+shaderfx_conf = shaders/GSdx_FX_Settings.ini
+shaderfx_glsl = shaders/GSdx.fx
+upscale_multiplier = 3
+wrap_gs_mem = 0
+EOF
+fi
 if [ ! -f "${USER_HOME:?}/.config/PCSX2/inis/PCSX2_ui.ini" ]; then
     cat << EOF > "${USER_HOME:?}/.config/PCSX2/inis/PCSX2_ui.ini"
 [Folders]
@@ -92,10 +150,10 @@ Snapshots=${storagePath:?}/pcsx2/snaps
 Savestates=${savesPath:?}/pcsx2/sstates
 MemoryCards=${savesPath:?}/pcsx2/memcards
 Logs=/home/default/.config/PCSX2/logs
-Langs=/tmp/.mount_pcsx2.ZlU2iM/usr/lib32/Langs
-Cheats=${storagePath:?}pcsx2/cheats
+Langs=/tmp/.mount_pcsx2.i5w9Tp/usr/lib32/Langs
+Cheats=${storagePath:?}/cheats
 CheatsWS=/home/default/.config/PCSX2/cheats_ws
-PluginsFolder=/tmp/.mount_pcsx2.ZlU2iM/usr/lib32/pcsx2
+PluginsFolder=/tmp/.mount_pcsx2.i5w9Tp/usr/lib32/pcsx2
 RunIso=${romsPath:?}/ps2
 RunELF=/home/default/.config/PCSX2
 EOF
