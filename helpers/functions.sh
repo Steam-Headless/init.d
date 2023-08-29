@@ -5,7 +5,7 @@
 # File Created: Friday, 25th August 2023 4:26:49 pm
 # Author: Josh.5 (jsunnex@gmail.com)
 # -----
-# Last Modified: Saturday, 26th August 2023 4:37:59 pm
+# Last Modified: Tuesday, 29th August 2023 5:47:47 pm
 # Modified By: Josh.5 (jsunnex@gmail.com)
 ###
 
@@ -70,7 +70,7 @@ EOF
     fi
 }
 
-function ensure_sunshine_entry {
+function ensure_sunshine_command_entry {
     __exec_cmd="${@:?}"
 
     # Ensure a sunshine config exists
@@ -117,6 +117,66 @@ function ensure_sunshine_entry {
             "name": $package_name,
             "output": "",
             "cmd": $new_cmd,
+            "exclude-global-prep-cmd": "false",
+            "elevated": "false",
+            "image-path": $package_icon_path,
+            "working-dir": $working_dir
+    }]')
+
+    # Override Sunshine's app.json config file
+    echo "${__updated_json:?}" > "${USER_HOME:?}/.config/sunshine/apps.json"
+}
+
+function ensure_sunshine_detached_command_entry {
+    __exec_cmd="${@:?}"
+
+    # Ensure a sunshine config exists
+    if [ ! -f "${USER_HOME:?}/.config/sunshine/apps.json" ]; then
+        return
+    fi
+
+    # Ensure config file can be parsed by jq
+    if ! cat "${USER_HOME:?}/.config/sunshine/apps.json" | jq &> /dev/null; then
+        print_step_error "Unable to parse JSON in file '${USER_HOME:?}/.config/sunshine/apps.json'"
+        return
+    fi
+
+    # Read current sunshine config
+    __json=$(cat "${USER_HOME:?}/.config/sunshine/apps.json")
+
+    # Check if an entry with the new cmd value already exists
+    __exists=$(echo "${__json:?}" \
+        | jq --arg new_cmd "${__exec_cmd:?}" \
+        '.apps[] | select(.detached[]? | contains($new_cmd)) | any')
+    if [ "${__exists:-}" = "true" ]; then
+        return
+    fi
+
+    # Check if an entry with the name value already exists (remove it if it does)
+    __exists=$(echo "${__json:?}" \
+        | jq --arg new_name "${package_name:?}" \
+        '.apps | map(.name) | contains([$new_name])')
+    if [ "${__exists:?}" = "true" ]; then
+        __json=$(echo "${__json:?}" | jq --arg name_to_remove "${package_name:?}" '.apps |= map(select(.name != $name_to_remove))')
+    fi
+
+    # Download an icon image
+    package_icon_path="${USER_HOME:?}/.cache/init.d/package_icons/${package_name:?}-icon.png"
+    ensure_icon_exists
+
+    # Generate updated JSON for Sunshine's app.json file
+    __updated_json=$(echo "$__json" | jq \
+        --arg package_name "${package_name:?}" \
+        --arg new_cmd "${__exec_cmd:?}" \
+        --arg package_icon_path "${package_icon_path:?}" \
+        --arg working_dir "${USER_HOME:?}" \
+        '.apps += [{
+            "name": $package_name,
+            "output": "",
+            "cmd": "",
+            "detached": [
+                $new_cmd
+            ],
             "exclude-global-prep-cmd": "false",
             "elevated": "false",
             "image-path": $package_icon_path,

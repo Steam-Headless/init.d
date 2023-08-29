@@ -5,7 +5,7 @@
 # File Created: Wednesday, 23rd August 2023 7:16:02 pm
 # Author: Josh.5 (jsunnex@gmail.com)
 # -----
-# Last Modified: Monday, 28th August 2023 12:23:44 pm
+# Last Modified: Tuesday, 29th August 2023 5:48:57 pm
 # Modified By: Josh.5 (jsunnex@gmail.com)
 ###
 #
@@ -86,6 +86,6 @@ fi
 
 # Configure Sunshine entry
 print_step_header "Adding sunshine entry for ${package_name:?}"
-ensure_sunshine_entry "flatpak-spawn --host /usr/bin/sunshine-run ${package_executable:?}"
+ensure_sunshine_detached_command_entry "/usr/bin/sunshine-run ${package_executable:?}"
 
 echo "DONE"
