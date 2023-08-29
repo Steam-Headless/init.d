@@ -5,7 +5,7 @@
 # File Created: Friday, 25th August 2023 4:26:49 pm
 # Author: Josh.5 (jsunnex@gmail.com)
 # -----
-# Last Modified: Tuesday, 29th August 2023 5:47:47 pm
+# Last Modified: Wednesday, 30th August 2023 12:25:44 am
 # Modified By: Josh.5 (jsunnex@gmail.com)
 ###
 
@@ -185,4 +185,20 @@ function ensure_sunshine_detached_command_entry {
 
     # Override Sunshine's app.json config file
     echo "${__updated_json:?}" > "${USER_HOME:?}/.config/sunshine/apps.json"
+}
+
+function ensure_symlink {
+    # Function to ensure a symlink points to a specified target path
+    __target_path="${1}"    # Desired target path
+    __link_path="${2}"      # Path of the symlink to be checked/created
+
+    # Check if the symlink doesn't exist or if it doesn't point to the desired target
+    if [ ! -L "${__link_path:?}" ] || [ "$(ls -l "${__link_path:?}" 2> /dev/null | awk '{print $NF}')" != "${__target_path:?}" ]; then
+        # Remove the existing file (if it's a file)
+        [ -f "${__link_path:?}" ] && rm -f "${__link_path:?}"
+        # Remove the existing directory (if it's a directory)
+        [ -d "${__link_path:?}" ] && rm -rf "${__link_path:?}"
+        # Create a new symlink to the desired path
+        ln -snf "${__target_path:?}" "${__link_path:?}"
+    fi
 }

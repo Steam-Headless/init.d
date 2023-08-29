@@ -5,57 +5,36 @@
 # File Created: Friday, 25th August 2023 7:27:26 pm
 # Author: Josh.5 (jsunnex@gmail.com)
 # -----
-# Last Modified: Sunday, 27th August 2023 8:09:57 am
+# Last Modified: Wednesday, 30th August 2023 12:33:59 am
 # Modified By: Josh.5 (jsunnex@gmail.com)
 ###
 
+source "${USER_HOME:?}/init.d/helpers/functions.sh"
 
 # Generate Yuzu Emulation directory structure
-romsPath="/mnt/games/Emulation/roms"
-biosPath="/mnt/games/Emulation/bios"
-storagePath="/mnt/games/Emulation/storage"
+__emulation_path="/mnt/games/Emulation"
 mkdir -p \
     "${USER_HOME:?}"/.local/share/yuzu \
-    "${biosPath:?}"/yuzu/keys \
-    "${storagePath:?}"/yuzu/{dump,load,nand,screenshots,sdmc,tas}
+    "${__emulation_path:?}/bios/yuzu" \
+    "${__emulation_path:?}/storage/yuzu"/{dump,keys,load,nand,screenshots,sdmc,tas}
 
-# Configure yuzu installation for Emulation directory structure
-if [ ! -L "${USER_HOME:?}/.local/share/yuzu/keys" ]; then
-    [ -d "${USER_HOME:?}/.local/share/yuzu/keys" ] && rm -rf "${USER_HOME:?}/.local/share/yuzu/keys"
-    ln -snf "${biosPath:?}/yuzu/keys" "${USER_HOME:?}/.local/share/yuzu/keys"
-    echo "Place both 'title.keys' and 'prod.keys' files here." > "${biosPath:?}/yuzu/keys/putkeyshere.txt"
-fi
-if [ ! -L "${USER_HOME:?}/.local/share/yuzu/dump" ]; then
-    [ -d "${USER_HOME:?}/.local/share/yuzu/dump" ] && rm -rf "${USER_HOME:?}/.local/share/yuzu/dump"
-    ln -snf "${storagePath:?}/yuzu/dump" "${USER_HOME:?}/.local/share/yuzu/dump"
-fi
-if [ ! -L "${USER_HOME:?}/.local/share/yuzu/load" ]; then
-    [ -d "${USER_HOME:?}/.local/share/yuzu/load" ] && rm -rf "${USER_HOME:?}/.local/share/yuzu/load"
-    ln -snf "${storagePath:?}/yuzu/load" "${USER_HOME:?}/.local/share/yuzu/load"
-fi
-if [ ! -L "${USER_HOME:?}/.local/share/yuzu/nand" ]; then
-    [ -d "${USER_HOME:?}/.local/share/yuzu/nand" ] && rm -rf "${USER_HOME:?}/.local/share/yuzu/nand"
-    ln -snf "${storagePath:?}/yuzu/nand" "${USER_HOME:?}/.local/share/yuzu/nand"
-fi
-if [ ! -L "${USER_HOME:?}/.local/share/yuzu/screenshots" ]; then
-    [ -d "${USER_HOME:?}/.local/share/yuzu/screenshots" ] && rm -rf "${USER_HOME:?}/.local/share/yuzu/screenshots"
-    ln -snf "${storagePath:?}/yuzu/screenshots" "${USER_HOME:?}/.local/share/yuzu/screenshots"
-fi
-if [ ! -L "${USER_HOME:?}/.local/share/yuzu/sdmc" ]; then
-    [ -d "${USER_HOME:?}/.local/share/yuzu/sdmc" ] && rm -rf "${USER_HOME:?}/.local/share/yuzu/sdmc"
-    ln -snf "${storagePath:?}/yuzu/sdmc" "${USER_HOME:?}/.local/share/yuzu/sdmc"
-fi
-if [ ! -L "${USER_HOME:?}/.local/share/yuzu/tas" ]; then
-    [ -d "${USER_HOME:?}/.local/share/yuzu/tas" ] && rm -rf "${USER_HOME:?}/.local/share/yuzu/tas"
-    ln -snf "${storagePath:?}/yuzu/tas" "${USER_HOME:?}/.local/share/yuzu/tas"
+# Create relative symlinks from the BIOS paths to Yuzu storage
+mkdir -p "${__emulation_path:?}/storage/yuzu/nand/system/Contents/registered"
+touch "${__emulation_path:?}/storage/yuzu/nand/system/Contents/registered/putfirmwarehere.txt"
+ensure_symlink "../../../storage/yuzu/nand/system/Contents/registered" "${__emulation_path:?}/bios/yuzu/firmware"
+ensure_symlink "../../../storage/yuzu/keys" "${__emulation_path:?}/bios/yuzu/keys"
+if [ ! -f "${__emulation_path:?}/storage/yuzu/keys/putkeyshere.txt" ]; then
+    echo "Place both 'title.keys' and 'prod.keys' files here." > "${__emulation_path:?}/storage/yuzu/keys/putkeyshere.txt"
 fi
 
-mkdir -p "${storagePath:?}/yuzu/nand/system/Contents/registered"
-touch "${storagePath:?}/yuzu/nand/system/Contents/registered/putfirmwarehere.txt"
-if [ ! -L "${biosPath}/yuzu/firmware" ]; then
-    [ -d "${biosPath}/yuzu/firmware" ] && rm -rf "${biosPath}/yuzu/firmware"
-    ln -snf "${storagePath:?}/yuzu/nand/system/Contents/registered" "${biosPath}/yuzu/firmware"
-fi
+# Create absolute symlinks from the ~/.local/share/yuzu/ directories to our storage path
+ensure_symlink "${__emulation_path:?}/storage/yuzu/dump" "${USER_HOME:?}/.local/share/yuzu/dump"
+ensure_symlink "${__emulation_path:?}/storage/yuzu/keys" "${USER_HOME:?}/.local/share/yuzu/keys"
+ensure_symlink "${__emulation_path:?}/storage/yuzu/load" "${USER_HOME:?}/.local/share/yuzu/load"
+ensure_symlink "${__emulation_path:?}/storage/yuzu/nand" "${USER_HOME:?}/.local/share/yuzu/nand"
+ensure_symlink "${__emulation_path:?}/storage/yuzu/screenshots" "${USER_HOME:?}/.local/share/yuzu/screenshots"
+ensure_symlink "${__emulation_path:?}/storage/yuzu/sdmc" "${USER_HOME:?}/.local/share/yuzu/sdmc"
+ensure_symlink "${__emulation_path:?}/storage/yuzu/tas" "${USER_HOME:?}/.local/share/yuzu/tas"
 
 # Install default Yuzu config
 mkdir -p "${USER_HOME:?}/.config/yuzu"
@@ -63,11 +42,11 @@ if [ ! -f "${USER_HOME:?}/.config/yuzu/qt-config.ini" ]; then
     cat << EOF > "${USER_HOME:?}/.config/yuzu/qt-config.ini"
 
 [Data%20Storage]
-dump_directory=${storagePath:?}/yuzu/dump
-load_directory=${storagePath:?}/yuzu/load
-nand_directory=${storagePath:?}/yuzu/nand
-sdmc_directory=${storagePath:?}/yuzu/sdmc
-tas_directory=/home/default/.local/share/yuzu/tas
+dump_directory=${__emulation_path:?}/storage/yuzu/dump
+load_directory=${__emulation_path:?}/storage/yuzu/load
+nand_directory=${__emulation_path:?}/storage/yuzu/nand
+sdmc_directory=${__emulation_path:?}/storage/yuzu/sdmc
+tas_directory=${__emulation_path:?}/storage/yuzu/tas
 
 [Renderer]
 resolution_setup=2
@@ -93,12 +72,12 @@ Paths\gamedirs\4\deep_scan=false
 Paths\gamedirs\4\deep_scan\default=true
 Paths\gamedirs\4\expanded=true
 Paths\gamedirs\4\expanded\default=true
-Paths\gamedirs\4\path=/mnt/games/Emulation/roms/switch
+Paths\gamedirs\4\path=${__emulation_path:?}/roms/switch
 Paths\gamedirs\size=4
 
 Screenshots\enable_screenshot_save_as=true
 Screenshots\enable_screenshot_save_as\default=true
-Screenshots\screenshot_path=${storagePath:?}/yuzu/screenshots
+Screenshots\screenshot_path=${__emulation_path:?}/storage/yuzu/screenshots
 
 Shortcuts\Main%20Window\Audio%20Mute\Unmute\Context=1
 Shortcuts\Main%20Window\Audio%20Mute\Unmute\Context\default=true
@@ -223,8 +202,8 @@ EOF
 fi
 
 # Configure EmulationStation DE
-mkdir -p "${romsPath:?}/switch"
-cat << 'EOF' > "${romsPath:?}/switch/systeminfo.txt"
+mkdir -p "${__emulation_path:?}/roms/switch"
+cat << 'EOF' > "${__emulation_path:?}/roms/switch/systeminfo.txt"
 System name:
 switch
 
@@ -246,17 +225,17 @@ switch
 Theme folder:
 switch
 EOF
-if ! grep -ri "switch:" "${romsPath:?}/systems.txt" &>/dev/null; then
-    print_step_header "Adding 'switch' path to '${romsPath:?}/systems.txt'"
-    echo "switch: " >> "${romsPath:?}/systems.txt"
-    chown -R ${PUID:?}:${PGID:?} "${romsPath:?}/systems.txt"
+if ! grep -ri "switch:" "${__emulation_path:?}/roms/systems.txt" &>/dev/null; then
+    print_step_header "Adding 'switch' path to '${__emulation_path:?}/roms/systems.txt'"
+    echo "switch: " >> "${__emulation_path:?}/roms/systems.txt"
+    chown -R ${PUID:?}:${PGID:?} "${__emulation_path:?}/roms/systems.txt"
 fi
-sed -i 's|^switch:.*$|switch: Nintendo Switch|' "${romsPath:?}/systems.txt"
+sed -i 's|^switch:.*$|switch: Nintendo Switch|' "${__emulation_path:?}/roms/systems.txt"
 
 # Set correct ownership of created paths
 chown -R ${PUID:?}:${PGID:?} \
     "${USER_HOME:?}"/.local/share/yuzu \
     "${USER_HOME:?}"/.config/yuzu \
-    "${romsPath:?}/switch" \
-    "${biosPath:?}"/yuzu \
-    "${storagePath:?}"/yuzu
+    "${__emulation_path:?}/roms/switch" \
+    "${__emulation_path:?}/bios/yuzu" \
+    "${__emulation_path:?}/storage/yuzu"

@@ -5,7 +5,7 @@
 # File Created: Wednesday, 23rd August 2023 7:16:02 pm
 # Author: Josh.5 (jsunnex@gmail.com)
 # -----
-# Last Modified: Monday, 28th August 2023 12:23:24 pm
+# Last Modified: Wednesday, 30th August 2023 12:35:10 am
 # Modified By: Josh.5 (jsunnex@gmail.com)
 ###
 #
@@ -62,6 +62,6 @@ else
     print_step_header "Latest version of ${package_name:?} version ${__latest_package_version:?} already installed"
 fi
 
-[ -f "${USER_HOME:?}/init.d/helpers/configure-yuzu.sh" ] && source "${USER_HOME:?}/init.d/helpers/configure-yuzu.sh"
+source "${USER_HOME:?}/init.d/helpers/configure-yuzu.sh"
 
 echo "DONE"
