@@ -55,7 +55,7 @@ __emulation_path="/mnt/games/Emulation"
 mkdir -p \
     "${USER_HOME:?}"/.config/rpcs3/dev_hdd0/home \
     "${__emulation_path:?}"/storage/rpcs3/{home,savedata} \
-    "${__emulation_path:?}"/ps3
+    "${__emulation_path:?}"/roms/ps3
 
 
 # Generate a default config if missing
@@ -66,7 +66,6 @@ EOF
 fi
 
 # Configure EmulationStation DE
-mkdir -p "${__emulation_path:?}/roms/ps3"
 cat << 'EOF' > "${__emulation_path:?}/roms/ps3/systeminfo.txt"
 System name:
 ps3
