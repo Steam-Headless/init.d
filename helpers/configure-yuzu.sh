@@ -5,7 +5,7 @@
 # File Created: Friday, 25th August 2023 7:27:26 pm
 # Author: Josh.5 (jsunnex@gmail.com)
 # -----
-# Last Modified: Wednesday, 30th August 2023 12:33:59 am
+# Last Modified: Wednesday, 30th August 2023 10:37:59 pm
 # Modified By: Josh.5 (jsunnex@gmail.com)
 ###
 
@@ -21,8 +21,8 @@ mkdir -p \
 # Create relative symlinks from the BIOS paths to Yuzu storage
 mkdir -p "${__emulation_path:?}/storage/yuzu/nand/system/Contents/registered"
 touch "${__emulation_path:?}/storage/yuzu/nand/system/Contents/registered/putfirmwarehere.txt"
-ensure_symlink "../../../storage/yuzu/nand/system/Contents/registered" "${__emulation_path:?}/bios/yuzu/firmware"
-ensure_symlink "../../../storage/yuzu/keys" "${__emulation_path:?}/bios/yuzu/keys"
+ensure_symlink "../../storage/yuzu/nand/system/Contents/registered" "${__emulation_path:?}/bios/yuzu/firmware"
+ensure_symlink "../../storage/yuzu/keys" "${__emulation_path:?}/bios/yuzu/keys"
 if [ ! -f "${__emulation_path:?}/storage/yuzu/keys/putkeyshere.txt" ]; then
     echo "Place both 'title.keys' and 'prod.keys' files here." > "${__emulation_path:?}/storage/yuzu/keys/putkeyshere.txt"
 fi
