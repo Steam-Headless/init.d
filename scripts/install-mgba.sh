@@ -211,7 +211,7 @@ ensure_esde_alternative_emulator_configured "gba" "mGBA (Standalone)"
 chown -R ${PUID:?}:${PGID:?} \
     "${USER_HOME:?}"/.config/mgba \
     "${__emulation_path:?}"/storage/mgba \
-    "${__emulation_path:?}"/roms/mgba \
+    "${__emulation_path:?}"/roms/gba \
     "${USER_HOME:?}"/.emulationstation
 
 echo "DONE"
