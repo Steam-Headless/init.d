@@ -67,7 +67,7 @@ __emulation_path="/mnt/games/Emulation"
 mkdir -p \
     "${USER_HOME:?}"/.local/share/duckstation \
     "${__emulation_path:?}"/roms/psx \
-    "${__emulation_path:?}/duckstation"/{states,memcards,bios,screenshots,covers,cache,cheats,dump,gamesettings,inputprofiles,states,screenshots,shaders,textures} 
+    "${__emulation_path:?}"/storage/duckstation/{states,memcards,bios,screenshots,covers,cache,cheats,dump,gamesettings,inputprofiles,states,screenshots,shaders,textures} 
 
 # Generate a default config if missing
 if [ ! -f "${USER_HOME:?}/.local/share/duckstation/settings.ini" ]; then
@@ -227,16 +227,16 @@ Root =
 [BIOS]
 PatchTTYEnable = false
 PatchFastBoot = false
-SearchDirectory = ${__emulation_path:?}/duckstation/bios
+SearchDirectory = ${__emulation_path:?}/storage/duckstation/bios
 
 
 [MemoryCards]
 Card1Type = PerGameTitle
 Card2Type = None
 UsePlaylistTitle = true
-Directory = ${__emulation_path:?}/duckstation/memcards 
-Card2Path = ${__emulation_path:?}/duckstation/memcards/shared_card_2.mcd
-Card1Path = ${__emulation_path:?}/duckstation/memcards/shared_card_1.mcd
+Directory = ${__emulation_path:?}/storage/duckstation/memcards 
+Card2Path = ${__emulation_path:?}/storage/duckstation/memcards/shared_card_2.mcd
+Card1Path = ${__emulation_path:?}/storage/duckstation/memcards/shared_card_1.mcd
 
 
 [Cheevos]
@@ -283,16 +283,16 @@ DumpVRAMWriteHeightThreshold = 128
 
 
 [Folders]
-Cache = ${__emulation_path:?}/duckstation/cache
-Cheats = ${__emulation_path:?}/duckstation/cheats
-Covers = ${__emulation_path:?}/duckstation/covers
-Dumps = ${__emulation_path:?}/duckstation/dump
-GameSettings = ${__emulation_path:?}/duckstation/gamesettings
-InputProfiles = ${__emulation_path:?}/duckstation/inputprofiles
-SaveStates = ${__emulation_path:?}/duckstation/states
-Screenshots = ${__emulation_path:?}/duckstation/screenshots
-Shaders = ${__emulation_path:?}/duckstation/shaders
-Textures = ${__emulation_path:?}/duckstation/textures
+Cache = ${__emulation_path:?}/storage/duckstation/cache
+Cheats = ${__emulation_path:?}/storage/duckstation/cheats
+Covers = ${__emulation_path:?}/storage/duckstation/covers
+Dumps = ${__emulation_path:?}/storage/duckstation/dump
+GameSettings = ${__emulation_path:?}/storage/duckstation/gamesettings
+InputProfiles = ${__emulation_path:?}/storage/duckstation/inputprofiles
+SaveStates = ${__emulation_path:?}/storage/duckstation/states
+Screenshots = ${__emulation_path:?}/storage/duckstation/screenshots
+Shaders = ${__emulation_path:?}/storage/duckstation/shaders
+Textures = ${__emulation_path:?}/storage/duckstation/textures
 
 
 [InputSources]
@@ -420,6 +420,6 @@ chown -R ${PUID:?}:${PGID:?} \
     "${USER_HOME:?}"/.local/share/duckstation \
     "${USER_HOME:?}"/.emulationstation
     "${__emulation_path:?}"/roms/psx \
-    "${__emulation_path:?}"/duckstation 
+    "${__emulation_path:?}"/storage/duckstation 
 
 echo "DONE"
