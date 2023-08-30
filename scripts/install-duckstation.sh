@@ -418,7 +418,6 @@ ensure_esde_alternative_emulator_configured "psx" "DuckStation (Standalone)"
 # Set correct ownership of created paths
 chown -R ${PUID:?}:${PGID:?} \
     "${USER_HOME:?}"/.local/share/duckstation \
-    "${USER_HOME:?}"/.emulationstation
     "${__emulation_path:?}"/roms/psx \
     "${__emulation_path:?}"/storage/duckstation 
 
