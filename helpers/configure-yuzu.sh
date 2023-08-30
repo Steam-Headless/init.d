@@ -15,14 +15,12 @@ source "${USER_HOME:?}/init.d/helpers/functions.sh"
 __emulation_path="/mnt/games/Emulation"
 mkdir -p \
     "${USER_HOME:?}"/.local/share/yuzu \
-    "${__emulation_path:?}/bios/yuzu" \
-    "${__emulation_path:?}/storage/yuzu"/{dump,keys,load,nand,screenshots,sdmc,tas}
+    "${__emulation_path:?}/storage/yuzu"/{dump,keys,load,nand,screenshots,sdmc,tas,firmware}
 
 # Create relative symlinks from the BIOS paths to Yuzu storage
 mkdir -p "${__emulation_path:?}/storage/yuzu/nand/system/Contents/registered"
 touch "${__emulation_path:?}/storage/yuzu/nand/system/Contents/registered/putfirmwarehere.txt"
-ensure_symlink "../../../storage/yuzu/nand/system/Contents/registered" "${__emulation_path:?}/bios/yuzu/firmware"
-ensure_symlink "../../../storage/yuzu/keys" "${__emulation_path:?}/bios/yuzu/keys"
+ensure_symlink "../../../storage/yuzu/nand/system/Contents/registered" "${__emulation_path:?}/storage/yuzu/firmware"
 if [ ! -f "${__emulation_path:?}/storage/yuzu/keys/putkeyshere.txt" ]; then
     echo "Place both 'title.keys' and 'prod.keys' files here." > "${__emulation_path:?}/storage/yuzu/keys/putkeyshere.txt"
 fi
@@ -237,5 +235,4 @@ chown -R ${PUID:?}:${PGID:?} \
     "${USER_HOME:?}"/.local/share/yuzu \
     "${USER_HOME:?}"/.config/yuzu \
     "${__emulation_path:?}/roms/switch" \
-    "${__emulation_path:?}/bios/yuzu" \
     "${__emulation_path:?}/storage/yuzu"
