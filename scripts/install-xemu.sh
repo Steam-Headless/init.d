@@ -60,22 +60,17 @@ else
 fi
 
 # Generate Emulation directory structure
-romsPath="/mnt/games/Emulation/roms"
-biosPath="/mnt/games/Emulation/bios"
-savesPath="/mnt/games/Emulation/saves"
-storagePath="/mnt/games/Emulation/storage"
+__emulation_path="/mnt/games/Emulation"
 mkdir -p \
     "${USER_HOME:?}"/.local/share/xemu/xemu \
-    "${romsPath:?}/xbox" \
-    "${biosPath:?}/xemu" \
-    "${savesPath:?}"/xemu \
-    "${storagePath:?}"/xemu
+    "${__emulation_path:?}"/storage/xemu/{bios,saves} \
+    "${__emulation_path:?}"/roms/xbox 
 
 # Install missing bios
-if [ ! -f "${storagePath:?}/xemu/eeprom.bin" ]; then
+if [ ! -f "${__emulation_path:?}/storage/xemu/bios/eeprom.bin" ]; then
     print_step_header "Fetching eeprom.bin"
     __xbox_bios_url="https://github.com/dragoonDorise/EmuDeck/raw/dbfe2d6e7cf4123ff4b537ff75ddcbeea7860b2b/configs/app.xemu.xemu/data/xemu/xemu/eeprom.bin"
-    wget -O "${storagePath:?}/xemu/eeprom.bin" \
+    wget -O "${__emulation_path:?}/storage/xemu/bios/eeprom.bin" \
         --quiet -o /dev/null \
         --no-verbose --show-progress \
         --progress=bar:force:noscroll \
@@ -83,16 +78,16 @@ if [ ! -f "${storagePath:?}/xemu/eeprom.bin" ]; then
 fi
 
 # Install missing Xbox HDD
-if [ ! -f "${storagePath:?}/xemu/xbox_hdd.qcow2" ]; then
+if [ ! -f "${__emulation_path:?}/storage/xemu/xbox_hdd.qcow2" ]; then
     print_step_header "Fetching xbox_hdd.qcow2"
-    wget -O "${storagePath:?}/xemu/xbox_hdd.qcow2.zip" \
+    wget -O "${__emulation_path:?}/storage/xemu/xbox_hdd.qcow2.zip" \
         --quiet -o /dev/null \
         --no-verbose --show-progress \
         --progress=bar:force:noscroll \
         "https://github.com/mborgerson/xemu-hdd-image/releases/latest/download/xbox_hdd.qcow2.zip"
     
     print_step_header "Extracting xbox_hdd.qcow2"
-    pushd "${storagePath:?}/xemu" &> /dev/null || (echo "Error: Unable to change directory before extracting Xbox HDD." && exit 1)
+    pushd "${__emulation_path:?}/storage/xemu" &> /dev/null || (echo "Error: Unable to change directory before extracting Xbox HDD." && exit 1)
         unzip -j xbox_hdd.qcow2.zip
         rm -rf xbox_hdd.qcow2.zip
     popd &> /dev/null || exit 1
@@ -117,16 +112,16 @@ fit = 'stretch'
 mem_limit = '128'
 
 [sys.files]
-bootrom_path = '${biosPath:?}/xemu/mcpx_1.0.bin'
-flashrom_path = '${biosPath:?}/xemu/Complex_4627v1.03.bin'
-eeprom_path = '${storagePath:?}/xemu/eeprom.bin'
-hdd_path = '${storagePath:?}/xemu/xbox_hdd.qcow2'
+bootrom_path = '${__emulation_path:?}/storage/xemu/bios/mcpx_1.0.bin'
+flashrom_path = '${__emulation_path:?}/storage/xemu/bios/Complex_4627v1.03.bin'
+eeprom_path = '${__emulation_path:?}/storage/xemu/bios/eeprom.bin'
+hdd_path = '${__emulation_path:?}/storage/xemu/xbox_hdd.qcow2'
 
 EOF
 fi
 
 # Configure EmulationStation DE
-cat << 'EOF' > "${romsPath:?}/xbox/systeminfo.txt"
+cat << 'EOF' > "${__emulation_path:?}/roms/xbox/systeminfo.txt"
 System name:
 xbox
 
@@ -145,18 +140,17 @@ xbox
 Theme folder:
 xbox
 EOF
-if ! grep -ri "xbox:" "${romsPath:?}/systems.txt" &>/dev/null; then
-    print_step_header "Adding 'xbox' path to '${romsPath:?}/systems.txt'"
-    echo "xbox: " >> "${romsPath:?}/systems.txt"
-    chown -R ${PUID:?}:${PGID:?} "${romsPath:?}/systems.txt"
+if ! grep -ri "xbox:" "${__emulation_path:?}/roms/systems.txt" &>/dev/null; then
+    print_step_header "Adding 'xbox' path to '${__emulation_path:?}/roms/systems.txt'"
+    echo "xbox: " >> "${__emulation_path:?}/roms/systems.txt"
+    chown -R ${PUID:?}:${PGID:?} "${__emulation_path:?}/roms/systems.txt"
 fi
-sed -i 's|^xbox:.*$|xbox: Microsoft Xbox|' "${romsPath:?}/systems.txt"
+sed -i 's|^xbox:.*$|xbox: Microsoft Xbox|' "${__emulation_path:?}/roms/systems.txt"
 
 # Set correct ownership of created paths
 chown -R ${PUID:?}:${PGID:?} \
     "${USER_HOME:?}"/.local/share/xemu/xemu \
-    "${savesPath:?}"/xemu \
-    "${storagePath:?}"/xemu \
-    "${romsPath:?}/xbox"
+    "${__emulation_path:?}"/storage/xemu \
+    "${__emulation_path:?}"/roms/xbox
 
 echo "DONE"
