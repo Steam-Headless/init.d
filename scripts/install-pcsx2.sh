@@ -62,20 +62,11 @@ else
 fi
 
 # Generate duckstation Emulation directory structure
-romsPath="/mnt/games/Emulation/roms"
-biosPath="/mnt/games/Emulation/bios"
-savesPath="/mnt/games/Emulation/saves"
-storagePath="/mnt/games/Emulation/storage"
+__emulation_path="/mnt/games/Emulation"
 mkdir -p \
     "${USER_HOME:?}"/.config/PCSX2/inis \
-    "${savesPath:?}"/pcsx2/memcards \
-    "${savesPath:?}"/pcsx2/sstates \
-    "${biosPath:?}"/pcsx2 \
-    "${storagePath:?}"/pcsx2/snaps \
-    "${storagePath:?}"/pcsx2/cheats \
-    "${storagePath:?}"/pcsx2/cache \
-    "${storagePath:?}"/pcsx2/covers \
-    "${romsPath:?}"/ps2
+    "${__emulation_path:?}"/storage/pcsx2/{memcards,sstates,snaps,cheats,cache,covers,bios,patches,textures} \
+    "${__emulation_path:?}"/roms/ps2
 
 # Generate a default config if missing
 # Currently need to run PCSX2 once to import the config, can't figure out how to bypass it
@@ -98,18 +89,18 @@ SetupWizardIncomplete = false
 
 
 [Folders]
-Bios = ${biosPath:?}/pcsx2
-Snapshots = ${storagePath:?}/pcsx2/snaps
-SaveStates = ${savesPath:?}/pcsx2/sstates
-MemoryCards = ${savesPath:?}/pcsx2/memcards
+Bios = ${__emulation_path:?}/storage/pcsx2/bios
+Snapshots = ${__emulation_path:?}/storage/pcsx2/snaps
+SaveStates = ${__emulation_path:?}/storage/pcsx2/sstates
+MemoryCards = ${__emulation_path:?}/storage/pcsx2/memcards
 Logs = logs
-Cheats = ${storagePath:?}/pcsx2/cheats
-Patches = patches
-Cache = ${storagePath:?}/pcsx2/cache
-Textures = textures
+Cheats = ${__emulation_path:?}/storage/pcsx2/cheats
+Patches = ${__emulation_path:?}/storage/pcsx2/patches
+Cache = ${__emulation_path:?}/storage/pcsx2/cache
+Textures = ${__emulation_path:?}/storage/pcsx2/textures
 InputProfiles = inputprofiles
 Videos = videos
-Covers = ${storagePath:?}/pcsx2/covers
+Covers = ${__emulation_path:?}/storage/pcsx2/covers
 
 
 [Hotkeys]
@@ -141,12 +132,12 @@ CheckAtStartup = false
 
 
 [GameList]
-RecursivePaths = ${romsPath:?}/ps2
+RecursivePaths = ${__emulation_path:?}/roms/ps2
 EOF
 fi
 
 # Configure EmulationStation DE
-cat << 'EOF' > "${romsPath:?}/ps2/systeminfo.txt"
+cat << 'EOF' > "${__emulation_path:?}/roms/ps2/systeminfo.txt"
 System name:
 ps2
 
@@ -170,24 +161,18 @@ ps2
 Theme folder:
 ps2
 EOF
-if ! grep -ri "ps2:" "${romsPath:?}/systems.txt" &>/dev/null; then
-    print_step_header "Adding 'ps2' path to '${romsPath:?}/systems.txt'"
-    echo "ps2: " >> "${romsPath:?}/systems.txt"
-    chown -R ${PUID:?}:${PGID:?} "${romsPath:?}/systems.txt"
+if ! grep -ri "ps2:" "${__emulation_path:?}/roms/systems.txt" &>/dev/null; then
+    print_step_header "Adding 'ps2' path to '${__emulation_path:?}/roms/systems.txt'"
+    echo "ps2: " >> "${__emulation_path:?}/roms/systems.txt"
+    chown -R ${PUID:?}:${PGID:?} "${__emulation_path:?}/roms/systems.txt"
 fi
-sed -i 's|^ps2:.*$|ps2: Sony Playstation 2|' "${romsPath:?}/systems.txt"
+sed -i 's|^ps2:.*$|ps2: Sony Playstation 2|' "${__emulation_path:?}/roms/systems.txt"
 ensure_esde_alternative_emulator_configured "ps2" "PCSX2 (Standalone)"
 
 # Set correct ownership of created paths
 chown -R ${PUID:?}:${PGID:?} \
     "${USER_HOME:?}"/.config/PCSX2 \
-    "${savesPath:?}"/pcsx2/memcards \
-    "${savesPath:?}"/pcsx2/sstates \
-    "${biosPath:?}"/pcsx2 \
-    "${storagePath:?}"/pcsx2/snaps \
-    "${storagePath:?}"/pcsx2/cheats \
-    "${storagePath:?}"/pcsx2/cache \
-    "${storagePath:?}"/pcsx2/covers \
-    "${romsPath:?}"/ps2
+    "${__emulation_path:?}"/roms/ps2 \
+    "${__emulation_path:?}"/storage/pcsx2
 
 echo "DONE"
