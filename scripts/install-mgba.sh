@@ -63,18 +63,11 @@ fi
 
 
 # Generate mGBA Emulation directory structure
-romsPath="/mnt/games/Emulation/roms"
-biosPath="/mnt/games/Emulation/bios"
-savesPath="/mnt/games/Emulation/saves"
-storagePath="/mnt/games/Emulation/storage"
+__emulation_path="/mnt/games/Emulation"
 mkdir -p \
     "${USER_HOME:?}"/.config/mgba \
-    "${savesPath:?}"/mgba/states \
-    "${savesPath:?}"/mgba/saves \
-    "${storagePath:?}"/mgba/cheats \
-    "${storagePath:?}"/mgba/screenshots \
-    "${storagePath:?}"/mgba/patches \
-    "${romsPath:?}"/gba
+    "${__emulation_path:?}"/storage/mgba/{states,saves,cheats,screenshots,patches} \
+    "${__emulation_path:?}"/roms/gba
 
 # Generate a default config if missing
 if [ ! -f "${USER_HOME:?}/.config/mgba/config.ini" ]; then
@@ -151,11 +144,11 @@ gb.pal[10]=2637856
 gb.pal[11]=1583112
 hwaccelVideo=1
 rewindBufferCapacity=1000
-savestatePath=${savesPath:?}/mgba/states
-cheatsPath=${storagePath:?}/mgba/cheats
-screenshotPath=${storagePath:?}/mgba/screenshots
-savegamePath=${savesPath:?}/mgba/saves
-patchPath=${storagePath:?}/mgba/patches
+savestatePath=${__emulation_path:?}/storage/mgba/states
+cheatsPath=${__emulation_path:?}/storage/mgba/cheats
+screenshotPath=${__emulation_path:?}/storage/mgba/screenshots
+savegamePath=${__emulation_path:?}/storage/mgba/saves
+patchPath=${__emulation_path:?}/storage/mgba/patches
 showLibrary=1
 videoScale=5
 updateAutoCheck=0
@@ -180,7 +173,7 @@ EOF
 fi
 
 # Configure EmulationStation DE
-cat << 'EOF' > "${romsPath:?}/gba/systeminfo.txt"
+cat << 'EOF' > "${__emulation_path:?}/roms/gba/systeminfo.txt"
 System name:
 gba
 
@@ -206,20 +199,19 @@ gba
 Theme folder:
 gba
 EOF
-if ! grep -ri "gba:" "${romsPath:?}/systems.txt" &>/dev/null; then
-    print_step_header "Adding 'gba' path to '${romsPath:?}/systems.txt'"
-    echo "gba: " >> "${romsPath:?}/systems.txt"
-    chown -R ${PUID:?}:${PGID:?} "${romsPath:?}/systems.txt"
+if ! grep -ri "gba:" "${__emulation_path:?}/roms/systems.txt" &>/dev/null; then
+    print_step_header "Adding 'gba' path to '${__emulation_path:?}/roms/systems.txt'"
+    echo "gba: " >> "${__emulation_path:?}/roms/systems.txt"
+    chown -R ${PUID:?}:${PGID:?} "${__emulation_path:?}/roms/systems.txt"
 fi
-sed -i 's|^gba:.*$|gba: Nintendo Game Boy Advance|' "${romsPath:?}/systems.txt"
+sed -i 's|^gba:.*$|gba: Nintendo Game Boy Advance|' "${__emulation_path:?}/roms/systems.txt"
 ensure_esde_alternative_emulator_configured "gba" "mGBA (Standalone)"
 
 # Set correct ownership of created paths
 chown -R ${PUID:?}:${PGID:?} \
     "${USER_HOME:?}"/.config/mgba \
-    "${savesPath:?}"/mgba \
-    "${storagePath:?}"/mgba \
-    "${romsPath:?}"/gba \
+    "${__emulation_path:?}"/storage/mgba \
+    "${__emulation_path:?}"/roms/mgba \
     "${USER_HOME:?}"/.emulationstation
 
 echo "DONE"
