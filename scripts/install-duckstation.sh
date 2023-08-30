@@ -63,19 +63,11 @@ fi
 
 
 # Generate duckstation Emulation directory structure
-romsPath="/mnt/games/Emulation/roms"
-biosPath="/mnt/games/Emulation/bios"
-savesPath="/mnt/games/Emulation/saves"
-storagePath="/mnt/games/Emulation/storage"
+__emulation_path="/mnt/games/Emulation"
 mkdir -p \
     "${USER_HOME:?}"/.local/share/duckstation \
-    "${savesPath:?}"/duckstation/states \
-    "${savesPath:?}"/duckstation/memcards \
-    "${biosPath:?}"/duckstation \
-    "${storagePath:?}"/duckstation/screenshots \
-    "${storagePath:?}"/duckstation/covers \
-    "${storagePath:?}"/duckstation/cache \
-    "${romsPath:?}"/psx
+    "${__emulation_path:?}"/roms/psx \
+    "${__emulation_path:?}/duckstation"/{states,memcards,bios,screenshots,covers,cache,cheats,dump,gamesettings,inputprofiles,states,screenshots,shaders,textures} 
 
 # Generate a default config if missing
 if [ ! -f "${USER_HOME:?}/.local/share/duckstation/settings.ini" ]; then
@@ -235,16 +227,16 @@ Root =
 [BIOS]
 PatchTTYEnable = false
 PatchFastBoot = false
-SearchDirectory = ${biosPath:?}/duckstation/
+SearchDirectory = ${__emulation_path:?}/duckstation/bios
 
 
 [MemoryCards]
 Card1Type = PerGameTitle
 Card2Type = None
 UsePlaylistTitle = true
-Directory = ${savesPath:?}/duckstation/memcards 
-Card2Path = ${savesPath:?}/duckstation/memcards/shared_card_2.mcd
-Card1Path = ${savesPath:?}/duckstation/memcards/shared_card_1.mcd
+Directory = ${__emulation_path:?}/duckstation/memcards 
+Card2Path = ${__emulation_path:?}/duckstation/memcards/shared_card_2.mcd
+Card1Path = ${__emulation_path:?}/duckstation/memcards/shared_card_1.mcd
 
 
 [Cheevos]
@@ -291,16 +283,16 @@ DumpVRAMWriteHeightThreshold = 128
 
 
 [Folders]
-Cache = ${storagePath:?}/duckstation/cache
-Cheats = cheats
-Covers = ${storagePath:?}/duckstation/covers
-Dumps = dump
-GameSettings = gamesettings
-InputProfiles = inputprofiles
-SaveStates = ${savesPath:?}/duckstation/states
-Screenshots = ${storagePath:?}/duckstation/screenshots
-Shaders = shaders
-Textures = textures
+Cache = ${__emulation_path:?}/duckstation/cache
+Cheats = ${__emulation_path:?}/duckstation/cheats
+Covers = ${__emulation_path:?}/duckstation/covers
+Dumps = ${__emulation_path:?}/duckstation/dump
+GameSettings = ${__emulation_path:?}/duckstation/gamesettings
+InputProfiles = ${__emulation_path:?}/duckstation/inputprofiles
+SaveStates = ${__emulation_path:?}/duckstation/states
+Screenshots = ${__emulation_path:?}/duckstation/screenshots
+Shaders = ${__emulation_path:?}/duckstation/shaders
+Textures = ${__emulation_path:?}/duckstation/textures
 
 
 [InputSources]
@@ -380,7 +372,7 @@ SelectNextSaveStateSlot = Keyboard/F4
 
 
 [GameList]
-RecursivePaths = ${romsPath:?}/psx
+RecursivePaths = ${__emulation_path:?}/roms/psx
 
 
 [UI]
@@ -389,7 +381,7 @@ EOF
 fi
 
 # Configure EmulationStation DE
-cat << 'EOF' > "${romsPath:?}/psx/systeminfo.txt"
+cat << 'EOF' > "${__emulation_path:?}/roms/psx/systeminfo.txt"
 System name:
 psx
 
@@ -415,24 +407,19 @@ psx
 Theme folder:
 psx
 EOF
-if ! grep -ri "psx:" "${romsPath:?}/systems.txt" &>/dev/null; then
-    print_step_header "Adding 'psx' path to '${romsPath:?}/systems.txt'"
-    echo "psx: " >> "${romsPath:?}/systems.txt"
-    chown -R ${PUID:?}:${PGID:?} "${romsPath:?}/systems.txt"
+if ! grep -ri "psx:" "${__emulation_path:?}/roms/systems.txt" &>/dev/null; then
+    print_step_header "Adding 'psx' path to '${__emulation_path:?}/roms/systems.txt'"
+    echo "psx: " >> "${__emulation_path:?}/roms/systems.txt"
+    chown -R ${PUID:?}:${PGID:?} "${__emulation_path:?}/roms/systems.txt"
 fi
-sed -i 's|^psx:.*$|psx: Sony Playstation|' "${romsPath:?}/systems.txt"
+sed -i 's|^psx:.*$|psx: Sony Playstation|' "${__emulation_path:?}/roms/systems.txt"
 ensure_esde_alternative_emulator_configured "psx" "DuckStation (Standalone)"
 
 # Set correct ownership of created paths
 chown -R ${PUID:?}:${PGID:?} \
     "${USER_HOME:?}"/.local/share/duckstation \
-    "${savesPath:?}"/duckstation/states \
-    "${savesPath:?}"/duckstation/memcards \
-    "${biosPath:?}"/duckstation \
-    "${storagePath:?}"/duckstation/screenshots \
-    "${storagePath:?}"/duckstation/covers \
-    "${storagePath:?}"/duckstation/cache \
-    "${romsPath:?}"/psx \
     "${USER_HOME:?}"/.emulationstation
+    "${__emulation_path:?}"/roms/psx \
+    "${__emulation_path:?}"/duckstation 
 
 echo "DONE"
