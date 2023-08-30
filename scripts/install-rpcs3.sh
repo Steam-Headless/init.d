@@ -51,14 +51,11 @@ else
 fi
 
 # Generate rpcs3 Emulation directory structure
-romsPath="/mnt/games/Emulation/roms"
-savesPath="/mnt/games/Emulation/saves"
-storagePath="/mnt/games/Emulation/storage"
+__emulation_path="/mnt/games/Emulation"
 mkdir -p \
     "${USER_HOME:?}"/.config/rpcs3/dev_hdd0/home \
-    "${storagePath:?}"/rpcs3/home \
-    "${savesPath:?}"/rpcs3/savedata \
-    "${romsPath:?}"/ps3
+    "${__emulation_path:?}"/storage/rpcs3/{home,savedata} \
+    "${__emulation_path:?}"/ps3
 
 
 # Generate a default config if missing
@@ -69,8 +66,8 @@ EOF
 fi
 
 # Configure EmulationStation DE
-mkdir -p "${romsPath:?}/ps3"
-cat << 'EOF' > "${romsPath:?}/ps3/systeminfo.txt"
+mkdir -p "${__emulation_path:?}/roms/ps3"
+cat << 'EOF' > "${__emulation_path:?}/roms/ps3/systeminfo.txt"
 System name:
 ps3
 
@@ -91,19 +88,18 @@ ps3
 Theme folder:
 ps3
 EOF
-if ! grep -ri "ps3:" "${romsPath:?}/systems.txt" &>/dev/null; then
-    print_step_header "Adding 'ps3' path to '${romsPath:?}/systems.txt'"
-    echo "ps3: " >> "${romsPath:?}/systems.txt"
-    chown -R ${PUID:?}:${PGID:?} "${romsPath:?}/systems.txt"
+if ! grep -ri "ps3:" "${__emulation_path:?}/roms/systems.txt" &>/dev/null; then
+    print_step_header "Adding 'ps3' path to '${__emulation_path:?}/roms/systems.txt'"
+    echo "ps3: " >> "${__emulation_path:?}/roms/systems.txt"
+    chown -R ${PUID:?}:${PGID:?} "${__emulation_path:?}/roms/systems.txt"
 fi
-sed -i 's|^ps3:.*$|ps3: Sony Playstation 3|' "${romsPath:?}/systems.txt"
+sed -i 's|^ps3:.*$|ps3: Sony Playstation 3|' "${__emulation_path:?}/roms/systems.txt"
 ensure_esde_alternative_emulator_configured "ps3" "RPCS3 Directory (Standalone)"
 
 # Set correct ownership of created paths
 chown -R ${PUID:?}:${PGID:?} \
     "${USER_HOME:?}"/.config/rpcs3/dev_hdd0/home \
-    "${savesPath:?}"/rpcs3/savedata \
-    "${storagePath:?}"/rpcs3/home \
-    "${romsPath:?}"/ps3
+    "${__emulation_path:?}"/storage/rpcs3 \
+    "${__emulation_path:?}"/roms/ps3
 
 echo "DONE"
