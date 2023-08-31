@@ -65,15 +65,15 @@ fi
 # Generate duckstation Emulation directory structure
 __emulation_path="/mnt/games/Emulation"
 mkdir -p \
-    "${USER_HOME:?}"/.local/share/duckstation \
+    "${USER_HOME:?}"/.config/citra-emu \
     "${__emulation_path:?}"/roms/n3ds \
     "${__emulation_path:?}"/storage/citra/{nand,sdmc,states,keys,sysdata} 
 
 # Generate a default config if missing
-if [ ! -f "${USER_HOME:?}/.local/share/duckstation/settings.ini" ]; then
-    cat << EOF > "${USER_HOME:?}/.local/share/duckstation/settings.ini"
-EOF
-fi
+#if [ ! -f "${USER_HOME:?}/.config/citra-emu/qt-config.ini" ]; then
+#    cat << EOF > "${USER_HOME:?}/.config/citra-emu/qt-config.ini"
+#EOF
+#fi
 
 # Configure EmulationStation DE
 cat << 'EOF' > "${__emulation_path:?}/roms/n3ds/systeminfo.txt"
@@ -99,7 +99,7 @@ n3ds
 Theme folder:
 n3ds
 EOF
-if ! grep -ri "psx:" "${__emulation_path:?}/roms/systems.txt" &>/dev/null; then
+if ! grep -ri "n3ds:" "${__emulation_path:?}/roms/systems.txt" &>/dev/null; then
     print_step_header "Adding 'n3ds' path to '${__emulation_path:?}/roms/systems.txt'"
     echo "n3ds: " >> "${__emulation_path:?}/roms/systems.txt"
     chown -R ${PUID:?}:${PGID:?} "${__emulation_path:?}/roms/systems.txt"
@@ -109,7 +109,7 @@ ensure_esde_alternative_emulator_configured "n3ds" "Citra (Standalone)"
 
 # Set correct ownership of created paths
 chown -R ${PUID:?}:${PGID:?} \
-    "${USER_HOME:?}"/.local/share/duckstation \
+    "${USER_HOME:?}"/.config/citra-emu \
     "${__emulation_path:?}"/roms/n3ds \
     "${__emulation_path:?}"/storage/citra
 
