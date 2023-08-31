@@ -54,10 +54,12 @@ fi
 __emulation_path="/mnt/games/Emulation"
 mkdir -p \
     "${USER_HOME:?}"/.config/rpcs3/dev_hdd0/home \
-    "${__emulation_path:?}"/storage/rpcs3/{home,savedata} \
+    "${__emulation_path:?}"/storage/rpcs3/{home,savestates,patches} \
     "${__emulation_path:?}"/roms/ps3
 
-ensure_symlink "${__emulation_path:?}/storage/rpcs/home" "${USER_HOME:?}/.config/rpcs3/dev_hdd0/home"
+ensure_symlink "${__emulation_path:?}/storage/rpcs3/home" "${USER_HOME:?}/.config/rpcs3/dev_hdd0/home"
+ensure_symlink "${__emulation_path:?}/storage/rpcs3/savestates" "${USER_HOME:?}/.config/rpcs3/savestates"
+ensure_symlink "${__emulation_path:?}/storage/rpcs3/patches" "${USER_HOME:?}/.config/rpcs3/patches"
 
 
 # Generate a default config if missing
@@ -99,7 +101,7 @@ ensure_esde_alternative_emulator_configured "ps3" "RPCS3 Directory (Standalone)"
 
 # Set correct ownership of created paths
 chown -R ${PUID:?}:${PGID:?} \
-    "${USER_HOME:?}"/.config/rpcs3/dev_hdd0/home \
+    "${USER_HOME:?}"/.config/rpcs3 \
     "${__emulation_path:?}"/storage/rpcs3 \
     "${__emulation_path:?}"/roms/ps3
 
