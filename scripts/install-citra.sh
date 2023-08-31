@@ -70,10 +70,19 @@ mkdir -p \
     "${__emulation_path:?}"/storage/citra/{nand,sdmc,states,keys,sysdata} 
 
 # Generate a default config if missing
-#if [ ! -f "${USER_HOME:?}/.config/citra-emu/qt-config.ini" ]; then
-#    cat << EOF > "${USER_HOME:?}/.config/citra-emu/qt-config.ini"
-#EOF
-#fi
+if [ ! -f "${USER_HOME:?}/.config/citra-emu/qt-config.ini" ]; then
+    cat << EOF > "${USER_HOME:?}/.config/citra-emu/qt-config.ini"
+[Data%20Storage]
+nand_directory=${__emulation_path:?}/storage/citra/nand/
+nand_directory\default=false
+sdmc_directory=${__emulation_path:?}/storage/citra/sdmc/
+sdmc_directory\default=false
+use_custom_storage=false
+use_custom_storage\default=true
+use_virtual_sd=true
+use_virtual_sd\default=true
+EOF
+fi
 
 # Configure EmulationStation DE
 cat << 'EOF' > "${__emulation_path:?}/roms/n3ds/systeminfo.txt"
