@@ -57,13 +57,15 @@ mkdir -p \
     "${__emulation_path:?}"/storage/rpcs3/{home,savedata} \
     "${__emulation_path:?}"/roms/ps3
 
+ensure_symlink "${__emulation_path:?}/storage/rpcs/home" "${USER_HOME:?}/.config/rpcs3/dev_hdd0/home"
+
 
 # Generate a default config if missing
-if [ ! -f "${USER_HOME:?}/.config/rpcs3/config.yml" ]; then
-    cat << EOF > "${USER_HOME:?}/.config/rpcs3/config.yml"
-
-EOF
-fi
+#if [ ! -f "${USER_HOME:?}/.config/rpcs3/config.yml" ]; then
+#    cat << EOF > "${USER_HOME:?}/.config/rpcs3/config.yml"
+#
+#EOF
+#fi
 
 # Configure EmulationStation DE
 cat << 'EOF' > "${__emulation_path:?}/roms/ps3/systeminfo.txt"
