@@ -68,6 +68,16 @@ mkdir -p \
     "${__emulation_path:?}"/storage/pcsx2/{memcards,sstates,snaps,cheats,cache,covers,bios,patches,textures} \
     "${__emulation_path:?}"/roms/ps2
 
+ensure_symlink "${__emulation_path:?}/storage/pcsx2/memcards" "${USER_HOME:?}/.config/PCSX2/memcards"
+ensure_symlink "${__emulation_path:?}/storage/pcsx2/sstates" "${USER_HOME:?}/.config/PCSX2/sstates"
+ensure_symlink "${__emulation_path:?}/storage/pcsx2/snaps" "${USER_HOME:?}/.config/PCSX2/snaps"
+ensure_symlink "${__emulation_path:?}/storage/pcsx2/cheats" "${USER_HOME:?}/.config/PCSX2/cheats"
+ensure_symlink "${__emulation_path:?}/storage/pcsx2/cache" "${USER_HOME:?}/.config/PCSX2/cache"
+ensure_symlink "${__emulation_path:?}/storage/pcsx2/covers" "${USER_HOME:?}/.config/PCSX2/covers"
+ensure_symlink "${__emulation_path:?}/storage/pcsx2/bios" "${USER_HOME:?}/.config/PCSX2/bios"
+ensure_symlink "${__emulation_path:?}/storage/pcsx2/patches" "${USER_HOME:?}/.config/PCSX2/patches"
+ensure_symlink "${__emulation_path:?}/storage/pcsx2/textures" "${USER_HOME:?}/.config/PCSX2/textures"
+
 # Generate a default config if missing
 # Currently need to run PCSX2 once to import the config, can't figure out how to bypass it
 if [ ! -f "${USER_HOME:?}/.config/PCSX2/inis/PCSX2.ini" ]; then
