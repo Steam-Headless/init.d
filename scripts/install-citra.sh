@@ -66,8 +66,14 @@ fi
 __emulation_path="/mnt/games/Emulation"
 mkdir -p \
     "${USER_HOME:?}"/.config/citra-emu \
+    "${USER_HOME:?}"/.local/share/citra-emu \
     "${__emulation_path:?}"/roms/n3ds \
-    "${__emulation_path:?}"/storage/citra/{nand,sdmc,states,keys,sysdata} 
+    "${__emulation_path:?}"/storage/citra/{nand,sdmc,screenshots,sysdata} 
+
+ensure_symlink "${__emulation_path:?}/storage/citra/nand" "${USER_HOME:?}/.local/share/citra-emu/nand"
+ensure_symlink "${__emulation_path:?}/storage/citra/sdmc" "${USER_HOME:?}/.local/share/citra-emu/sdmc"
+ensure_symlink "${__emulation_path:?}/storage/citra/screenshots" "${USER_HOME:?}/.local/share/citra-emu/screenshots"
+ensure_symlink "${__emulation_path:?}/storage/citra/sysdata" "${USER_HOME:?}/.local/share/citra-emu/sysdata"
 
 # Generate a default config if missing
 if [ ! -f "${USER_HOME:?}/.config/citra-emu/qt-config.ini" ]; then
@@ -77,7 +83,7 @@ nand_directory=${__emulation_path:?}/storage/citra/nand/
 nand_directory\default=false
 sdmc_directory=${__emulation_path:?}/storage/citra/sdmc/
 sdmc_directory\default=false
-use_custom_storage=false
+use_custom_storage=true
 use_custom_storage\default=true
 use_virtual_sd=true
 use_virtual_sd\default=true
@@ -119,6 +125,7 @@ ensure_esde_alternative_emulator_configured "n3ds" "Citra (Standalone)"
 # Set correct ownership of created paths
 chown -R ${PUID:?}:${PGID:?} \
     "${USER_HOME:?}"/.config/citra-emu \
+    "${USER_HOME:?}"/.local/share/citra-emu \
     "${__emulation_path:?}"/roms/n3ds \
     "${__emulation_path:?}"/storage/citra
 
