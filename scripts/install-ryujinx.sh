@@ -206,45 +206,61 @@ if [ ! -f "${USER_HOME:?}/.config/Ryujinx/Config.json" ]; then
   "input_config": [
     {
       "left_joycon_stick": {
-        "stick_up": "W",
-        "stick_down": "S",
-        "stick_left": "A",
-        "stick_right": "D",
-        "stick_button": "F"
+        "joystick": "Left",
+        "invert_stick_x": false,
+        "invert_stick_y": false,
+        "rotate90_cw": false,
+        "stick_button": "LeftStick"
       },
       "right_joycon_stick": {
-        "stick_up": "I",
-        "stick_down": "K",
-        "stick_left": "J",
-        "stick_right": "L",
-        "stick_button": "H"
+        "joystick": "Right",
+        "invert_stick_x": false,
+        "invert_stick_y": false,
+        "rotate90_cw": false,
+        "stick_button": "RightStick"
+      },
+      "deadzone_left": 0.1,
+      "deadzone_right": 0.1,
+      "range_left": 1,
+      "range_right": 1,
+      "trigger_threshold": 0.5,
+      "motion": {
+        "motion_backend": "GamepadDriver",
+        "sensitivity": 100,
+        "gyro_deadzone": 1,
+        "enable_motion": true
+      },
+      "rumble": {
+        "strong_rumble": 1,
+        "weak_rumble": 1,
+        "enable_rumble": false
       },
       "left_joycon": {
         "button_minus": "Minus",
-        "button_l": "E",
-        "button_zl": "Q",
+        "button_l": "LeftShoulder",
+        "button_zl": "LeftTrigger",
         "button_sl": "Unbound",
         "button_sr": "Unbound",
-        "dpad_up": "Up",
-        "dpad_down": "Down",
-        "dpad_left": "Left",
-        "dpad_right": "Right"
+        "dpad_up": "DpadUp",
+        "dpad_down": "DpadDown",
+        "dpad_left": "DpadLeft",
+        "dpad_right": "DpadRight"
       },
       "right_joycon": {
         "button_plus": "Plus",
-        "button_r": "U",
-        "button_zr": "O",
+        "button_r": "RightShoulder",
+        "button_zr": "RightTrigger",
         "button_sl": "Unbound",
         "button_sr": "Unbound",
-        "button_x": "C",
-        "button_b": "X",
-        "button_y": "V",
-        "button_a": "Z"
+        "button_x": "X",
+        "button_b": "B",
+        "button_y": "Y",
+        "button_a": "A"
       },
       "version": 1,
-      "backend": "WindowKeyboard",
-      "id": "0",
-      "controller_type": "JoyconPair",
+      "backend": "GamepadSDL2",
+      "id": "0-f0030003-045e-0000-8e02-000010010000",
+      "controller_type": "ProController",
       "player_index": "Player1"
     }
   ],
