@@ -5,7 +5,7 @@
 # File Created: Friday, 25th August 2023 2:27:28 pm
 # Author: Josh.5 (jsunnex@gmail.com)
 # -----
-# Last Modified: Wednesday, 30th August 2023 12:37:16 am
+# Last Modified: Friday, 1st September 2023 1:33:59 pm
 # Modified By: Josh.5 (jsunnex@gmail.com)
 ###
 #
@@ -15,7 +15,7 @@
 #
 # Guide:
 #   Add this script to your startup scripts by running:
-#       $ ln -sf "${USER_HOME:?}/init.d/scripts/00-auto-update-init-scripts.sh" "${USER_HOME:?}/init.d/00-auto-update-init-scripts.sh"
+#       $ ln -sf "./scripts/00-auto-update-init-scripts.sh" "${USER_HOME:?}/init.d/00-auto-update-init-scripts.sh"
 #
 ###
 

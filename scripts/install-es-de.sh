@@ -5,7 +5,7 @@
 # File Created: Wednesday, 23rd August 2023 7:16:02 pm
 # Author: Josh.5 (jsunnex@gmail.com)
 # -----
-# Last Modified: Tuesday, 29th August 2023 5:48:57 pm
+# Last Modified: Friday, 1st September 2023 1:34:01 pm
 # Modified By: Josh.5 (jsunnex@gmail.com)
 ###
 #
@@ -16,7 +16,7 @@
 #
 # Guide:
 #   Add this script to your startup scripts by running:
-#       $ ln -sf "${USER_HOME:?}/init.d/scripts/install-es-de.sh" "${USER_HOME:?}/init.d/install-es-de.sh"
+#       $ ln -sf "./scripts/install-es-de.sh" "${USER_HOME:?}/init.d/install-es-de.sh"
 #
 ###
 
