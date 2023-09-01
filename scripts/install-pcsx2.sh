@@ -114,7 +114,7 @@ Covers = ${__emulation_path:?}/storage/pcsx2/covers
 
 
 [Hotkeys]
-ToggleFullscreen = Keyboard/Alt & Keyboard/Return
+ToggleFullscreen = SDL-0/Start & SDL-0/DPadLeft
 CycleAspectRatio = Keyboard/F6
 CycleInterlaceMode = Keyboard/F5
 CycleMipmapMode = Keyboard/Insert
@@ -129,12 +129,15 @@ LoadStateFromSlot = Keyboard/F3
 SaveStateToSlot = Keyboard/F1
 NextSaveStateSlot = Keyboard/F2
 PreviousSaveStateSlot = Keyboard/Shift & Keyboard/F2
-OpenPauseMenu = Keyboard/Escape
+OpenPauseMenu = SDL-0/Back & SDL-0/Y
 ToggleFrameLimit = Keyboard/F4
-TogglePause = Keyboard/Space
+TogglePause = SDL-0/Back & SDL-0/A
 ToggleSlowMotion = Keyboard/Shift & Keyboard/Backtab
 ToggleTurbo = Keyboard/Tab
 HoldTurbo = Keyboard/Period
+SaveStateToSlot1 = SDL-0/Start & SDL-0/DPadUp
+LoadStateFromSlot1 = SDL-0/Start & SDL-0/DPadDown
+ShutdownVM = SDL-0/Back & SDL-0/X
 
 
 [AutoUpdater]
@@ -143,6 +146,36 @@ CheckAtStartup = false
 
 [GameList]
 RecursivePaths = ${__emulation_path:?}/roms/ps2
+
+
+[Pad1]
+Up = SDL-0/DPadUp
+Right = SDL-0/DPadRight
+Down = SDL-0/DPadDown
+Left = SDL-0/DPadLeft
+Triangle = SDL-0/Y
+Circle = SDL-0/B
+Cross = SDL-0/A
+Square = SDL-0/X
+Select = SDL-0/Back
+Start = SDL-0/Start
+L1 = SDL-0/LeftShoulder
+L2 = SDL-0/+LeftTrigger
+R1 = SDL-0/RightShoulder
+R2 = SDL-0/+RightTrigger
+L3 = SDL-0/LeftStick
+R3 = SDL-0/RightStick
+Analog = SDL-0/Guide
+LUp = SDL-0/-LeftY
+LRight = SDL-0/+LeftX
+LDown = SDL-0/+LeftY
+LLeft = SDL-0/-LeftX
+RUp = SDL-0/-RightY
+RRight = SDL-0/+RightX
+RDown = SDL-0/+RightY
+RLeft = SDL-0/-RightX
+LargeMotor = SDL-0/LargeMotor
+SmallMotor = SDL-0/SmallMotor
 EOF
 fi
 
