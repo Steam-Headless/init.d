@@ -5,7 +5,7 @@
 # File Created: Wednesday, 23rd August 2023 7:16:02 pm
 # Author: Josh.5 (jsunnex@gmail.com)
 # -----
-# Last Modified: Wednesday, 30th August 2023 12:35:06 am
+# Last Modified: Friday, 1st September 2023 1:34:03 pm
 # Modified By: Josh.5 (jsunnex@gmail.com)
 ###
 #
@@ -15,7 +15,7 @@
 #
 # Guide:
 #   Add this script to your startup scripts by running:
-#       $ ln -sf "${USER_HOME:?}/init.d/scripts/install-yuzu.sh" "${USER_HOME:?}/init.d/install-yuzu.sh"
+#       $ ln -sf "./scripts/install-yuzu.sh" "${USER_HOME:?}/init.d/install-yuzu.sh"
 #
 ###
 

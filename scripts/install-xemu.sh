@@ -5,7 +5,7 @@
 # File Created: Sunday, 27th August 2023 3:53:57 pm
 # Author: Josh.5 (jsunnex@gmail.com)
 # -----
-# Last Modified: Monday, 28th August 2023 12:39:48 pm
+# Last Modified: Friday, 1st September 2023 1:34:02 pm
 # Modified By: Josh.5 (jsunnex@gmail.com)
 ###
 #
@@ -15,7 +15,7 @@
 #
 # Guide:
 #   Add this script to your startup scripts by running:
-#       $ ln -sf "${USER_HOME:?}/init.d/scripts/install-xemu.sh" "${USER_HOME:?}/init.d/install-xemu.sh"
+#       $ ln -sf "./scripts/install-xemu.sh" "${USER_HOME:?}/init.d/install-xemu.sh"
 #
 ###
 
