@@ -5,7 +5,7 @@
 # File Created: Friday, 1st September 2023 3:57:42 pm
 # Author: Josh.5 (jsunnex@gmail.com)
 # -----
-# Last Modified: Friday, 1st September 2023 5:49:52 pm
+# Last Modified: Friday, 1st September 2023 6:07:08 pm
 # Modified By: Josh.5 (jsunnex@gmail.com)
 ###
 #
@@ -23,7 +23,7 @@
 # Config
 package_name="Ryujinx"
 package_description="Nintendo Switch Emulator"
-package_icon_url="https://i.imgur.com/WcCj6Rt.png"
+package_icon_url="https://upload.wikimedia.org/wikipedia/commons/0/07/Ryujinx_Logo.png"
 package_executable="${USER_HOME:?}/.local/bin/${package_name,,}"
 package_category="Game"
 package_icon="${USER_HOME:?}/.cache/init.d/package_icons/${package_name:?}-icon.png"
@@ -65,7 +65,7 @@ if [ ! -f "${package_executable:?}" ] || [ ! -f "${USER_HOME:?}/.cache/init.d/in
     popd &> /dev/null || { echo "Error: Failed to pop directory out of ${__install_dir:?}"; exit 1; }
 
     # Ensure this package has a start menu link (will create it if missing)
-    print_step_header "Ensuring menu short is present for ${package_name:?}"
+    print_step_header "Ensuring menu shortcut is present for ${package_name:?}"
     rm -f "${USER_HOME:?}/.local/share/applications/${package_name:?}.desktop"
     ensure_menu_shortcut
 
