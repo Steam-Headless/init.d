@@ -5,7 +5,7 @@
 # File Created: Friday, 1st September 2023 3:57:42 pm
 # Author: Josh.5 (jsunnex@gmail.com)
 # -----
-# Last Modified: Friday, 1st September 2023 6:07:08 pm
+# Last Modified: Friday, 1st September 2023 6:23:30 pm
 # Modified By: Josh.5 (jsunnex@gmail.com)
 ###
 #
@@ -264,7 +264,7 @@ if [ ! -f "${USER_HOME:?}/.config/Ryujinx/Config.json" ]; then
       "player_index": "Player1"
     }
   ],
-  "graphics_backend": "Vulkan",
+  "graphics_backend": "OpenGl",
   "preferred_gpu": "",
   "multiplayer_lan_interface_id": "0",
   "use_hypervisor": true
