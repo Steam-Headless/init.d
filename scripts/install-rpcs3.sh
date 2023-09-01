@@ -54,6 +54,7 @@ fi
 __emulation_path="/mnt/games/Emulation"
 mkdir -p \
     "${USER_HOME:?}"/.config/rpcs3/dev_hdd0/home \
+    "${USER_HOME:?}"/.config/rpcs3/input_configs/global \
     "${__emulation_path:?}"/storage/rpcs3/{home,savestates,patches} \
     "${__emulation_path:?}"/roms/ps3
 
@@ -62,12 +63,91 @@ ensure_symlink "${__emulation_path:?}/storage/rpcs3/savestates" "${USER_HOME:?}/
 ensure_symlink "${__emulation_path:?}/storage/rpcs3/patches" "${USER_HOME:?}/.config/rpcs3/patches"
 
 
-# Generate a default config if missing
-#if [ ! -f "${USER_HOME:?}/.config/rpcs3/config.yml" ]; then
-#    cat << EOF > "${USER_HOME:?}/.config/rpcs3/config.yml"
-#
-#EOF
-#fi
+ Generate a default config if missing
+if [ ! -f "${USER_HOME:?}/.config/rpcs3/input_configs/global/Default.yml" ]; then
+    cat << EOF > "${USER_HOME:?}/.config/rpcs3/input_configs/global/Default.yml"
+Player 1 Input:
+  Handler: SDL
+  Device: X360 Controller 1
+  Config:
+    Left Stick Left: LS X-
+    Left Stick Down: LS Y-
+    Left Stick Right: LS X+
+    Left Stick Up: LS Y+
+    Right Stick Left: RS X-
+    Right Stick Down: RS Y-
+    Right Stick Right: RS X+
+    Right Stick Up: RS Y+
+    Start: Start
+    Select: Back
+    PS Button: Guide
+    Square: X
+    Cross: A
+    Circle: B
+    Triangle: Y
+    Left: Left
+    Down: Down
+    Right: Right
+    Up: Up
+    R1: RB
+    R2: RT
+    R3: RS
+    L1: LB
+    L2: LT
+    L3: LS
+    Motion Sensor X:
+      Axis: ""
+      Mirrored: false
+      Shift: 0
+    Motion Sensor Y:
+      Axis: ""
+      Mirrored: false
+      Shift: 0
+    Motion Sensor Z:
+      Axis: ""
+      Mirrored: false
+      Shift: 0
+    Motion Sensor G:
+      Axis: ""
+      Mirrored: false
+      Shift: 0
+    Pressure Intensity Button: ""
+    Pressure Intensity Percent: 50
+    Pressure Intensity Toggle Mode: false
+    Pressure Intensity Deadzone: 0
+    Left Stick Multiplier: 100
+    Right Stick Multiplier: 100
+    Left Stick Deadzone: 8000
+    Right Stick Deadzone: 8000
+    Left Trigger Threshold: 0
+    Right Trigger Threshold: 0
+    Left Pad Squircling Factor: 8000
+    Right Pad Squircling Factor: 8000
+    Color Value R: 0
+    Color Value G: 0
+    Color Value B: 20
+    Blink LED when battery is below 20%: true
+    Use LED as a battery indicator: false
+    LED battery indicator brightness: 10
+    Player LED enabled: true
+    Enable Large Vibration Motor: true
+    Enable Small Vibration Motor: true
+    Switch Vibration Motors: false
+    Mouse Movement Mode: Relative
+    Mouse Deadzone X Axis: 60
+    Mouse Deadzone Y Axis: 60
+    Mouse Acceleration X Axis: 200
+    Mouse Acceleration Y Axis: 250
+    Left Stick Lerp Factor: 100
+    Right Stick Lerp Factor: 100
+    Analog Button Lerp Factor: 100
+    Trigger Lerp Factor: 100
+    Device Class Type: 0
+    Vendor ID: 1356
+    Product ID: 616
+  Buddy Device: ""
+EOF
+fi
 
 # Configure EmulationStation DE
 cat << 'EOF' > "${__emulation_path:?}/roms/ps3/systeminfo.txt"
