@@ -5,8 +5,18 @@
 # File Created: Saturday, 2nd September 2023 11:08:22 am
 # Author: Josh.5 (jsunnex@gmail.com)
 # -----
-# Last Modified: Sunday, 3rd September 2023 10:00:57 am
+# Last Modified: Sunday, 3rd September 2023 11:10:57 am
 # Modified By: Josh.5 (jsunnex@gmail.com)
+###
+#
+# About:
+#   Install Cemu during container startup.
+#   This will also configure Cemu with some default options for Steam Headless.
+#
+# Guide:
+#   Add this script to your startup scripts by running:
+#       $ ln -sf "./scripts/install-cemu.sh" "${USER_HOME:?}/init.d/install-cemu.sh"
+#
 ###
 
 
@@ -71,7 +81,7 @@ if [ ! -f "${__emulation_path:?}/storage/cemu/keys/keys.txt" ]; then
 EOF
 fi
 
-# Create absolute symlinks from the ~/.config/Ryujinx/ directories to our storage path
+# Create absolute symlinks from the ~/.local/share/Cemu/ directories to our storage path
 ensure_symlink "${__emulation_path:?}/storage/cemu/mlc01" "${USER_HOME:?}/.local/share/Cemu/mlc01"
 
 # Install default Cemu config

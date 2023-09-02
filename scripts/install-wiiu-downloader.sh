@@ -5,8 +5,17 @@
 # File Created: Sunday, 3rd September 2023 10:21:43 am
 # Author: Josh.5 (jsunnex@gmail.com)
 # -----
-# Last Modified: Sunday, 3rd September 2023 10:35:27 am
+# Last Modified: Sunday, 3rd September 2023 11:14:48 am
 # Modified By: Josh.5 (jsunnex@gmail.com)
+###
+#
+# About:
+#   Install WiiUDownloader during container startup.
+#
+# Guide:
+#   Add this script to your startup scripts by running:
+#       $ ln -sf "./scripts/install-wiiu-downloader.sh" "${USER_HOME:?}/init.d/install-wiiu-downloader.sh"
+#
 ###
 
 
