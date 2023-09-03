@@ -49,12 +49,13 @@ if [ ! -f "${package_executable:?}" ] || [ ! -f "${USER_HOME:?}/.cache/init.d/in
     # Download Appimage to Applications directory
     print_step_header "Downloading ${package_name:?} version ${__latest_package_version:?}"
 	
-	cd /tmp && wget \
+	wget \
         --quiet --no-verbose --show-progress \
         --progress=bar:force:noscroll \
-        "${@:?}" -O - | tar -xz
+        "${__latest_package_url:?}" -P /tmp
+	tar xz /tmp/citra*
 	mv /tmp/citra-linux*/citra-qt.AppImage ${package_executable:?}
-	rm -rf /tmp/citra-linux*
+	rm -rf /tmp/citra*
 	
     chmod +x "${package_executable:?}"
     chown -R ${PUID:?}:${PGID:?} "${package_executable:?}"
