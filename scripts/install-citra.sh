@@ -39,8 +39,8 @@ print_package_name
 # Check for a new version to install
 __registry_package_json=$(wget -O - -o /dev/null https://api.github.com/repos/citra-emu/citra-canary/releases/latest)
 __latest_package_version=$(echo ${__registry_package_json:?} | jq -r '.tag_name')
-__latest_package_id=$(echo ${__registry_package_json:?} | jq -r '.assets[] | select(.name | test("\\.appimage$"; "i"))' | jq -r '.id')
-__latest_package_url=$(echo ${__registry_package_json:?} | jq -r '.assets[] | select(.name | test("\\.appimage$"; "i"))' | jq -r '.browser_download_url')
+__latest_package_id=$(echo ${__registry_package_json:?} | jq -r '.assets[] | select(.name | contains("appimage"))' | jq -r '.id' | head -n 1)
+__latest_package_url=$(echo ${__registry_package_json:?} | jq -r '.assets[] | select(.name | contains("appimage"))' | jq -r '.browser_download_url' | head -n 1)
 print_step_header "Latest ${package_name:?} version: ${__latest_package_version:?}"
 
 
