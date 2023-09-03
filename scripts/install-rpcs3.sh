@@ -64,6 +64,21 @@ ensure_symlink "${__emulation_path:?}/storage/rpcs3/patches" "${USER_HOME:?}/.co
 
 
  Generate a default config if missing
+if [ ! -f "${USER_HOME:?}/.config/rpcs3/config.yml" ]; then
+    cat << EOF > "${USER_HOME:?}/.config/rpcs3/config.yml"
+Video:
+  Stretch To Display Area: true
+  Multithreaded RSX: true
+  Resolution Scale: 150
+Miscellaneous:
+  Exit RPCS3 when process finishes: true
+  Pause emulation on RPCS3 focus loss: true
+  Start games in fullscreen mode: true
+  Prevent display sleep while running games: true
+EOF
+fi
+
+ Generate a default config if missing
 if [ ! -f "${USER_HOME:?}/.config/rpcs3/input_configs/global/Default.yml" ]; then
     cat << EOF > "${USER_HOME:?}/.config/rpcs3/input_configs/global/Default.yml"
 Player 1 Input:
