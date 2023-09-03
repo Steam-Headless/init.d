@@ -52,8 +52,8 @@ if [ ! -f "${package_executable:?}" ] || [ ! -f "${USER_HOME:?}/.cache/init.d/in
 	wget \
         --quiet --no-verbose --show-progress \
         --progress=bar:force:noscroll \
-        "${@:?}" | tar -xz
-	mv citra-linux*/citra-qt.Appimage ${package_executable:?}
+        "${@:?}" -O - | tar -xz
+	mv citra-linux*/citra-qt.AppImage ${package_executable:?}
 	rm -rf citra-linux*
 	
     chmod +x "${package_executable:?}"
