@@ -49,6 +49,7 @@ if [ ! -f "${package_executable:?}" ] || [ ! -f "${USER_HOME:?}/.cache/init.d/in
     # Download Appimage to Applications directory
     print_step_header "Downloading ${package_name:?} version ${__latest_package_version:?}"
     fetch_appimage_and_make_executable "${__latest_package_url:?}"
+	
 
     # Ensure this package has a start menu link (will create it if missing)
     print_step_header "Ensuring menu short is present for ${package_name:?}"
@@ -87,6 +88,27 @@ use_custom_storage=true
 use_custom_storage\default=true
 use_virtual_sd=true
 use_virtual_sd\default=true
+
+[Renderer]
+resolution_factor=3
+resolution_factor\default=false
+
+[UI]
+Paths\romsPath=${__emulation_path:?}/roms/nd3s
+Paths\screenshotPath=${__emulation_path:?}/storage/citra/screenshots
+Paths\screenshotPath\default=false
+Updater\check_for_update_on_start=false
+Updater\check_for_update_on_start\default=false
+confirmClose=false
+confirmClose\default=false
+enable_discord_presence=false
+enable_discord_presence\default=false
+fullscreen=true
+fullscreen\default=false
+hideInactiveMouse=true
+hideInactiveMouse\default=false
+pauseWhenInBackground=true
+pauseWhenInBackground\default=false
 EOF
 fi
 
