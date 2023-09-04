@@ -46,19 +46,30 @@ print_step_header "Latest ${package_name:?} version: ${__latest_package_version:
 
 # Only install if the latest version does not already exist locally
 if [ ! -f "${package_executable:?}" ] || [ ! -f "${USER_HOME:?}/.cache/init.d/installed_packages/.${package_name:?}-${__latest_package_version:?}" ]; then
-    # Download Appimage to Applications directory
+	__install_dir="${USER_HOME:?}/.local/share/${package_name,,}"
+	# Download Appimage to Applications directory
     print_step_header "Downloading ${package_name:?} version ${__latest_package_version:?}"
-	
-	wget \
-        --quiet --no-verbose --show-progress \
-        --progress=bar:force:noscroll \
-        "${__latest_package_url:?}" -P /tmp
-	tar xz /tmp/citra*
-	mv /tmp/citra-linux*/citra-qt.AppImage ${package_executable:?}
-	rm -rf /tmp/citra*
-	
-    chmod +x "${package_executable:?}"
-    chown -R ${PUID:?}:${PGID:?} "${package_executable:?}"
+	mkdir -p "${__install_dir:?}"
+	wget -O "${__install_dir:?}/${package_name,,}-${__latest_package_version:?}-linux_x64.tar.gz" \
+		--quiet -o /dev/null \
+		--no-verbose --show-progress \
+		--progress=bar:force:noscroll \
+		"${__latest_package_url:?}"
+	# Install package
+	print_step_header "Installing ${package_name:?} version ${__latest_package_version:?}"
+	pushd "${__install_dir:?}" &> /dev/null || { echo "Error: Failed to push directory to ${__install_dir:?}"; exit 1; }
+	tar --strip-components=1 -xf "${__install_dir:?}/${package_name,,}-${__latest_package_version:?}-linux_x64.tar.gz"
+	mkdir -p "${USER_HOME:?}/.local/bin"
+	ln -snf "${__install_dir:?}/citra.AppImage" "${USER_HOME:?}/.local/bin/citra.AppImage"
+	chmod +x "${__install_dir:?}/citra.AppImage"
+	ln -snf "${__install_dir:?}/citra-qt.AppImage" "${USER_HOME:?}/.local/bin/citra-qt.AppImage"
+	chmod +x "${__install_dir:?}/citra-qt.AppImage"
+	ln -snf "${__install_dir:?}/citra-room.AppImage" "${USER_HOME:?}/.local/bin/citra-room.AppImage"
+	chmod +x "${__install_dir:?}/citra-room.AppImage"
+	chown ${PUID:?}:${PGID:?} "${USER_HOME:?}"/.local/bin/citra*
+	chown -R ${PUID:?}:${PGID:?} "${__install_dir:?}"
+	popd &> /dev/null || { echo "Error: Failed to pop directory out of ${__install_dir:?}"; exit 1; }
+    
 	
 
     # Ensure this package has a start menu link (will create it if missing)
