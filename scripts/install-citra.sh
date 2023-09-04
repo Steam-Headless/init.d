@@ -45,7 +45,7 @@ print_step_header "Latest ${package_name:?} version: ${__latest_package_version:
 
 
 # Only install if the latest version does not already exist locally
-if [ ! -f "${package_executable:?}" ] || [ ! -f "${USER_HOME:?}/.cache/init.d/installed_packages/.${package_name:?}-${__latest_package_version:?}" ]; then
+if [ ! -f "${__install_dir:?}/${package_name,,}-${__latest_package_version:?}-linux_x64.tar.gz" ] || [ ! -f "${USER_HOME:?}/.cache/init.d/installed_packages/.${package_name:?}-${__latest_package_version:?}" ]; then
 	__install_dir="${USER_HOME:?}/.local/share/${package_name,,}"
 	# Download Appimage to Applications directory
     print_step_header "Downloading ${package_name:?} version ${__latest_package_version:?}"
