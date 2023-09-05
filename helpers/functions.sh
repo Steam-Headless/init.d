@@ -5,7 +5,7 @@
 # File Created: Friday, 25th August 2023 4:26:49 pm
 # Author: Josh.5 (jsunnex@gmail.com)
 # -----
-# Last Modified: Monday, 4th September 2023 5:36:03 pm
+# Last Modified: Wednesday, 6th September 2023 1:16:09 am
 # Modified By: Josh.5 (jsunnex@gmail.com)
 ###
 
@@ -39,25 +39,26 @@ function install_xdg_icon {
     local __input_icon_path="${@:2}"
     # Array of icon sizes
     local __sizes=("256x256" "48x48" "32x32" "24x24" "16x16")
-    # Temporary directory to store the scaled icons
-    local __temp_dir="$(mktemp -d)"
     # Check if convert (ImageMagick) is available
     if command -v convert &>/dev/null; then
+        # Temporary directory to store the scaled icons
+        local __convert_temp_dir="$(mktemp -d)"
         # Loop over sizes and create scaled icons
         for size in "${__sizes[@]}"; do
-            mkdir -p "${__temp_dir:?}/${size:?}"
+            mkdir -p "${__convert_temp_dir:?}/${size:?}"
+            chown -R ${PUID:?}:${PGID:?} "${__convert_temp_dir:?}"
             # Scale the icon to the desired size using ImageMagick's convert command
-            convert "${__input_icon_path:?}" -resize "${size:?}" "${__temp_dir:?}/${size:?}/${__input_icon_name:?}.png"
+            convert "${__input_icon_path:?}" -resize "${size:?}" "${__convert_temp_dir:?}/${size:?}/${__input_icon_name:?}.png"
             # Install the scaled icon using xdg-icon-resource
-            xdg-icon-resource install --novendor --size "${size%%x*}" "${__temp_dir:?}/${size:?}/${__input_icon_name:?}.png"
+            su - default -c "xdg-icon-resource install --novendor --mode user --size ${size%%x*} ${__convert_temp_dir:?}/${size:?}/${__input_icon_name:?}.png"
         done
+        # Remove temp dir
+        rm -rf "${__temp_dir:?}"
     else
         # If convert is not available, install a 256x256 version of the icon
-        xdg-icon-resource install --novendor --size "256" "${__input_icon_path:?}"
+        su - default -c "xdg-icon-resource install --novendor --mode user --size 256 ${__input_icon_path:?}"
     fi
     chown -R ${PUID:?}:${PGID:?} "${USER_HOME:?}/.local/share/icons"
-    # Remove temp dir
-    rm -rf "${__temp_dir:?}"
 }
 
 function ensure_icon_exists {
@@ -77,6 +78,7 @@ function ensure_icon_exists {
             --progress=bar:force:noscroll \
             "${__input_icon_url:?}"
         # Install the icon
+        chown -R ${PUID:?}:${PGID:?} "${__temp_dir:?}"
         install_xdg_icon "${__input_icon_name:?}" "${__temp_dir:?}/${__input_icon_name:?}.png"
         # Remove temp dir
         rm -rf "${__temp_dir:?}"
