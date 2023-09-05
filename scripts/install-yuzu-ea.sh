@@ -5,7 +5,7 @@
 # File Created: Wednesday, 23rd August 2023 7:16:02 pm
 # Author: Josh.5 (jsunnex@gmail.com)
 # -----
-# Last Modified: Friday, 1st September 2023 1:34:03 pm
+# Last Modified: Monday, 4th September 2023 5:37:19 pm
 # Modified By: Josh.5 (jsunnex@gmail.com)
 ###
 #
@@ -26,7 +26,6 @@ package_description="Nintendo Switch Emulator"
 package_icon_url="https://raw.githubusercontent.com/yuzu-emu/yuzu-assets/master/icons/icon.png"
 package_executable="${USER_HOME:?}/Applications/${package_name,,}.AppImage"
 package_category="Game"
-package_icon="${USER_HOME:?}/.cache/init.d/package_icons/${package_name:?}-icon.png"
 
 
 source "${USER_HOME:?}/init.d/helpers/setup-directories.sh"

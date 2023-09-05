@@ -5,7 +5,7 @@
 # File Created: Friday, 25th August 2023 4:26:49 pm
 # Author: Josh.5 (jsunnex@gmail.com)
 # -----
-# Last Modified: Wednesday, 30th August 2023 12:25:44 am
+# Last Modified: Monday, 4th September 2023 5:36:03 pm
 # Modified By: Josh.5 (jsunnex@gmail.com)
 ###
 
@@ -31,14 +31,55 @@ function fetch_appimage_and_make_executable {
     chown -R ${PUID:?}:${PGID:?} "${package_executable:?}"
 }
 
+function install_xdg_icon {
+    mkdir -p "${USER_HOME:?}"/.local/share/icons/hicolor/{256x256,48x48,32x32,24x24,16x16}/apps
+    # Input icon name
+    local __input_icon_name="${1}"
+    # Input icon path
+    local __input_icon_path="${@:2}"
+    # Array of icon sizes
+    local __sizes=("256x256" "48x48" "32x32" "24x24" "16x16")
+    # Temporary directory to store the scaled icons
+    local __temp_dir="$(mktemp -d)"
+    # Check if convert (ImageMagick) is available
+    if command -v convert &>/dev/null; then
+        # Loop over sizes and create scaled icons
+        for size in "${__sizes[@]}"; do
+            mkdir -p "${__temp_dir:?}/${size:?}"
+            # Scale the icon to the desired size using ImageMagick's convert command
+            convert "${__input_icon_path:?}" -resize "${size:?}" "${__temp_dir:?}/${size:?}/${__input_icon_name:?}.png"
+            # Install the scaled icon using xdg-icon-resource
+            xdg-icon-resource install --novendor --size "${size%%x*}" "${__temp_dir:?}/${size:?}/${__input_icon_name:?}.png"
+        done
+    else
+        # If convert is not available, install a 256x256 version of the icon
+        xdg-icon-resource install --novendor --size "256" "${__input_icon_path:?}"
+    fi
+    chown -R ${PUID:?}:${PGID:?} "${USER_HOME:?}/.local/share/icons"
+    # Remove temp dir
+    rm -rf "${__temp_dir:?}"
+}
+
 function ensure_icon_exists {
-    if [[ ! -f "${package_icon_path:?}" && "X${package_icon_url:-}" != "X" ]]; then
-        wget -O "${package_icon_path:?}" \
+    # Input icon name
+    local __input_icon_name="${1}"
+    # Input icon path
+    local __input_icon_url="${@:2}"
+    # Path to XDG icon
+    local __package_icon_path="${USER_HOME:?}/.local/share/icons/hicolor/256x256/apps/${__input_icon_name:?}.png"
+    # Check if the icon already exists
+    if [[ ! -f "${__package_icon_path:?}" && "X${__input_icon_url:-}" != "X" ]]; then
+        # Temporary directory for download
+        local __temp_dir="$(mktemp -d)"
+        wget -O "${__temp_dir:?}/${__input_icon_name:?}.png" \
             --quiet -o /dev/null \
             --no-verbose --show-progress \
             --progress=bar:force:noscroll \
-            "${package_icon_url:?}"
-        chown -R ${PUID:?}:${PGID:?} "${package_icon_path:?}"
+            "${__input_icon_url:?}"
+        # Install the icon
+        install_xdg_icon "${__input_icon_name:?}" "${__temp_dir:?}/${__input_icon_name:?}.png"
+        # Remove temp dir
+        rm -rf "${__temp_dir:?}"
     fi
 }
 
@@ -46,8 +87,7 @@ function ensure_menu_shortcut {
     mkdir -p "${USER_HOME:?}/.local/share/applications"
 
     # Download an icon image
-    package_icon_path="${USER_HOME:?}/.cache/init.d/package_icons/${package_name:?}-icon.png"
-    ensure_icon_exists
+    ensure_icon_exists "${package_name,,}" "${package_icon_url:?}"
 
     # Generate the desktop shortcut
     if ! grep -ri "${package_executable:?}" "${USER_HOME:?}/.local/share/applications/" &>/dev/null; then
@@ -58,7 +98,7 @@ function ensure_menu_shortcut {
 Name=${package_name:?}
 Exec="${package_executable:?}" %U
 Comment="${package_description:?}"
-Icon=${package_icon_path:?}
+Icon=${package_name,,}
 Type=Application
 Categories=${package_category:?};
 TryExec=${package_executable:?}
@@ -104,8 +144,7 @@ function ensure_sunshine_command_entry {
     fi
 
     # Download an icon image
-    package_icon_path="${USER_HOME:?}/.cache/init.d/package_icons/${package_name:?}-icon.png"
-    ensure_icon_exists
+    ensure_icon_exists "${package_name,,}" "${package_icon_url:?}"
 
     # Generate updated JSON for Sunshine's app.json file
     __updated_json=$(echo "$__json" | jq \
@@ -161,14 +200,14 @@ function ensure_sunshine_detached_command_entry {
     fi
 
     # Download an icon image
-    package_icon_path="${USER_HOME:?}/.cache/init.d/package_icons/${package_name:?}-icon.png"
-    ensure_icon_exists
+    ensure_icon_exists "${package_name,,}" "${package_icon_url:?}"
+    local __package_icon_path="${USER_HOME:?}/.local/share/icons/hicolor/256x256/apps/${package_name,,}.png"
 
     # Generate updated JSON for Sunshine's app.json file
     __updated_json=$(echo "$__json" | jq \
         --arg package_name "${package_name:?}" \
         --arg new_cmd "${__exec_cmd:?}" \
-        --arg package_icon_path "${package_icon_path:?}" \
+        --arg package_icon_path "${__package_icon_path:?}" \
         --arg working_dir "${USER_HOME:?}" \
         '.apps += [{
             "name": $package_name,

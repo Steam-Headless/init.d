@@ -5,7 +5,7 @@
 # File Created: Sunday, 27th August 2023 8:28:04 am
 # Author: Josh.5 (jsunnex@gmail.com)
 # -----
-# Last Modified: Friday, 1st September 2023 1:34:02 pm
+# Last Modified: Monday, 4th September 2023 5:36:52 pm
 # Modified By: Josh.5 (jsunnex@gmail.com)
 ###
 #
@@ -27,7 +27,6 @@ package_description="Sony Playstation 2 Emulator"
 package_icon_url="https://cdn2.steamgriddb.com/file/sgdb-cdn/icon/9a32ff36c65e8ba30915a21b7bd76506/32/24x24.png"
 package_executable="${USER_HOME:?}/Applications/${package_name:?}.AppImage"
 package_category="Game"
-package_icon="${USER_HOME:?}/.cache/init.d/package_icons/${package_name:?}-icon.png"
 
 
 source "${USER_HOME:?}/init.d/helpers/setup-directories.sh"

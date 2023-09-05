@@ -5,7 +5,7 @@
 # File Created: Sunday, 27th August 2023 8:28:04 am
 # Author: Josh.5 (jsunnex@gmail.com)
 # -----
-# Last Modified: Sunday, 27th August 2023 10:52:09 am
+# Last Modified: Wednesday, 6th September 2023 12:51:48 am
 # Modified By: Josh.5 (jsunnex@gmail.com)
 ###
 
@@ -16,7 +16,6 @@ package_description="Sony Playstation 3 Emulator"
 package_icon_url="https://cdn2.steamgriddb.com/file/sgdb-cdn/icon/add5aebfcb33a2206b6497d53bc4f309/32/24x24.png"
 package_executable="${USER_HOME:?}/Applications/${package_name:?}.AppImage"
 package_category="Game"
-package_icon="${USER_HOME:?}/.cache/init.d/package_icons/${package_name:?}-icon.png"
 
 
 source "${USER_HOME:?}/init.d/helpers/setup-directories.sh"

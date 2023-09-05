@@ -5,7 +5,7 @@
 # File Created: Saturday, 2nd September 2023 11:08:22 am
 # Author: Josh.5 (jsunnex@gmail.com)
 # -----
-# Last Modified: Sunday, 3rd September 2023 11:10:57 am
+# Last Modified: Monday, 4th September 2023 5:36:39 pm
 # Modified By: Josh.5 (jsunnex@gmail.com)
 ###
 #
@@ -26,7 +26,6 @@ package_description="Nintendo Wii U Emulator"
 package_icon_url="https://upload.wikimedia.org/wikipedia/commons/2/25/Cemu_Emulator_icon.png"
 package_executable="${USER_HOME:?}/Applications/${package_name,,}.AppImage"
 package_category="Game"
-package_icon="${USER_HOME:?}/.cache/init.d/package_icons/${package_name:?}-icon.png"
 
 
 source "${USER_HOME:?}/init.d/helpers/setup-directories.sh"

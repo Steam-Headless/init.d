@@ -5,7 +5,7 @@
 # File Created: Friday, 1st September 2023 3:57:42 pm
 # Author: Josh.5 (jsunnex@gmail.com)
 # -----
-# Last Modified: Friday, 1st September 2023 6:23:30 pm
+# Last Modified: Monday, 4th September 2023 5:37:04 pm
 # Modified By: Josh.5 (jsunnex@gmail.com)
 ###
 #
@@ -26,7 +26,6 @@ package_description="Nintendo Switch Emulator"
 package_icon_url="https://upload.wikimedia.org/wikipedia/commons/0/07/Ryujinx_Logo.png"
 package_executable="${USER_HOME:?}/.local/bin/${package_name,,}"
 package_category="Game"
-package_icon="${USER_HOME:?}/.cache/init.d/package_icons/${package_name:?}-icon.png"
 
 
 source "${USER_HOME:?}/init.d/helpers/setup-directories.sh"
