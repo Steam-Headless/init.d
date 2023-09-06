@@ -65,6 +65,18 @@ if [ ! -f "${package_executable:?}" ] || [ ! -f "${USER_HOME:?}/.cache/init.d/in
     chown ${PUID:?}:${PGID:?} "${package_executable:?}"
     chown -R ${PUID:?}:${PGID:?} "${__install_dir:?}"
     popd &> /dev/null || { echo "Error: Failed to pop directory out of ${__install_dir:?}"; exit 1; }
+	
+	# Download cores if they do not exist, if they exist user can update them using the UI
+	if [ ! -f "${__install_dir:?}/RetroArch_cores.7z" ]; then
+		print_step_header "Extracting cores..."
+		wget -O "${__install_dir:?}/RetroArch_cores.7z" \
+			--quiet -o /dev/null \
+			--no-verbose --show-progress \
+			--progress=bar:force:noscroll \
+			"https://buildbot.libretro.com/nightly/linux/x86_64/RetroArch_cores.7z"
+		pushd "${__install_dir:?}" &> /dev/null || { echo "Error: Failed to push directory to ${__install_dir:?}"; exit 1; }
+		7z x "${__install_dir:?}/RetroArch_cores.7z"
+	fi
 
     # Ensure this package has a start menu link (will create it if missing)
     print_step_header "Ensuring menu shortcut is present for ${package_name:?}"
