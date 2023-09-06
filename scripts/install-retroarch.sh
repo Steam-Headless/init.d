@@ -59,7 +59,7 @@ if [ ! -f "${package_executable:?}" ] || [ ! -f "${USER_HOME:?}/.cache/init.d/in
     # Install package
     print_step_header "Installing ${package_name:?} version ${__latest_package_version:?}"
     pushd "${__install_dir:?}" &> /dev/null || { echo "Error: Failed to push directory to ${__install_dir:?}"; exit 1; }
-    7z x "${__install_dir:?}/${package_name,,}-${__latest_package_version:?}-linux-x86_64.7z"
+    7z x "${__install_dir:?}/${package_name,,}-${__latest_package_version:?}-linux-x86_64.7z" -aoa
     mkdir -p "${USER_HOME:?}/.local/bin"
     ln -snf "${__install_dir:?}/RetroArch-Linux-x86_64/RetroArch-Linux-x86_64.AppImage" "${package_executable:?}"
     chown ${PUID:?}:${PGID:?} "${package_executable:?}"
