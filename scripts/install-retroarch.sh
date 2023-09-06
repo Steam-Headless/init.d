@@ -24,10 +24,9 @@
 # Config
 package_name="RetroArch-Linux"
 package_description="Multi System Emulator"
-package_icon_url="https://git.libretro.com/libretro-assets/retroarch-assets/-/blob/52ab08994b83dda5d3350661c8874bbf3fb1211d/ozone/png/icons/retroarch.png"
+package_icon_url="https://cdn2.steamgriddb.com/file/sgdb-cdn/icon/b36fd154dd0df788b77b7cfe39200ba3.png"
 package_executable="${USER_HOME:?}/.local/bin/${package_name:?}.AppImage"
 package_category="Game"
-package_icon="${USER_HOME:?}/.cache/init.d/package_icons/${package_name:?}-icon.png"
 
 
 source "${USER_HOME:?}/init.d/helpers/setup-directories.sh"
@@ -35,50 +34,55 @@ source "${USER_HOME:?}/init.d/helpers/functions.sh"
 source "${USER_HOME:?}/init.d/helpers/functions-es-de-config.sh"
 print_package_name
 
+set +e
+
 # Check for a new version to install
-__latest_registery_url_qt="https://buildbot.libretro.com/nightly/linux/x86_64/RetroArch_Qt.7z"
-__latest_registery_url="https://buildbot.libretro.com/nightly/linux/x86_64/RetroArch.7z"
+__buildbot_html_content=$(curl --silent "https://buildbot.libretro.com/nightly/linux/x86_64/")
+__latest_package_href=$(echo "${__buildbot_html_content:?}" | grep -oE 'href="[^"]*_RetroArch\.7z"[^"]*"' | sort -t '/' -k 5,5 -k 4,4 -k 3,3 | tail -n 1 | cut -d '"' -f 2)
+__latest_package_version=$(echo "${__latest_package_href:?}" | awk -F'/' '{print $5}' | cut -d'_' -f1)
+__latest_package_url="https://buildbot.libretro.com${__latest_package_href:?}"
+print_step_header "Latest ${package_name:?} version: ${__latest_package_version:?}"
 
 
 # Only install if the latest version does not already exist locally
-if [ ! -f "${package_executable:?}" ] || [ ! -f "${USER_HOME:?}/.cache/init.d/installed_packages/.${package_name:?}" ]; then
-	__install_dir="${USER_HOME:?}/.local/share/${package_name,,}"
-	# Download Appimage to Applications directory
-    print_step_header "Downloading ${package_name:?}"
-	mkdir -p "${__install_dir:?}"
-	wget -O "${__install_dir:?}/${package_name,,}_x64.7z" \
-		--quiet -o /dev/null \
-		--no-verbose --show-progress \
-		--progress=bar:force:noscroll \
-		"${__latest_registery_url_qt:?}"
-	# Install package
-	print_step_header "Installing ${package_name:?}"
-	pushd "${__install_dir:?}" &> /dev/null || { echo "Error: Failed to push directory to ${__install_dir:?}"; exit 1; }
-	p7zip -d "${__install_dir:?}/${package_name,,}_x64.7z"
-	mkdir -p "${USER_HOME:?}/.local/bin"
-	ln -snf "${__install_dir:?}/RetroArch-Linux-x86_64.AppImage" "${USER_HOME:?}/.local/bin/RetroArch-Linux.AppImage"
-	chmod +x "${__install_dir:?}/RetroArch-Linux.AppImage"
-	chown ${PUID:?}:${PGID:?} "${USER_HOME:?}"/.local/bin/RetroArch-Linux.AppImage
-	chown -R ${PUID:?}:${PGID:?} "${__install_dir:?}"
-	popd &> /dev/null || { echo "Error: Failed to pop directory out of ${__install_dir:?}"; exit 1; }
+if [ ! -f "${package_executable:?}" ] || [ ! -f "${USER_HOME:?}/.cache/init.d/installed_packages/.${package_name:?}-${__latest_package_version:?}" ]; then
+    __install_dir="${USER_HOME:?}/.local/share/retroarch"
+    # Download and extract package to Applications directory
+    print_step_header "Downloading ${package_name:?} version ${__latest_package_version:?}"
+    mkdir -p "${__install_dir:?}"
+    wget -O "${__install_dir:?}/${package_name,,}-${__latest_package_version:?}-linux-x86_64.7z" \
+        --quiet -o /dev/null \
+        --no-verbose --show-progress \
+        --progress=bar:force:noscroll \
+        "${__latest_package_url:?}"
+
+    # Install package
+    print_step_header "Installing ${package_name:?} version ${__latest_package_version:?}"
+    pushd "${__install_dir:?}" &> /dev/null || { echo "Error: Failed to push directory to ${__install_dir:?}"; exit 1; }
+    7z x "${__install_dir:?}/${package_name,,}-${__latest_package_version:?}-linux-x86_64.7z"
+    mkdir -p "${USER_HOME:?}/.local/bin"
+    ln -snf "${__install_dir:?}/RetroArch-Linux-x86_64/RetroArch-Linux-x86_64.AppImage" "${package_executable:?}"
+    chown ${PUID:?}:${PGID:?} "${package_executable:?}"
+    chown -R ${PUID:?}:${PGID:?} "${__install_dir:?}"
+    popd &> /dev/null || { echo "Error: Failed to pop directory out of ${__install_dir:?}"; exit 1; }
 
     # Ensure this package has a start menu link (will create it if missing)
-    print_step_header "Ensuring menu short is present for ${package_name:?}"
+    print_step_header "Ensuring menu shortcut is present for ${package_name:?}"
     rm -f "${USER_HOME:?}/.local/share/applications/${package_name:?}.desktop"
     ensure_menu_shortcut
 
     # Mark this version as installed
-    touch "${USER_HOME:?}/.cache/init.d/installed_packages/.${package_name:?}"
+    touch "${USER_HOME:?}/.cache/init.d/installed_packages/.${package_name:?}-${__latest_package_version:?}"
 else
-    print_step_header "${package_name:?} already installed"
+    print_step_header "Latest version of ${package_name:?} version ${__latest_package_version:?} already installed"
 fi
 
 # Generate RetroArch Emulation directory structure
 __emulation_path="/mnt/games/Emulation"
-__retroarch_home="${USER_HOME:?}"/.local/share/RetroArch-Linux/RetroArch-Linux-x86_64.AppImage.home
+__retroarch_home="${USER_HOME:?}/.local/share/retroarch/RetroArch-Linux-x86_64/RetroArch-Linux-x86_64.AppImage.home"
 mkdir -p \
     "${__retroarch_home:?}"/.config/retroarch \
-    "${__emulation_path:?}"/storage/retroarch/{cheats,config,saves,screenshots,states,system} 
+    "${__emulation_path:?}"/storage/retroarch/{cheats,config,saves,screenshots,states,system}
 
 ensure_symlink "${__emulation_path:?}/storage/retroarch/cheats" "${__retroarch_home:?}/.config/retroarch/cheats"
 ensure_symlink "${__emulation_path:?}/storage/retroarch/config" "${__retroarch_home:?}/.config/retroarch/config"
@@ -88,15 +92,36 @@ ensure_symlink "${__emulation_path:?}/storage/retroarch/states" "${__retroarch_h
 ensure_symlink "${__emulation_path:?}/storage/retroarch/system" "${__retroarch_home:?}/.config/retroarch/system"
 
 # Generate a default config if missing
-#if [ ! -f "${__retroarch_home:?}/.config/retroarch/retroarch.cfg" ]; then
-#    cat << EOF > "${__retroarch_home:?}/.config/retroarch/retroarch.cfg"
-#
-#EOF
-#fi
+if [ ! -f "${__retroarch_home:?}/.config/retroarch/retroarch.cfg" ]; then
+    cat << EOF > "${__retroarch_home:?}/.config/retroarch/retroarch.cfg"
+assets_directory = "${__emulation_path:?}/storage/retroarch/assets"
+cheat_database_path = "${__emulation_path:?}/storage/retroarch/cheats"
+config_save_on_exit = "true"
+input_menu_toggle_gamepad_combo = "2"
+input_quit_gamepad_combo = "9"
+pause_on_disconnect = "true"
+quit_press_twice = "false"
+quit_on_close_content = "1"
+savefile_directory = "${__emulation_path:?}/storage/retroarch/saves"
+savestate_directory = "${__emulation_path:?}/storage/retroarch/states"
+screenshot_directory = "${__emulation_path:?}/storage/retroarch/screenshots"
+sort_savefiles_by_content_enable = "false"
+sort_savefiles_enable = "true"
+sort_savestates_by_content_enable = "false"
+sort_savestates_enable = "true"
+sort_screenshots_by_content_enable = "false"
+suspend_screensaver_enable = "true"
+system_directory = "${__emulation_path:?}/storage/retroarch/system"
+video_driver = "vulkan"
+video_fullscreen = "true"
+video_windowed_fullscreen = "true"
+video_hdr_enable = "false"
+EOF
+fi
 
 # Set correct ownership of created paths
 chown -R ${PUID:?}:${PGID:?} \
-    "${USER_HOME:?}"/.local/share/RetroArch-Linux \
+    "${USER_HOME:?}"/.local/share/retroarch \
     "${__emulation_path:?}"/storage/retroarch
 
 echo "DONE"
