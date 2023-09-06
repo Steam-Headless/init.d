@@ -123,12 +123,9 @@ sort_savefiles_enable = "true"
 sort_savestates_by_content_enable = "false"
 sort_savestates_enable = "true"
 sort_screenshots_by_content_enable = "false"
-suspend_screensaver_enable = "true"
 system_directory = "${__emulation_path:?}/storage/retroarch/system"
 video_driver = "vulkan"
 video_fullscreen = "true"
-video_windowed_fullscreen = "true"
-video_hdr_enable = "false"
 EOF
 fi
 
