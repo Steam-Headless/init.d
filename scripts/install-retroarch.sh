@@ -76,6 +76,8 @@ if [ ! -f "${package_executable:?}" ] || [ ! -f "${USER_HOME:?}/.cache/init.d/in
 			"https://buildbot.libretro.com/nightly/linux/x86_64/RetroArch_cores.7z"
 		pushd "${__install_dir:?}" &> /dev/null || { echo "Error: Failed to push directory to ${__install_dir:?}"; exit 1; }
 		7z x "${__install_dir:?}/RetroArch_cores.7z" -aoa
+		mkdir -p "${USER_HOME:?}/.config/retroarch"
+		ln -snf "${USER_HOME:?}/.local/share/retroarch/RetroArch-Linux-x86_64/RetroArch-Linux-x86_64.AppImage.home/.config/retroarch/cores" "${USER_HOME:?}/.config/retroarch/"
 		popd &> /dev/null || { echo "Error: Failed to pop directory out of ${__install_dir:?}"; exit 1; }
 	fi
 
