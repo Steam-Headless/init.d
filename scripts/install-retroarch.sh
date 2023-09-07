@@ -97,7 +97,7 @@ __emulation_path="/mnt/games/Emulation"
 __retroarch_home="${USER_HOME:?}/.local/share/retroarch/RetroArch-Linux-x86_64/RetroArch-Linux-x86_64.AppImage.home"
 mkdir -p \
     "${__retroarch_home:?}"/.config/retroarch \
-    "${__emulation_path:?}"/storage/retroarch/{cheats,config,saves,screenshots,states,system}
+    "${__emulation_path:?}"/storage/retroarch/{cheats,remaps,shaders,config,saves,screenshots,states,system}
 
 ensure_symlink "${__emulation_path:?}/storage/retroarch/cheats" "${__retroarch_home:?}/.config/retroarch/cheats"
 ensure_symlink "${__emulation_path:?}/storage/retroarch/config" "${__retroarch_home:?}/.config/retroarch/config"
@@ -105,6 +105,7 @@ ensure_symlink "${__emulation_path:?}/storage/retroarch/saves" "${__retroarch_ho
 ensure_symlink "${__emulation_path:?}/storage/retroarch/screenshots" "${__retroarch_home:?}/.config/retroarch/screenshots"
 ensure_symlink "${__emulation_path:?}/storage/retroarch/states" "${__retroarch_home:?}/.config/retroarch/states"
 ensure_symlink "${__emulation_path:?}/storage/retroarch/system" "${__retroarch_home:?}/.config/retroarch/system"
+ensure_symlink "${__emulation_path:?}/storage/retroarch/shaders" "${__retroarch_home:?}/.config/retroarch/shaders"
 
 # Generate a default config if missing
 if [ ! -f "${__retroarch_home:?}/.config/retroarch/retroarch.cfg" ]; then
@@ -121,6 +122,8 @@ rgui_config_directory = "${__emulation_path:?}/storage/retroarch/config"
 savefile_directory = "${__emulation_path:?}/storage/retroarch/saves"
 savestate_directory = "${__emulation_path:?}/storage/retroarch/states"
 screenshot_directory = "${__emulation_path:?}/storage/retroarch/screenshots"
+video_shader_dir = "${__emulation_path:?}/storage/retroarch/shaders"
+input_remapping_directory = "${__emulation_path:?}/storage/retroarch/config/remaps"
 sort_savefiles_by_content_enable = "false"
 sort_savefiles_enable = "true"
 sort_savestates_by_content_enable = "false"
