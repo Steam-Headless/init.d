@@ -134,27 +134,7 @@ fi
 
 #demo of mGBA settings
 mkdir -p "${__emulation_path:?}/storage/retroarch/config/mGBA"
-if [ ! -f "${__emulation_path:?}/storage/retroarch/config/mGBA/mGBA.opt" ]; then
-    cat << EOF > "${__emulation_path:?}/storage/retroarch/config/mGBA/mGBA.opt"
-mgba_allow_opposing_directions = "no"
-mgba_audio_low_pass_filter = "disabled"
-mgba_audio_low_pass_range = "60"
-mgba_color_correction = "OFF"
-mgba_force_gbp = "OFF"
-mgba_frameskip = "disabled"
-mgba_frameskip_interval = "0"
-mgba_frameskip_threshold = "33"
-mgba_gb_colors = "Grayscale"
-mgba_gb_colors_preset = "0"
-mgba_gb_model = "Autodetect"
-mgba_idle_optimization = "Remove Known"
-mgba_interframe_blending = "OFF"
-mgba_sgb_borders = "ON"
-mgba_skip_bios = "OFF"
-mgba_solar_sensor_level = "0"
-mgba_use_bios = "ON"
-EOF
-fi
+
 if [ ! -f "${__emulation_path:?}/storage/retroarch/config/mGBA/mGBA.slangp" ]; then
     cat << EOF > "${__emulation_path:?}/storage/retroarch/config/mGBA/mGBA.slangp"
 #reference "../../shaders/shaders_slang/presets/xsoft+scalefx-level2aa+sharpsmoother.slangp"
