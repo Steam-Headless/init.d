@@ -23,7 +23,7 @@
 # Config
 package_name="Yuzu-EA"
 package_description="Nintendo Switch Emulator"
-package_icon_url="https://raw.githubusercontent.com/yuzu-emu/yuzu-assets/master/icons/icon.png"
+package_icon_url="https://cdn2.steamgriddb.com/file/sgdb-cdn/icon/4764f37856fc727f70b666b8d0c4ab7a/32/24x24.png"
 package_executable="${USER_HOME:?}/Applications/${package_name,,}.AppImage"
 package_category="Game"
 
