@@ -62,7 +62,7 @@ ensure_symlink "${__emulation_path:?}/storage/rpcs3/savestates" "${USER_HOME:?}/
 ensure_symlink "${__emulation_path:?}/storage/rpcs3/patches" "${USER_HOME:?}/.config/rpcs3/patches"
 
 
- Generate a default config if missing
+# Generate a default config if missing
 if [ ! -f "${USER_HOME:?}/.config/rpcs3/config.yml" ]; then
     cat << EOF > "${USER_HOME:?}/.config/rpcs3/config.yml"
 Video:
