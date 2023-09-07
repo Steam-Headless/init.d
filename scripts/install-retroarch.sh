@@ -97,7 +97,7 @@ __emulation_path="/mnt/games/Emulation"
 __retroarch_home="${USER_HOME:?}/.local/share/retroarch/RetroArch-Linux-x86_64/RetroArch-Linux-x86_64.AppImage.home"
 mkdir -p \
     "${__retroarch_home:?}"/.config/retroarch \
-    "${__emulation_path:?}"/storage/retroarch/{cheats,remaps,shaders,config,saves,screenshots,states,system}
+    "${__emulation_path:?}"/storage/retroarch/{cheats,shaders,config,saves,screenshots,states,system}
 
 ensure_symlink "${__emulation_path:?}/storage/retroarch/cheats" "${__retroarch_home:?}/.config/retroarch/cheats"
 ensure_symlink "${__emulation_path:?}/storage/retroarch/config" "${__retroarch_home:?}/.config/retroarch/config"
