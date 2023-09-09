@@ -5,7 +5,7 @@
 # File Created: Friday, 25th August 2023 7:27:26 pm
 # Author: Josh.5 (jsunnex@gmail.com)
 # -----
-# Last Modified: Wednesday, 30th August 2023 10:37:59 pm
+# Last Modified: Saturday, 9th September 2023 9:43:12 pm
 # Modified By: Josh.5 (jsunnex@gmail.com)
 ###
 
@@ -89,13 +89,13 @@ Shortcuts\Main%20Window\Audio%20Volume%20Up\Controller_KeySeq=
 Shortcuts\Main%20Window\Audio%20Volume%20Up\Controller_KeySeq\default=false
 Shortcuts\Main%20Window\Capture%20Screenshot\Controller_KeySeq=
 Shortcuts\Main%20Window\Capture%20Screenshot\Controller_KeySeq\default=false
-Shortcuts\Main%20Window\Change%20Adapting%20Filter\Controller_KeySeq=Plus+Dpad_Left
+Shortcuts\Main%20Window\Change%20Adapting%20Filter\Controller_KeySeq=Minus+A
 Shortcuts\Main%20Window\Change%20Adapting%20Filter\Controller_KeySeq\default=false
-Shortcuts\Main%20Window\Change%20Docked%20Mode\Controller_KeySeq=Plus+Dpad_Up
+Shortcuts\Main%20Window\Change%20Docked%20Mode\Controller_KeySeq=Minus+X
 Shortcuts\Main%20Window\Change%20Docked%20Mode\Controller_KeySeq\default=false
-Shortcuts\Main%20Window\Change%20GPU%20Accuracy\Controller_KeySeq=Plus+Dpad_Down
+Shortcuts\Main%20Window\Change%20GPU%20Accuracy\Controller_KeySeq=Minus+Y
 Shortcuts\Main%20Window\Change%20GPU%20Accuracy\Controller_KeySeq\default=false
-Shortcuts\Main%20Window\Continue\Pause%20Emulation\Controller_KeySeq=Minus+A
+Shortcuts\Main%20Window\Continue\Pause%20Emulation\Controller_KeySeq=Minus+Dpad_Up
 Shortcuts\Main%20Window\Continue\Pause%20Emulation\Controller_KeySeq\default=false
 Shortcuts\Main%20Window\Exit%20Fullscreen\Controller_KeySeq=
 Shortcuts\Main%20Window\Exit%20Fullscreen\Controller_KeySeq\default=true
@@ -103,7 +103,7 @@ Shortcuts\Main%20Window\Exit%20Fullscreen\KeySeq=Esc
 Shortcuts\Main%20Window\Exit%20Fullscreen\KeySeq\default=true
 Shortcuts\Main%20Window\Exit%20yuzu\Context=1
 Shortcuts\Main%20Window\Exit%20yuzu\Context\default=true
-Shortcuts\Main%20Window\Exit%20yuzu\Controller_KeySeq=Minus+X
+Shortcuts\Main%20Window\Exit%20yuzu\Controller_KeySeq=Minus+Dpad_Down
 Shortcuts\Main%20Window\Exit%20yuzu\Controller_KeySeq\default=false
 Shortcuts\Main%20Window\Exit%20yuzu\KeySeq=Ctrl+Q
 Shortcuts\Main%20Window\Exit%20yuzu\KeySeq\default=true
