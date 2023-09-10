@@ -107,6 +107,9 @@ ensure_symlink "${__emulation_path:?}/storage/retroarch/states" "${__retroarch_h
 ensure_symlink "${__emulation_path:?}/storage/retroarch/system" "${__retroarch_home:?}/.config/retroarch/system"
 ensure_symlink "${__emulation_path:?}/storage/retroarch/shaders" "${__retroarch_home:?}/.config/retroarch/shaders"
 
+# Create relative symlinks for the BIOS 
+ensure_symlink "../storage/retroarch/system" "${__emulation_path:?}/bios/retroarch"
+
 # Generate a default config if missing
 if [ ! -f "${__retroarch_home:?}/.config/retroarch/retroarch.cfg" ]; then
     cat << EOF > "${__retroarch_home:?}/.config/retroarch/retroarch.cfg"
