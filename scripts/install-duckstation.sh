@@ -385,39 +385,6 @@ MainWindowGeometry = AdnQywADAAAAAARWAAABhwAAB38AAAQ3AAAEWwAAAaQAAAd6AAAEMgAAAAA
 EOF
 fi
 
-# Configure EmulationStation DE
-cat << 'EOF' > "${__emulation_path:?}/roms/psx/systeminfo.txt"
-System name:
-psx
-
-Full system name:
-Sony Playstation
-
-Supported file extensions:
-.cue .CUE .chd .CHD .7z .7Z .zip .ZIP
-
-Launch command:
-%EMULATOR_DUCKSTATION% -batch %ROM%
-
-Alternative launch commands:
-%EMULATOR_RETROARCH% -L %CORE_RETROARCH%/mednafen_psx_libretro.so %ROM%
-%EMULATOR_RETROARCH% -L %CORE_RETROARCH%/mednafen_psx_hw_libretro.so %ROM%
-%EMULATOR_RETROARCH% -L %CORE_RETROARCH%/pcsx_rearmed_libretro.so %ROM%
-%EMULATOR_RETROARCH% -L %CORE_RETROARCH%/swanstation_libretro.so %ROM%
-%EMULATOR_MEDNAFEN% -force_module psx %ROM%
-
-Platform (for scraping):
-psx
-
-Theme folder:
-psx
-EOF
-if ! grep -ri "psx:" "${__emulation_path:?}/roms/systems.txt" &>/dev/null; then
-    print_step_header "Adding 'psx' path to '${__emulation_path:?}/roms/systems.txt'"
-    echo "psx: " >> "${__emulation_path:?}/roms/systems.txt"
-    chown -R ${PUID:?}:${PGID:?} "${__emulation_path:?}/roms/systems.txt"
-fi
-sed -i 's|^psx:.*$|psx: Sony Playstation|' "${__emulation_path:?}/roms/systems.txt"
 ensure_esde_alternative_emulator_configured "psx" "DuckStation (Standalone)"
 
 # Set correct ownership of created paths
