@@ -163,34 +163,6 @@ Player 1 Input:
 EOF
 fi
 
-# Configure EmulationStation DE
-cat << 'EOF' > "${__emulation_path:?}/roms/ps3/systeminfo.txt"
-System name:
-ps3
-
-Full system name:
-Sony Playstation 3
-
-Supported file extensions:
-.desktop .ps3 .PS3 .ps3dir .PS3DIR
-
-Launch command:
-%EMULATOR_RPCS3% --no-gui %ROM%
-
-Alternative launch commands:
-
-Platform (for scraping):
-ps3
-
-Theme folder:
-ps3
-EOF
-if ! grep -ri "ps3:" "${__emulation_path:?}/roms/systems.txt" &>/dev/null; then
-    print_step_header "Adding 'ps3' path to '${__emulation_path:?}/roms/systems.txt'"
-    echo "ps3: " >> "${__emulation_path:?}/roms/systems.txt"
-    chown -R ${PUID:?}:${PGID:?} "${__emulation_path:?}/roms/systems.txt"
-fi
-sed -i 's|^ps3:.*$|ps3: Sony Playstation 3|' "${__emulation_path:?}/roms/systems.txt"
 ensure_esde_alternative_emulator_configured "ps3" "RPCS3 Directory (Standalone)"
 
 # Set correct ownership of created paths
