@@ -115,6 +115,7 @@ cheat_database_path = "${__emulation_path:?}/storage/retroarch/cheats"
 config_save_on_exit = "true"
 input_menu_toggle_gamepad_combo = "2"
 input_quit_gamepad_combo = "9"
+menu_swap_ok_cancel_buttons = "true"
 pause_on_disconnect = "true"
 quit_press_twice = "false"
 quit_on_close_content = "1"
@@ -129,20 +130,22 @@ sort_savefiles_enable = "true"
 sort_savestates_by_content_enable = "false"
 sort_savestates_enable = "true"
 sort_screenshots_by_content_enable = "false"
+savestate_auto_load = "false"
+savestate_auto_save = "false"
 system_directory = "${__emulation_path:?}/storage/retroarch/system"
 video_driver = "vulkan"
 video_fullscreen = "true"
 EOF
 fi
 
-#demo of mGBA settings
-mkdir -p "${__emulation_path:?}/storage/retroarch/config/mGBA"
+# Directory where core .cfg and shader overrides will reside
+mkdir -p "${__emulation_path:?}/storage/retroarch/config"
 
-if [ ! -f "${__emulation_path:?}/storage/retroarch/config/mGBA/mGBA.slangp" ]; then
-    cat << EOF > "${__emulation_path:?}/storage/retroarch/config/mGBA/mGBA.slangp"
-#reference "../../shaders/shaders_slang/presets/xsoft+scalefx-level2aa+sharpsmoother.slangp"
-EOF
-fi
+#if [ ! -f "${__emulation_path:?}/storage/retroarch/config/mGBA/mGBA.slangp" ]; then
+#    cat << EOF > "${__emulation_path:?}/storage/retroarch/config/mGBA/mGBA.slangp"
+##reference "../../shaders/shaders_slang/presets/xsoft+scalefx-level2aa+sharpsmoother.slangp"
+#EOF
+#fi
 
 # Set correct ownership of created paths
 chown -R ${PUID:?}:${PGID:?} \
