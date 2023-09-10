@@ -97,7 +97,7 @@ __emulation_path="/mnt/games/Emulation"
 __retroarch_home="${USER_HOME:?}/.local/share/retroarch/RetroArch-Linux-x86_64/RetroArch-Linux-x86_64.AppImage.home"
 mkdir -p \
     "${__retroarch_home:?}"/.config/retroarch \
-	"${__emulation_path:?}"/roms/{gb,gba,gbc,gc,genesis,mastersystem,n3ds,n64,neogeo,nes,ngp,ngpc,psp,saturn,sega32x,segacd,sg-1000,snes,wii} \
+    "${__emulation_path:?}"/roms/{gb,gba,gbc,gc,genesis,mastersystem,n3ds,n64,neogeo,nes,ngp,ngpc,psp,saturn,sega32x,segacd,sg-1000,snes,wii} \
     "${__emulation_path:?}"/storage/retroarch/{cheats,shaders,config,saves,screenshots,states,system}
 
 ensure_symlink "${__emulation_path:?}/storage/retroarch/cheats" "${__retroarch_home:?}/.config/retroarch/cheats"
@@ -148,7 +148,7 @@ fi
 # Set correct ownership of created paths
 chown -R ${PUID:?}:${PGID:?} \
     "${USER_HOME:?}"/.local/share/retroarch \
-	"${__emulation_path:?}"/roms \
+    "${__emulation_path:?}"/roms \
     "${__emulation_path:?}"/storage/retroarch
 
 echo "DONE"
