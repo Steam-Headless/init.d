@@ -163,6 +163,9 @@ Player 1 Input:
 EOF
 fi
 
+# Note to user
+touch "${__emulation_path:?}/roms/ps3/rename_rom_root_dirs_from_DIR_to_DIR.ps3dir.txt"
+
 ensure_esde_alternative_emulator_configured "ps3" "RPCS3 Directory (Standalone)"
 
 # Set correct ownership of created paths
