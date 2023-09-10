@@ -77,6 +77,9 @@ ensure_symlink "${__emulation_path:?}/storage/pcsx2/bios" "${USER_HOME:?}/.confi
 ensure_symlink "${__emulation_path:?}/storage/pcsx2/patches" "${USER_HOME:?}/.config/PCSX2/patches"
 ensure_symlink "${__emulation_path:?}/storage/pcsx2/textures" "${USER_HOME:?}/.config/PCSX2/textures"
 
+# Create relative symlinks
+ensure_symlink "../storage/pcsx2/bios" "${__emulation_path:?}/bios/pcsx2"
+
 # Generate a default config if missing
 # Currently need to run PCSX2 once to import the config, can't figure out how to bypass it
 if [ ! -f "${USER_HOME:?}/.config/PCSX2/inis/PCSX2.ini" ]; then
