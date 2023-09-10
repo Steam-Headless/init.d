@@ -128,15 +128,15 @@ LoadStateFromSlot = Keyboard/F3
 SaveStateToSlot = Keyboard/F1
 NextSaveStateSlot = Keyboard/F2
 PreviousSaveStateSlot = Keyboard/Shift & Keyboard/F2
-OpenPauseMenu = SDL-0/Back & SDL-0/Y
+OpenPauseMenu = SDL-0/Back & SDL-0/DPadUp
 ToggleFrameLimit = Keyboard/F4
-TogglePause = SDL-0/Back & SDL-0/A
+TogglePause = Keyboard/F9
 ToggleSlowMotion = Keyboard/Shift & Keyboard/Backtab
 ToggleTurbo = Keyboard/Tab
 HoldTurbo = Keyboard/Period
 SaveStateToSlot1 = SDL-0/Start & SDL-0/DPadUp
 LoadStateFromSlot1 = SDL-0/Start & SDL-0/DPadDown
-ShutdownVM = SDL-0/Back & SDL-0/X
+ShutdownVM = SDL-0/Back & SDL-0/DPadDown
 
 
 [AutoUpdater]
