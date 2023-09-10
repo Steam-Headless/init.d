@@ -178,37 +178,6 @@ SmallMotor = SDL-0/SmallMotor
 EOF
 fi
 
-# Configure EmulationStation DE
-cat << 'EOF' > "${__emulation_path:?}/roms/ps2/systeminfo.txt"
-System name:
-ps2
-
-Full system name:
-Sony Playstation 2
-
-Supported file extensions:
-.bin .BIN .chd .CHD .ciso .CISO .cso .CSO .dump .DUMP .elf .ELF .gz .GZ .m3u .M3U .mdf .MDF .img .IMG .iso .ISO .isz .ISZ .nrg .NRG
-
-Launch command:
-%EMULATOR_PCSX2% -batch %ROM%
-
-Alternative launch commands:
-%EMULATOR_RETROARCH% -L %CORE_RETROARCH%/pcsx2_libretro.so %ROM%
-%EMULATOR_PCSX2-LEGACY% --nogui %ROM%
-%EMULATOR_PLAY!% --disc %ROM%
-
-Platform (for scraping):
-ps2
-
-Theme folder:
-ps2
-EOF
-if ! grep -ri "ps2:" "${__emulation_path:?}/roms/systems.txt" &>/dev/null; then
-    print_step_header "Adding 'ps2' path to '${__emulation_path:?}/roms/systems.txt'"
-    echo "ps2: " >> "${__emulation_path:?}/roms/systems.txt"
-    chown -R ${PUID:?}:${PGID:?} "${__emulation_path:?}/roms/systems.txt"
-fi
-sed -i 's|^ps2:.*$|ps2: Sony Playstation 2|' "${__emulation_path:?}/roms/systems.txt"
 ensure_esde_alternative_emulator_configured "ps2" "PCSX2 (Standalone)"
 
 # Set correct ownership of created paths
