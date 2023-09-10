@@ -77,7 +77,7 @@ Miscellaneous:
 EOF
 fi
 
- Generate a default config if missing
+# Generate a default config if missing
 if [ ! -f "${USER_HOME:?}/.config/rpcs3/input_configs/global/Default.yml" ]; then
     cat << EOF > "${USER_HOME:?}/.config/rpcs3/input_configs/global/Default.yml"
 Player 1 Input:
