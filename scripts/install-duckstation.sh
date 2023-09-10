@@ -60,13 +60,15 @@ else
     print_step_header "Latest version of ${package_name:?} version ${__latest_package_version:?} already installed"
 fi
 
-
 # Generate duckstation Emulation directory structure
 __emulation_path="/mnt/games/Emulation"
 mkdir -p \
     "${USER_HOME:?}"/.local/share/duckstation \
     "${__emulation_path:?}"/roms/psx \
     "${__emulation_path:?}"/storage/duckstation/{states,memcards,bios,screenshots,covers,cache,cheats,dump,gamesettings,inputprofiles,states,screenshots,shaders,textures} 
+
+# Create relative symlinks
+ensure_symlink "../storage/duckstation/bios" "${__emulation_path:?}/bios/duckstation"
 
 # Generate a default config if missing
 if [ ! -f "${USER_HOME:?}/.local/share/duckstation/settings.ini" ]; then
