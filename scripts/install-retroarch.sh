@@ -548,7 +548,7 @@ EOF
 # Set correct ownership of created paths
 chown -R ${PUID:?}:${PGID:?} \
     "${USER_HOME:?}"/.local/share/retroarch \
-	"${__emulation_path:?}"/roms \
+    "${__emulation_path:?}"/roms \
     "${__emulation_path:?}"/storage/retroarch
 
 echo "DONE"
