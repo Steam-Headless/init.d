@@ -363,15 +363,15 @@ Type = None
 
 [Hotkeys]
 FastForward = Keyboard/Tab
-TogglePause = SDL-0/Back & SDL-0/A
+TogglePause = Keyboard/F9
 Screenshot = SDL-0/Start & SDL-0/DPadRight
 ToggleFullscreen = SDL-0/Start & SDL-0/DPadLeft
-OpenPauseMenu = SDL-0/Back & SDL-0/Y
+OpenPauseMenu = SDL-0/Back & SDL-0/DPadUp
 LoadSelectedSaveState = Keyboard/F1
 SaveSelectedSaveState = Keyboard/F2
 SelectPreviousSaveStateSlot = Keyboard/F3
 SelectNextSaveStateSlot = Keyboard/F4
-PowerOff = SDL-0/Back & SDL-0/X
+PowerOff = SDL-0/Back & SDL-0/DPadDown
 LoadGlobalState1 = SDL-0/Start & SDL-0/DPadDown
 SaveGlobalState1 = SDL-0/Start & SDL-0/DPadUp
 
