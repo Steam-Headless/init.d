@@ -138,9 +138,6 @@ video_fullscreen = "true"
 EOF
 fi
 
-# Directory where core .cfg and shader overrides will reside
-mkdir -p "${__emulation_path:?}/storage/retroarch/config"
-
 #if [ ! -f "${__emulation_path:?}/storage/retroarch/config/mGBA/mGBA.slangp" ]; then
 #    cat << EOF > "${__emulation_path:?}/storage/retroarch/config/mGBA/mGBA.slangp"
 ##reference "../../shaders/shaders_slang/presets/xsoft+scalefx-level2aa+sharpsmoother.slangp"
