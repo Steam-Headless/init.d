@@ -5,7 +5,7 @@
 # File Created: Friday, 25th August 2023 4:26:49 pm
 # Author: Josh.5 (jsunnex@gmail.com)
 # -----
-# Last Modified: Monday, 11th September 2023 7:41:11 pm
+# Last Modified: Monday, 11th September 2023 7:59:57 pm
 # Modified By: Josh.5 (jsunnex@gmail.com)
 ###
 
@@ -15,6 +15,13 @@ function exec_script_as_default_user {
         su default -c "$0" "$@"
         # Exit the current root instance of the script
         exit $?
+    fi
+}
+
+function ensure_function_not_running_as_root {
+    if [ "$(id -u)" -eq 0 ]; then
+        echo "ERROR: The function '${1}' cannot be run as root! Exit!"
+        exit 1
     fi
 }
 
@@ -39,6 +46,7 @@ function set_default_user_ownership {
 }
 
 function fetch_appimage_and_make_executable {
+    ensure_function_not_running_as_root "fetch_appimage_and_make_executable"
     mkdir -p "$(dirname "${package_executable:?}")"
     wget -O "${package_executable:?}" \
         --quiet -o /dev/null \
@@ -49,6 +57,7 @@ function fetch_appimage_and_make_executable {
 }
 
 function install_xdg_icon {
+    ensure_function_not_running_as_root "install_xdg_icon"
     mkdir -p "${USER_HOME:?}"/.local/share/icons/hicolor/{256x256,48x48,32x32,24x24,16x16}/apps
     # Input icon name
     local __input_icon_name="${1}"
@@ -77,6 +86,7 @@ function install_xdg_icon {
 }
 
 function ensure_icon_exists {
+    ensure_function_not_running_as_root "ensure_icon_exists"
     # Input icon name
     local __input_icon_name="${1}"
     # Input icon path
@@ -100,6 +110,7 @@ function ensure_icon_exists {
 }
 
 function ensure_menu_shortcut {
+    ensure_function_not_running_as_root "ensure_menu_shortcut"
     mkdir -p "${USER_HOME:?}/.local/share/applications"
 
     # Download an icon image
@@ -126,6 +137,7 @@ EOF
 }
 
 function ensure_sunshine_command_entry {
+    ensure_function_not_running_as_root "ensure_sunshine_command_entry"
     __exec_cmd="${@:?}"
 
     # Ensure a sunshine config exists
@@ -182,6 +194,7 @@ function ensure_sunshine_command_entry {
 }
 
 function ensure_sunshine_detached_command_entry {
+    ensure_function_not_running_as_root "ensure_sunshine_detached_command_entry"
     __exec_cmd="${@:?}"
 
     # Ensure a sunshine config exists
