@@ -165,14 +165,15 @@ EOF
 fi
 if [ ! -f "${USER_HOME:?}/.config/mgba/qt.ini" ]; then
     cat << EOF > "${USER_HOME:?}/.config/mgba/qt.ini"
+
 [shortcutButton]
-quit=2
+quit=6
 
 [shortcutProfileAxis.Xbox%20360%20Controller]
 quit=@String(\0-1)
 
 [shortcutProfileButton.Xbox%20360%20Controller]
-quit=2
+quit=6
 
 EOF
 fi
