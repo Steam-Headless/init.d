@@ -5,7 +5,7 @@
 # File Created: Sunday, 27th August 2023 8:28:04 am
 # Author: Josh.5 (jsunnex@gmail.com)
 # -----
-# Last Modified: Wednesday, 6th September 2023 12:51:42 am
+# Last Modified: Monday, 11th September 2023 4:14:23 pm
 # Modified By: Josh.5 (jsunnex@gmail.com)
 ###
 #
@@ -66,7 +66,7 @@ if [ ! -f "${__install_dir:?}/${package_name,,}-${__latest_package_version:?}-li
 	ln -snf "${__install_dir:?}/citra-room.AppImage" "${USER_HOME:?}/.local/bin/citra-room.AppImage"
 	chmod +x "${__install_dir:?}/citra-room.AppImage"
 	chown ${PUID:?}:${PGID:?} "${USER_HOME:?}"/.local/bin/citra*
-	chown -R ${PUID:?}:${PGID:?} "${__install_dir:?}"
+	set_default_user_ownership "${__install_dir:?}"
 	popd &> /dev/null || { echo "Error: Failed to pop directory out of ${__install_dir:?}"; exit 1; }
     
 	
@@ -159,13 +159,13 @@ EOF
 if ! grep -ri "n3ds:" "${__emulation_path:?}/roms/systems.txt" &>/dev/null; then
     print_step_header "Adding 'n3ds' path to '${__emulation_path:?}/roms/systems.txt'"
     echo "n3ds: " >> "${__emulation_path:?}/roms/systems.txt"
-    chown -R ${PUID:?}:${PGID:?} "${__emulation_path:?}/roms/systems.txt"
+    set_default_user_ownership "${__emulation_path:?}/roms/systems.txt"
 fi
 sed -i 's|^n3ds:.*$|n3ds: Nintendo 3DS|' "${__emulation_path:?}/roms/systems.txt"
 ensure_esde_alternative_emulator_configured "n3ds" "Citra (Standalone)"
 
 # Set correct ownership of created paths
-chown -R ${PUID:?}:${PGID:?} \
+set_default_user_ownership \
     "${USER_HOME:?}"/.config/citra-emu \
     "${USER_HOME:?}"/.local/share/citra-emu \
     "${__emulation_path:?}"/roms/n3ds \

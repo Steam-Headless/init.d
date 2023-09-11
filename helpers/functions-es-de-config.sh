@@ -5,7 +5,7 @@
 # File Created: Monday, 28th August 2023 11:35:55 am
 # Author: Josh.5 (jsunnex@gmail.com)
 # -----
-# Last Modified: Monday, 28th August 2023 12:26:58 pm
+# Last Modified: Monday, 11th September 2023 4:12:55 pm
 # Modified By: Josh.5 (jsunnex@gmail.com)
 ###
 
@@ -31,7 +31,7 @@ function ensure_esde_alternative_emulator_configured {
         fi
     else
         mkdir -p "$(dirname ${__xml_file:?})"
-        chown -R ${PUID:?}:${PGID:?} "$(dirname ${__xml_file:?})"
+        set_default_user_ownership "$(dirname ${__xml_file:?})"
         cat << EOF > "${__xml_file:?}"
 <?xml version="1.0"?>
 <alternativeEmulator>

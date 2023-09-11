@@ -5,7 +5,7 @@
 # File Created: Friday, 25th August 2023 7:27:26 pm
 # Author: Josh.5 (jsunnex@gmail.com)
 # -----
-# Last Modified: Saturday, 9th September 2023 9:43:12 pm
+# Last Modified: Monday, 11th September 2023 4:12:51 pm
 # Modified By: Josh.5 (jsunnex@gmail.com)
 ###
 
@@ -228,12 +228,12 @@ EOF
 if ! grep -ri "switch:" "${__emulation_path:?}/roms/systems.txt" &>/dev/null; then
     print_step_header "Adding 'switch' path to '${__emulation_path:?}/roms/systems.txt'"
     echo "switch: " >> "${__emulation_path:?}/roms/systems.txt"
-    chown -R ${PUID:?}:${PGID:?} "${__emulation_path:?}/roms/systems.txt"
+    set_default_user_ownership "${__emulation_path:?}/roms/systems.txt"
 fi
 sed -i 's|^switch:.*$|switch: Nintendo Switch|' "${__emulation_path:?}/roms/systems.txt"
 
 # Set correct ownership of created paths
-chown -R ${PUID:?}:${PGID:?} \
+set_default_user_ownership \
     "${USER_HOME:?}"/.local/share/yuzu \
     "${USER_HOME:?}"/.config/yuzu \
     "${__emulation_path:?}/roms/switch" \

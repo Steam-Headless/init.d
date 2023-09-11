@@ -5,7 +5,7 @@
 # File Created: Wednesday, 6th September 2023 1:42:38 am
 # Author: Josh.5 (jsunnex@gmail.com)
 # -----
-# Last Modified: Wednesday, 6th September 2023 2:29:38 am
+# Last Modified: Monday, 11th September 2023 4:14:25 pm
 # Modified By: Josh.5 (jsunnex@gmail.com)
 ###
 
@@ -54,7 +54,7 @@ __heroic_game_library_path="/mnt/games/GameLibrary/Heroic"
 if [ -d "${__heroic_game_library_path:?}" ]; then
     mkdir -p \
         "${__heroic_game_library_path:?}"/Prefixes
-    chown -R ${PUID:?}:${PGID:?} ${__heroic_game_library_path:?}
+    set_default_user_ownership ${__heroic_game_library_path:?}
     chown ${PUID:?}:${PGID:?} /mnt/games/GameLibrary
 fi
 
@@ -118,7 +118,7 @@ print_step_header "Adding sunshine entry for ${package_name:?}"
 ensure_sunshine_detached_command_entry "/usr/bin/sunshine-run ${package_executable:?}"
 
 # Set correct ownership of created paths
-chown -R ${PUID:?}:${PGID:?} \
+set_default_user_ownership \
     "${USER_HOME:?}"/.config/heroic 
 
 echo "DONE"
