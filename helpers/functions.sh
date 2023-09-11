@@ -172,12 +172,13 @@ function ensure_sunshine_command_entry {
 
     # Download an icon image
     ensure_icon_exists "${package_name,,}" "${package_icon_url:?}"
+    local __package_icon_path="${USER_HOME:?}/.local/share/icons/hicolor/256x256/apps/${package_name,,}.png"
 
     # Generate updated JSON for Sunshine's app.json file
     __updated_json=$(echo "$__json" | jq \
         --arg package_name "${package_name:?}" \
         --arg new_cmd "${__exec_cmd:?}" \
-        --arg package_icon_path "${package_icon_path:?}" \
+        --arg package_icon_path "${__package_icon_path:?}" \
         --arg working_dir "${USER_HOME:?}" \
         '.apps += [{
             "name": $package_name,
