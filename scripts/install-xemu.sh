@@ -5,7 +5,7 @@
 # File Created: Sunday, 27th August 2023 3:53:57 pm
 # Author: Josh.5 (jsunnex@gmail.com)
 # -----
-# Last Modified: Monday, 4th September 2023 5:37:23 pm
+# Last Modified: Monday, 11th September 2023 4:14:30 pm
 # Modified By: Josh.5 (jsunnex@gmail.com)
 ###
 #
@@ -142,12 +142,12 @@ EOF
 if ! grep -ri "xbox:" "${__emulation_path:?}/roms/systems.txt" &>/dev/null; then
     print_step_header "Adding 'xbox' path to '${__emulation_path:?}/roms/systems.txt'"
     echo "xbox: " >> "${__emulation_path:?}/roms/systems.txt"
-    chown -R ${PUID:?}:${PGID:?} "${__emulation_path:?}/roms/systems.txt"
+    set_default_user_ownership "${__emulation_path:?}/roms/systems.txt"
 fi
 sed -i 's|^xbox:.*$|xbox: Microsoft Xbox|' "${__emulation_path:?}/roms/systems.txt"
 
 # Set correct ownership of created paths
-chown -R ${PUID:?}:${PGID:?} \
+set_default_user_ownership \
     "${USER_HOME:?}"/.local/share/xemu/xemu \
     "${__emulation_path:?}"/storage/xemu \
     "${__emulation_path:?}"/roms/xbox

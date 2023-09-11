@@ -5,7 +5,7 @@
 # File Created: Sunday, 3rd September 2023 10:21:43 am
 # Author: Josh.5 (jsunnex@gmail.com)
 # -----
-# Last Modified: Sunday, 3rd September 2023 11:14:48 am
+# Last Modified: Monday, 11th September 2023 4:14:29 pm
 # Modified By: Josh.5 (jsunnex@gmail.com)
 ###
 #
@@ -57,6 +57,6 @@ if [ ! -f "${package_executable:?}" ] || [ ! -f "${USER_HOME:?}/.cache/init.d/in
 else
     print_step_header "Latest version of ${package_name:?} version ${__latest_package_version:?} already installed"
 fi
-chown -R ${PUID:?}:${PGID:?} "${USER_HOME:?}/.local/share/${package_name:?}"
+set_default_user_ownership "${USER_HOME:?}/.local/share/${package_name:?}"
 
 echo "DONE"

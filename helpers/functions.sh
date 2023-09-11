@@ -5,7 +5,7 @@
 # File Created: Friday, 25th August 2023 4:26:49 pm
 # Author: Josh.5 (jsunnex@gmail.com)
 # -----
-# Last Modified: Wednesday, 6th September 2023 1:16:09 am
+# Last Modified: Monday, 11th September 2023 4:13:04 pm
 # Modified By: Josh.5 (jsunnex@gmail.com)
 ###
 
@@ -21,6 +21,14 @@ function print_step_error {
     echo -e "    \e[31mERROR: \e[33m${@:?}\e[0m"
 }
 
+function set_default_user_ownership {
+    if [ $(id -u) -gt 0 ]; then
+        echo "WARNING!  Unable to set ownership of '${@}'. Executed as non-root user."
+    else
+        chown -R ${PUID:?}:${PGID:?} ${@}
+    fi
+}
+
 function fetch_appimage_and_make_executable {
     wget -O "${package_executable:?}" \
         --quiet -o /dev/null \
@@ -28,7 +36,7 @@ function fetch_appimage_and_make_executable {
         --progress=bar:force:noscroll \
         "${@:?}"
     chmod +x "${package_executable:?}"
-    chown -R ${PUID:?}:${PGID:?} "${package_executable:?}"
+    set_default_user_ownership "${package_executable:?}"
 }
 
 function install_xdg_icon {
@@ -46,7 +54,7 @@ function install_xdg_icon {
         # Loop over sizes and create scaled icons
         for size in "${__sizes[@]}"; do
             mkdir -p "${__convert_temp_dir:?}/${size:?}"
-            chown -R ${PUID:?}:${PGID:?} "${__convert_temp_dir:?}"
+            set_default_user_ownership "${__convert_temp_dir:?}"
             # Scale the icon to the desired size using ImageMagick's convert command
             convert "${__input_icon_path:?}" -resize "${size:?}" "${__convert_temp_dir:?}/${size:?}/${__input_icon_name:?}.png"
             # Install the scaled icon using xdg-icon-resource
@@ -58,7 +66,7 @@ function install_xdg_icon {
         # If convert is not available, install a 256x256 version of the icon
         su - default -c "xdg-icon-resource install --novendor --mode user --size 256 ${__input_icon_path:?}"
     fi
-    chown -R ${PUID:?}:${PGID:?} "${USER_HOME:?}/.local/share/icons"
+    set_default_user_ownership "${USER_HOME:?}/.local/share/icons"
 }
 
 function ensure_icon_exists {
@@ -78,7 +86,7 @@ function ensure_icon_exists {
             --progress=bar:force:noscroll \
             "${__input_icon_url:?}"
         # Install the icon
-        chown -R ${PUID:?}:${PGID:?} "${__temp_dir:?}"
+        set_default_user_ownership "${__temp_dir:?}"
         install_xdg_icon "${__input_icon_name:?}" "${__temp_dir:?}/${__input_icon_name:?}.png"
         # Remove temp dir
         rm -rf "${__temp_dir:?}"
@@ -107,7 +115,7 @@ TryExec=${package_executable:?}
 Terminal=false
 StartupNotify=false
 EOF
-        chown -R ${PUID:?}:${PGID:?} "${menu_shortcut:?}"
+        set_default_user_ownership "${menu_shortcut:?}"
         chmod 644 "${menu_shortcut:?}"
     fi
 }

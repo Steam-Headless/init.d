@@ -5,7 +5,7 @@
 # File Created: Sunday, 27th August 2023 8:28:04 am
 # Author: Josh.5 (jsunnex@gmail.com)
 # -----
-# Last Modified: Monday, 4th September 2023 5:37:25 pm
+# Last Modified: Monday, 11th September 2023 4:14:26 pm
 # Modified By: Josh.5 (jsunnex@gmail.com)
 ###
 #
@@ -201,13 +201,13 @@ EOF
 if ! grep -ri "gba:" "${__emulation_path:?}/roms/systems.txt" &>/dev/null; then
     print_step_header "Adding 'gba' path to '${__emulation_path:?}/roms/systems.txt'"
     echo "gba: " >> "${__emulation_path:?}/roms/systems.txt"
-    chown -R ${PUID:?}:${PGID:?} "${__emulation_path:?}/roms/systems.txt"
+    set_default_user_ownership "${__emulation_path:?}/roms/systems.txt"
 fi
 sed -i 's|^gba:.*$|gba: Nintendo Game Boy Advance|' "${__emulation_path:?}/roms/systems.txt"
 ensure_esde_alternative_emulator_configured "gba" "mGBA (Standalone)"
 
 # Set correct ownership of created paths
-chown -R ${PUID:?}:${PGID:?} \
+set_default_user_ownership \
     "${USER_HOME:?}"/.config/mgba \
     "${__emulation_path:?}"/storage/mgba \
     "${__emulation_path:?}"/roms/gba \

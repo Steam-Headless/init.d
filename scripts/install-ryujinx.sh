@@ -5,7 +5,7 @@
 # File Created: Friday, 1st September 2023 3:57:42 pm
 # Author: Josh.5 (jsunnex@gmail.com)
 # -----
-# Last Modified: Monday, 4th September 2023 5:37:04 pm
+# Last Modified: Monday, 11th September 2023 4:14:29 pm
 # Modified By: Josh.5 (jsunnex@gmail.com)
 ###
 #
@@ -60,7 +60,7 @@ if [ ! -f "${package_executable:?}" ] || [ ! -f "${USER_HOME:?}/.cache/init.d/in
     mkdir -p "${USER_HOME:?}/.local/bin"
     ln -snf "${__install_dir:?}/publish/Ryujinx.sh" "${package_executable:?}"
     chown ${PUID:?}:${PGID:?} "${package_executable:?}"
-    chown -R ${PUID:?}:${PGID:?} "${__install_dir:?}"
+    set_default_user_ownership "${__install_dir:?}"
     popd &> /dev/null || { echo "Error: Failed to pop directory out of ${__install_dir:?}"; exit 1; }
 
     # Ensure this package has a start menu link (will create it if missing)
@@ -298,12 +298,12 @@ EOF
 if ! grep -ri "switch:" "${__emulation_path:?}/roms/systems.txt" &>/dev/null; then
     print_step_header "Adding 'switch' path to '${__emulation_path:?}/roms/systems.txt'"
     echo "switch: " >> "${__emulation_path:?}/roms/systems.txt"
-    chown -R ${PUID:?}:${PGID:?} "${__emulation_path:?}/roms/systems.txt"
+    set_default_user_ownership "${__emulation_path:?}/roms/systems.txt"
 fi
 sed -i 's|^switch:.*$|switch: Nintendo Switch|' "${__emulation_path:?}/roms/systems.txt"
 
 # Set correct ownership of created paths
-chown -R ${PUID:?}:${PGID:?} \
+set_default_user_ownership \
     "${USER_HOME:?}"/.config/Ryujinx \
     "${__emulation_path:?}/roms/switch" \
     "${__emulation_path:?}/bios/ryujinx" \

@@ -5,7 +5,7 @@
 # File Created: Saturday, 2nd September 2023 11:08:22 am
 # Author: Josh.5 (jsunnex@gmail.com)
 # -----
-# Last Modified: Monday, 4th September 2023 5:36:39 pm
+# Last Modified: Monday, 11th September 2023 4:14:21 pm
 # Modified By: Josh.5 (jsunnex@gmail.com)
 ###
 #
@@ -351,12 +351,12 @@ EOF
 if ! grep -ri "wiiu:" "${__emulation_path:?}/roms/systems.txt" &>/dev/null; then
     print_step_header "Adding 'wiiu' path to '${__emulation_path:?}/roms/systems.txt'"
     echo "wiiu: " >> "${__emulation_path:?}/roms/systems.txt"
-    chown -R ${PUID:?}:${PGID:?} "${__emulation_path:?}/roms/systems.txt"
+    set_default_user_ownership "${__emulation_path:?}/roms/systems.txt"
 fi
 sed -i 's|^wiiu:.*$|wiiu: Nintendo Wii U|' "${__emulation_path:?}/roms/systems.txt"
 
 # Set correct ownership of created paths
-chown -R ${PUID:?}:${PGID:?} \
+set_default_user_ownership \
     "${USER_HOME:?}"/.config/Cemu \
     "${__emulation_path:?}/roms/wiiu" \
     "${__emulation_path:?}/bios/cemu" \
