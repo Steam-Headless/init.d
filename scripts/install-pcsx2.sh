@@ -5,7 +5,7 @@
 # File Created: Sunday, 27th August 2023 8:28:04 am
 # Author: Josh.5 (jsunnex@gmail.com)
 # -----
-# Last Modified: Monday, 11th September 2023 4:14:27 pm
+# Last Modified: Monday, 11th September 2023 7:53:21 pm
 # Modified By: Josh.5 (jsunnex@gmail.com)
 ###
 #
@@ -20,6 +20,17 @@
 #
 ###
 
+set -euo pipefail
+
+
+# Import helpers
+source "${USER_HOME:?}/init.d/helpers/functions.sh"
+source "${USER_HOME:?}/init.d/helpers/functions-es-de-config.sh"
+
+
+# Ensure this script is being executed as the default user
+exec_script_as_default_user
+
 
 # Config
 package_name="pcsx2"
@@ -27,12 +38,8 @@ package_description="Sony Playstation 2 Emulator"
 package_icon_url="https://cdn2.steamgriddb.com/file/sgdb-cdn/icon/9a32ff36c65e8ba30915a21b7bd76506/32/24x24.png"
 package_executable="${USER_HOME:?}/Applications/${package_name:?}.AppImage"
 package_category="Game"
-
-
-source "${USER_HOME:?}/init.d/helpers/setup-directories.sh"
-source "${USER_HOME:?}/init.d/helpers/functions.sh"
-source "${USER_HOME:?}/init.d/helpers/functions-es-de-config.sh"
 print_package_name
+
 
 # Check for a new version to install
 __latest_registery_url=$(wget -O - -o /dev/null https://api.github.com/repos/PCSX2/pcsx2/releases | jq -r '.[0].url')
@@ -182,11 +189,5 @@ EOF
 fi
 
 ensure_esde_alternative_emulator_configured "ps2" "PCSX2 (Standalone)"
-
-# Set correct ownership of created paths
-chown -R ${PUID:?}:${PGID:?} \
-    "${USER_HOME:?}"/.config/PCSX2 \
-    "${__emulation_path:?}"/roms/ps2 \
-    "${__emulation_path:?}"/storage/pcsx2
 
 echo "DONE"

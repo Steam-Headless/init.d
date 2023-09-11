@@ -5,7 +5,7 @@
 # File Created: Sunday, 27th August 2023 8:28:04 am
 # Author: Josh.5 (jsunnex@gmail.com)
 # -----
-# Last Modified: Monday, 11th September 2023 4:14:23 pm
+# Last Modified: Monday, 11th September 2023 7:41:41 pm
 # Modified By: Josh.5 (jsunnex@gmail.com)
 ###
 #
@@ -20,6 +20,17 @@
 #
 ###
 
+set -euo pipefail
+
+
+# Import helpers
+source "${USER_HOME:?}/init.d/helpers/functions.sh"
+source "${USER_HOME:?}/init.d/helpers/functions-es-de-config.sh"
+
+
+# Ensure this script is being executed as the default user
+exec_script_as_default_user
+
 
 # Config
 package_name="citra-canary"
@@ -27,11 +38,6 @@ package_description="3DS Emulator"
 package_icon_url="https://cdn2.steamgriddb.com/file/sgdb-cdn/icon/075b24b68eb3cb44b3fa4e331d86db89.png"
 package_executable="${USER_HOME:?}/Applications/${package_name:?}.AppImage"
 package_category="Game"
-
-
-source "${USER_HOME:?}/init.d/helpers/setup-directories.sh"
-source "${USER_HOME:?}/init.d/helpers/functions.sh"
-source "${USER_HOME:?}/init.d/helpers/functions-es-de-config.sh"
 print_package_name
 
 
@@ -65,8 +71,6 @@ if [ ! -f "${__install_dir:?}/${package_name,,}-${__latest_package_version:?}-li
 	chmod +x "${__install_dir:?}/citra-qt.AppImage"
 	ln -snf "${__install_dir:?}/citra-room.AppImage" "${USER_HOME:?}/.local/bin/citra-room.AppImage"
 	chmod +x "${__install_dir:?}/citra-room.AppImage"
-	chown ${PUID:?}:${PGID:?} "${USER_HOME:?}"/.local/bin/citra*
-	set_default_user_ownership "${__install_dir:?}"
 	popd &> /dev/null || { echo "Error: Failed to pop directory out of ${__install_dir:?}"; exit 1; }
     
 	
@@ -159,16 +163,8 @@ EOF
 if ! grep -ri "n3ds:" "${__emulation_path:?}/roms/systems.txt" &>/dev/null; then
     print_step_header "Adding 'n3ds' path to '${__emulation_path:?}/roms/systems.txt'"
     echo "n3ds: " >> "${__emulation_path:?}/roms/systems.txt"
-    set_default_user_ownership "${__emulation_path:?}/roms/systems.txt"
 fi
 sed -i 's|^n3ds:.*$|n3ds: Nintendo 3DS|' "${__emulation_path:?}/roms/systems.txt"
 ensure_esde_alternative_emulator_configured "n3ds" "Citra (Standalone)"
-
-# Set correct ownership of created paths
-set_default_user_ownership \
-    "${USER_HOME:?}"/.config/citra-emu \
-    "${USER_HOME:?}"/.local/share/citra-emu \
-    "${__emulation_path:?}"/roms/n3ds \
-    "${__emulation_path:?}"/storage/citra
 
 echo "DONE"

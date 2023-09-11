@@ -5,9 +5,20 @@
 # File Created: Sunday, 27th August 2023 8:28:04 am
 # Author: Josh.5 (jsunnex@gmail.com)
 # -----
-# Last Modified: Monday, 11th September 2023 4:14:28 pm
+# Last Modified: Monday, 11th September 2023 7:53:44 pm
 # Modified By: Josh.5 (jsunnex@gmail.com)
 ###
+
+set -euo pipefail
+
+
+# Import helpers
+source "${USER_HOME:?}/init.d/helpers/functions.sh"
+source "${USER_HOME:?}/init.d/helpers/functions-es-de-config.sh"
+
+
+# Ensure this script is being executed as the default user
+exec_script_as_default_user
 
 
 # Config
@@ -16,11 +27,6 @@ package_description="Sony Playstation 3 Emulator"
 package_icon_url="https://cdn2.steamgriddb.com/file/sgdb-cdn/icon/add5aebfcb33a2206b6497d53bc4f309/32/24x24.png"
 package_executable="${USER_HOME:?}/Applications/${package_name:?}.AppImage"
 package_category="Game"
-
-
-source "${USER_HOME:?}/init.d/helpers/setup-directories.sh"
-source "${USER_HOME:?}/init.d/helpers/functions.sh"
-source "${USER_HOME:?}/init.d/helpers/functions-es-de-config.sh"
 print_package_name
 
 
@@ -167,11 +173,5 @@ fi
 touch "${__emulation_path:?}/roms/ps3/rename_rom_root_dirs_from_DIR_to_DIR.ps3dir.txt"
 
 ensure_esde_alternative_emulator_configured "ps3" "RPCS3 Directory (Standalone)"
-
-# Set correct ownership of created paths
-chown -R ${PUID:?}:${PGID:?} \
-    "${USER_HOME:?}"/.config/rpcs3 \
-    "${__emulation_path:?}"/storage/rpcs3 \
-    "${__emulation_path:?}"/roms/ps3
 
 echo "DONE"

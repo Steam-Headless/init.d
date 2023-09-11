@@ -5,7 +5,7 @@
 # File Created: Sunday, 3rd September 2023 10:21:43 am
 # Author: Josh.5 (jsunnex@gmail.com)
 # -----
-# Last Modified: Monday, 11th September 2023 4:14:29 pm
+# Last Modified: Monday, 11th September 2023 7:42:21 pm
 # Modified By: Josh.5 (jsunnex@gmail.com)
 ###
 #
@@ -18,6 +18,16 @@
 #
 ###
 
+set -euo pipefail
+
+
+# Import helpers
+source "${USER_HOME:?}/init.d/helpers/functions.sh"
+
+
+# Ensure this script is being executed as the default user
+exec_script_as_default_user
+
 
 # Config
 package_name="WiiUDownloader"
@@ -25,10 +35,6 @@ package_description="WiiUDownloader is a Golang program that allows you to downl
 package_icon_url="https://www.clipartmax.com/png/middle/108-1081687_playstation-3-wii-u-wii-u-logo-png.png"
 package_executable="${USER_HOME:?}/.local/share/${package_name:?}/${package_name:?}.AppImage"
 package_category="Utility"
-
-
-source "${USER_HOME:?}/init.d/helpers/setup-directories.sh"
-source "${USER_HOME:?}/init.d/helpers/functions.sh"
 print_package_name
 
 
@@ -57,6 +63,5 @@ if [ ! -f "${package_executable:?}" ] || [ ! -f "${USER_HOME:?}/.cache/init.d/in
 else
     print_step_header "Latest version of ${package_name:?} version ${__latest_package_version:?} already installed"
 fi
-set_default_user_ownership "${USER_HOME:?}/.local/share/${package_name:?}"
 
 echo "DONE"

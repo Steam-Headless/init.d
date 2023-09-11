@@ -5,7 +5,7 @@
 # File Created: Sunday, 27th August 2023 3:53:57 pm
 # Author: Josh.5 (jsunnex@gmail.com)
 # -----
-# Last Modified: Monday, 11th September 2023 4:14:30 pm
+# Last Modified: Monday, 11th September 2023 7:42:24 pm
 # Modified By: Josh.5 (jsunnex@gmail.com)
 ###
 #
@@ -19,6 +19,16 @@
 #
 ###
 
+set -euo pipefail
+
+
+# Import helpers
+source "${USER_HOME:?}/init.d/helpers/functions.sh"
+
+
+# Ensure this script is being executed as the default user
+exec_script_as_default_user
+
 
 # Config
 package_name="xemu"
@@ -26,10 +36,6 @@ package_description="A free and open-source application that emulates the origin
 package_icon_url="https://cdn2.steamgriddb.com/file/sgdb-cdn/logo_thumb/8f6240dce8bc1548c3f66bc5ed17369f.png"
 package_executable="${USER_HOME:?}/Applications/${package_name:?}.AppImage"
 package_category="Game"
-
-
-source "${USER_HOME:?}/init.d/helpers/setup-directories.sh"
-source "${USER_HOME:?}/init.d/helpers/functions.sh"
 print_package_name
 
 
@@ -142,14 +148,7 @@ EOF
 if ! grep -ri "xbox:" "${__emulation_path:?}/roms/systems.txt" &>/dev/null; then
     print_step_header "Adding 'xbox' path to '${__emulation_path:?}/roms/systems.txt'"
     echo "xbox: " >> "${__emulation_path:?}/roms/systems.txt"
-    set_default_user_ownership "${__emulation_path:?}/roms/systems.txt"
 fi
 sed -i 's|^xbox:.*$|xbox: Microsoft Xbox|' "${__emulation_path:?}/roms/systems.txt"
-
-# Set correct ownership of created paths
-set_default_user_ownership \
-    "${USER_HOME:?}"/.local/share/xemu/xemu \
-    "${__emulation_path:?}"/storage/xemu \
-    "${__emulation_path:?}"/roms/xbox
 
 echo "DONE"

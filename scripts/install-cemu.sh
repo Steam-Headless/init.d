@@ -5,7 +5,7 @@
 # File Created: Saturday, 2nd September 2023 11:08:22 am
 # Author: Josh.5 (jsunnex@gmail.com)
 # -----
-# Last Modified: Monday, 11th September 2023 4:14:21 pm
+# Last Modified: Monday, 11th September 2023 7:41:33 pm
 # Modified By: Josh.5 (jsunnex@gmail.com)
 ###
 #
@@ -19,6 +19,16 @@
 #
 ###
 
+set -euo pipefail
+
+
+# Import helpers
+source "${USER_HOME:?}/init.d/helpers/functions.sh"
+
+
+# Ensure this script is being executed as the default user
+exec_script_as_default_user
+
 
 # Config
 package_name="Cemu"
@@ -26,10 +36,6 @@ package_description="Nintendo Wii U Emulator"
 package_icon_url="https://upload.wikimedia.org/wikipedia/commons/2/25/Cemu_Emulator_icon.png"
 package_executable="${USER_HOME:?}/Applications/${package_name,,}.AppImage"
 package_category="Game"
-
-
-source "${USER_HOME:?}/init.d/helpers/setup-directories.sh"
-source "${USER_HOME:?}/init.d/helpers/functions.sh"
 print_package_name
 
 
@@ -351,15 +357,7 @@ EOF
 if ! grep -ri "wiiu:" "${__emulation_path:?}/roms/systems.txt" &>/dev/null; then
     print_step_header "Adding 'wiiu' path to '${__emulation_path:?}/roms/systems.txt'"
     echo "wiiu: " >> "${__emulation_path:?}/roms/systems.txt"
-    set_default_user_ownership "${__emulation_path:?}/roms/systems.txt"
 fi
 sed -i 's|^wiiu:.*$|wiiu: Nintendo Wii U|' "${__emulation_path:?}/roms/systems.txt"
-
-# Set correct ownership of created paths
-set_default_user_ownership \
-    "${USER_HOME:?}"/.config/Cemu \
-    "${__emulation_path:?}/roms/wiiu" \
-    "${__emulation_path:?}/bios/cemu" \
-    "${__emulation_path:?}/storage/cemu"
 
 echo "DONE"

@@ -5,9 +5,18 @@
 # File Created: Friday, 25th August 2023 4:26:49 pm
 # Author: Josh.5 (jsunnex@gmail.com)
 # -----
-# Last Modified: Monday, 11th September 2023 4:13:04 pm
+# Last Modified: Monday, 11th September 2023 7:41:11 pm
 # Modified By: Josh.5 (jsunnex@gmail.com)
 ###
+
+function exec_script_as_default_user {
+    if [ "$(id -u)" -eq 0 ]; then
+        # Re-execute the script as the specified user with arguments
+        su default -c "$0" "$@"
+        # Exit the current root instance of the script
+        exit $?
+    fi
+}
 
 function print_package_name {
     echo "**** ${package_name:?} ****"
@@ -30,13 +39,13 @@ function set_default_user_ownership {
 }
 
 function fetch_appimage_and_make_executable {
+    mkdir -p "$(dirname "${package_executable:?}")"
     wget -O "${package_executable:?}" \
         --quiet -o /dev/null \
         --no-verbose --show-progress \
         --progress=bar:force:noscroll \
         "${@:?}"
     chmod +x "${package_executable:?}"
-    set_default_user_ownership "${package_executable:?}"
 }
 
 function install_xdg_icon {
@@ -54,19 +63,17 @@ function install_xdg_icon {
         # Loop over sizes and create scaled icons
         for size in "${__sizes[@]}"; do
             mkdir -p "${__convert_temp_dir:?}/${size:?}"
-            set_default_user_ownership "${__convert_temp_dir:?}"
             # Scale the icon to the desired size using ImageMagick's convert command
             convert "${__input_icon_path:?}" -resize "${size:?}" "${__convert_temp_dir:?}/${size:?}/${__input_icon_name:?}.png"
             # Install the scaled icon using xdg-icon-resource
-            su - default -c "xdg-icon-resource install --novendor --mode user --size ${size%%x*} ${__convert_temp_dir:?}/${size:?}/${__input_icon_name:?}.png"
+            xdg-icon-resource install --novendor --mode user --size ${size%%x*} "${__convert_temp_dir:?}/${size:?}/${__input_icon_name:?}.png"
         done
         # Remove temp dir
         rm -rf "${__temp_dir:?}"
     else
         # If convert is not available, install a 256x256 version of the icon
-        su - default -c "xdg-icon-resource install --novendor --mode user --size 256 ${__input_icon_path:?}"
+        xdg-icon-resource install --novendor --mode user --size 256 "${__input_icon_path:?}"
     fi
-    set_default_user_ownership "${USER_HOME:?}/.local/share/icons"
 }
 
 function ensure_icon_exists {
@@ -86,7 +93,6 @@ function ensure_icon_exists {
             --progress=bar:force:noscroll \
             "${__input_icon_url:?}"
         # Install the icon
-        set_default_user_ownership "${__temp_dir:?}"
         install_xdg_icon "${__input_icon_name:?}" "${__temp_dir:?}/${__input_icon_name:?}.png"
         # Remove temp dir
         rm -rf "${__temp_dir:?}"
@@ -115,7 +121,6 @@ TryExec=${package_executable:?}
 Terminal=false
 StartupNotify=false
 EOF
-        set_default_user_ownership "${menu_shortcut:?}"
         chmod 644 "${menu_shortcut:?}"
     fi
 }

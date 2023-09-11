@@ -5,7 +5,7 @@
 # File Created: Wednesday, 23rd August 2023 7:16:02 pm
 # Author: Josh.5 (jsunnex@gmail.com)
 # -----
-# Last Modified: Monday, 4th September 2023 5:37:11 pm
+# Last Modified: Monday, 11th September 2023 7:42:28 pm
 # Modified By: Josh.5 (jsunnex@gmail.com)
 ###
 #
@@ -19,6 +19,16 @@
 #
 ###
 
+set -euo pipefail
+
+
+# Import helpers
+source "${USER_HOME:?}/init.d/helpers/functions.sh"
+
+
+# Ensure this script is being executed as the default user
+exec_script_as_default_user
+
 
 # Config
 package_name="Yuzu"
@@ -26,10 +36,6 @@ package_description="Nintendo Switch Emulator"
 package_icon_url="https://raw.githubusercontent.com/yuzu-emu/yuzu-assets/master/icons/icon.png"
 package_executable="${USER_HOME:?}/Applications/${package_name,,}.AppImage"
 package_category="Game"
-
-
-source "${USER_HOME:?}/init.d/helpers/setup-directories.sh"
-source "${USER_HOME:?}/init.d/helpers/functions.sh"
 print_package_name
 
 

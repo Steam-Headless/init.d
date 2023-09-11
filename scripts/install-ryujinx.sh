@@ -5,7 +5,7 @@
 # File Created: Friday, 1st September 2023 3:57:42 pm
 # Author: Josh.5 (jsunnex@gmail.com)
 # -----
-# Last Modified: Monday, 11th September 2023 4:14:29 pm
+# Last Modified: Monday, 11th September 2023 7:42:19 pm
 # Modified By: Josh.5 (jsunnex@gmail.com)
 ###
 #
@@ -19,6 +19,16 @@
 #
 ###
 
+set -euo pipefail
+
+
+# Import helpers
+source "${USER_HOME:?}/init.d/helpers/functions.sh"
+
+
+# Ensure this script is being executed as the default user
+exec_script_as_default_user
+
 
 # Config
 package_name="Ryujinx"
@@ -26,10 +36,6 @@ package_description="Nintendo Switch Emulator"
 package_icon_url="https://upload.wikimedia.org/wikipedia/commons/0/07/Ryujinx_Logo.png"
 package_executable="${USER_HOME:?}/.local/bin/${package_name,,}"
 package_category="Game"
-
-
-source "${USER_HOME:?}/init.d/helpers/setup-directories.sh"
-source "${USER_HOME:?}/init.d/helpers/functions.sh"
 print_package_name
 
 
@@ -59,8 +65,6 @@ if [ ! -f "${package_executable:?}" ] || [ ! -f "${USER_HOME:?}/.cache/init.d/in
     tar -xf "${__install_dir:?}/${package_name,,}-${__latest_package_version:?}-linux_x64.tar.gz"
     mkdir -p "${USER_HOME:?}/.local/bin"
     ln -snf "${__install_dir:?}/publish/Ryujinx.sh" "${package_executable:?}"
-    chown ${PUID:?}:${PGID:?} "${package_executable:?}"
-    set_default_user_ownership "${__install_dir:?}"
     popd &> /dev/null || { echo "Error: Failed to pop directory out of ${__install_dir:?}"; exit 1; }
 
     # Ensure this package has a start menu link (will create it if missing)
@@ -298,16 +302,7 @@ EOF
 if ! grep -ri "switch:" "${__emulation_path:?}/roms/systems.txt" &>/dev/null; then
     print_step_header "Adding 'switch' path to '${__emulation_path:?}/roms/systems.txt'"
     echo "switch: " >> "${__emulation_path:?}/roms/systems.txt"
-    set_default_user_ownership "${__emulation_path:?}/roms/systems.txt"
 fi
 sed -i 's|^switch:.*$|switch: Nintendo Switch|' "${__emulation_path:?}/roms/systems.txt"
-
-# Set correct ownership of created paths
-set_default_user_ownership \
-    "${USER_HOME:?}"/.config/Ryujinx \
-    "${__emulation_path:?}/roms/switch" \
-    "${__emulation_path:?}/bios/ryujinx" \
-    "${__emulation_path:?}/storage/ryujinx"
-
 
 echo "DONE"
