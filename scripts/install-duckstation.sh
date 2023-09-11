@@ -5,7 +5,7 @@
 # File Created: Sunday, 27th August 2023 8:28:04 am
 # Author: Josh.5 (jsunnex@gmail.com)
 # -----
-# Last Modified: Monday, 11th September 2023 4:14:24 pm
+# Last Modified: Monday, 11th September 2023 7:53:03 pm
 # Modified By: Josh.5 (jsunnex@gmail.com)
 ###
 #
@@ -20,6 +20,17 @@
 #
 ###
 
+set -euo pipefail
+
+
+# Import helpers
+source "${USER_HOME:?}/init.d/helpers/functions.sh"
+source "${USER_HOME:?}/init.d/helpers/functions-es-de-config.sh"
+
+
+# Ensure this script is being executed as the default user
+exec_script_as_default_user
+
 
 # Config
 package_name="duckstation-qt"
@@ -27,11 +38,6 @@ package_description="Playstation Emulator"
 package_icon_url="https://cdn2.steamgriddb.com/file/sgdb-cdn/icon/e1f581b9f9af4ca9be996aa40da6759e/32/24x24.png"
 package_executable="${USER_HOME:?}/Applications/${package_name:?}.AppImage"
 package_category="Game"
-
-
-source "${USER_HOME:?}/init.d/helpers/setup-directories.sh"
-source "${USER_HOME:?}/init.d/helpers/functions.sh"
-source "${USER_HOME:?}/init.d/helpers/functions-es-de-config.sh"
 print_package_name
 
 
@@ -59,6 +65,7 @@ if [ ! -f "${package_executable:?}" ] || [ ! -f "${USER_HOME:?}/.cache/init.d/in
 else
     print_step_header "Latest version of ${package_name:?} version ${__latest_package_version:?} already installed"
 fi
+
 
 # Generate duckstation Emulation directory structure
 __emulation_path="/mnt/games/Emulation"
@@ -388,11 +395,5 @@ EOF
 fi
 
 ensure_esde_alternative_emulator_configured "psx" "DuckStation (Standalone)"
-
-# Set correct ownership of created paths
-chown -R ${PUID:?}:${PGID:?} \
-    "${USER_HOME:?}"/.local/share/duckstation \
-    "${__emulation_path:?}"/roms/psx \
-    "${__emulation_path:?}"/storage/duckstation 
 
 echo "DONE"

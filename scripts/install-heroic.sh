@@ -5,9 +5,28 @@
 # File Created: Wednesday, 6th September 2023 1:42:38 am
 # Author: Josh.5 (jsunnex@gmail.com)
 # -----
-# Last Modified: Monday, 11th September 2023 4:14:25 pm
+# Last Modified: Monday, 11th September 2023 7:41:53 pm
 # Modified By: Josh.5 (jsunnex@gmail.com)
 ###
+#
+# About:
+#   Install Heroic Launcher during container startup.
+#
+# Guide:
+#   Add this script to your startup scripts by running:
+#       $ ln -sf "./scripts/install-heroic.sh" "${USER_HOME:?}/init.d/install-heroic.sh"
+#
+###
+
+set -euo pipefail
+
+
+# Import helpers
+source "${USER_HOME:?}/init.d/helpers/functions.sh"
+
+
+# Ensure this script is being executed as the default user
+exec_script_as_default_user
 
 
 # Config
@@ -16,10 +35,6 @@ package_description="Heroic Games Launcher is an Open Source GOG and Epic games 
 package_icon_url="https://heroicgameslauncher.com/_next/static/images/logo-29caca3fc66e11655d58060009610568.png"
 package_executable="${USER_HOME:?}/Applications/${package_name:?}.AppImage"
 package_category="Game"
-
-
-source "${USER_HOME:?}/init.d/helpers/setup-directories.sh"
-source "${USER_HOME:?}/init.d/helpers/functions.sh"
 print_package_name
 
 
@@ -54,8 +69,6 @@ __heroic_game_library_path="/mnt/games/GameLibrary/Heroic"
 if [ -d "${__heroic_game_library_path:?}" ]; then
     mkdir -p \
         "${__heroic_game_library_path:?}"/Prefixes
-    set_default_user_ownership ${__heroic_game_library_path:?}
-    chown ${PUID:?}:${PGID:?} /mnt/games/GameLibrary
 fi
 
 # Install default Ryujinx config
@@ -116,9 +129,5 @@ fi
 # Configure Sunshine entry
 print_step_header "Adding sunshine entry for ${package_name:?}"
 ensure_sunshine_detached_command_entry "/usr/bin/sunshine-run ${package_executable:?}"
-
-# Set correct ownership of created paths
-set_default_user_ownership \
-    "${USER_HOME:?}"/.config/heroic 
 
 echo "DONE"

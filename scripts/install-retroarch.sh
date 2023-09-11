@@ -5,7 +5,7 @@
 # File Created: Sunday, 27th August 2023 8:28:04 am
 # Author: Josh.5 (jsunnex@gmail.com)
 # -----
-# Last Modified: Friday, 1st September 2023 1:34:02 pm
+# Last Modified: Monday, 11th September 2023 7:54:42 pm
 # Modified By: Josh.5 (jsunnex@gmail.com)
 ###
 #
@@ -20,6 +20,17 @@
 #
 ###
 
+set -euo pipefail
+
+
+# Import helpers
+source "${USER_HOME:?}/init.d/helpers/functions.sh"
+source "${USER_HOME:?}/init.d/helpers/functions-es-de-config.sh"
+
+
+# Ensure this script is being executed as the default user
+exec_script_as_default_user
+
 
 # Config
 package_name="RetroArch-Linux"
@@ -27,14 +38,8 @@ package_description="Multi System Emulator"
 package_icon_url="https://cdn2.steamgriddb.com/file/sgdb-cdn/icon/b36fd154dd0df788b77b7cfe39200ba3.png"
 package_executable="${USER_HOME:?}/.local/bin/${package_name:?}.AppImage"
 package_category="Game"
-
-
-source "${USER_HOME:?}/init.d/helpers/setup-directories.sh"
-source "${USER_HOME:?}/init.d/helpers/functions.sh"
-source "${USER_HOME:?}/init.d/helpers/functions-es-de-config.sh"
 print_package_name
 
-set +e
 
 # Check for a new version to install
 __buildbot_html_content=$(curl --silent "https://buildbot.libretro.com/nightly/linux/x86_64/")
@@ -62,8 +67,6 @@ if [ ! -f "${package_executable:?}" ] || [ ! -f "${USER_HOME:?}/.cache/init.d/in
     7z x "${__install_dir:?}/${package_name,,}-${__latest_package_version:?}-linux-x86_64.7z" -aoa
     mkdir -p "${USER_HOME:?}/.local/bin"
     ln -snf "${__install_dir:?}/RetroArch-Linux-x86_64/RetroArch-Linux-x86_64.AppImage" "${package_executable:?}"
-    chown ${PUID:?}:${PGID:?} "${package_executable:?}"
-    chown -R ${PUID:?}:${PGID:?} "${__install_dir:?}"
     popd &> /dev/null || { echo "Error: Failed to pop directory out of ${__install_dir:?}"; exit 1; }
 	
     # Download cores if they do not exist, if they exist user can update them using the UI
@@ -146,10 +149,5 @@ fi
 ##reference "../../shaders/shaders_slang/presets/xsoft+scalefx-level2aa+sharpsmoother.slangp"
 #EOF
 #fi
-
-# Set correct ownership of created paths
-chown -R ${PUID:?}:${PGID:?} \
-    "${USER_HOME:?}"/.local/share/retroarch \
-    "${__emulation_path:?}"/storage/retroarch
 
 echo "DONE"
