@@ -55,10 +55,12 @@ mkdir -p "${romsPath:?}"
 __steamapps=$(ls "${steamPath}" | grep ".acf")
 
 for __steamapp in ${__steamapps:?}; do
-    steam_id=grep appid ${__steamapp} | cut -d '"' -f 4
-	steam_name=grep name ${__steamapp} | cut -d '"' -f 4
-    es_entry="${romsPath:?}/${steam_name:?}.desktop"
-	es_shortcut=$(CreateXDGDesktopShorcut ${steam_id:?} ${steam_name:?})
-	
-	echo "${es_shortcut:?}" > "${es_entry:?}"
+    steam_id=$(grep "appid" "${steamPath:?}/${__steamapp}" | cut -d '"' -f 4)
+    steam_name=$(grep "name" "${steamPath:?}/${__steamapp}" | cut -d '"' -f 4)
+	if [[ ! -z ${steam_name:?} ]]; then
+        es_entry="${romsPath:?}/${steam_name:?}.desktop"
+        es_shortcut=$(CreateXDGDesktopShorcut ${steam_id:?} ${steam_name:?})
+
+        echo "${es_shortcut:?}" > "${es_entry:?}"
+	fi
 done
