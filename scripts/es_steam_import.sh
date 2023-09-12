@@ -30,7 +30,7 @@ exec_script_as_default_user
 
 function CreateXDGDesktopShorcut() {
     __steam_id="$1"
-    __steam_name="$2"
+    __steam_name='"$2"'
 
     cat <<EOF
 [Desktop Entry]
@@ -56,7 +56,8 @@ __steamapps=$(ls "${steamPath}" | grep ".acf")
 
 for __steamapp in ${__steamapps:?}; do
     steam_id=$(grep "appid" "${steamPath:?}/${__steamapp}" | cut -d '"' -f 4)
-    steam_name=$(grep "name" "${steamPath:?}/${__steamapp}" | cut -d '"' -f 4)
+    steam_name_dirty=$(grep "name" "${steamPath:?}/${__steamapp}" | cut -d '"' -f 4)
+    steam_name=$(echo "${steam_name_dirty:?}" | sed -e 's/"//g' | sed -e 's/\//\\\//g')
 	if [[ ! -z ${steam_name:?} ]]; then
         es_entry="${romsPath:?}/${steam_name:?}.desktop"
         es_shortcut=$(CreateXDGDesktopShorcut ${steam_id:?} ${steam_name:?})
