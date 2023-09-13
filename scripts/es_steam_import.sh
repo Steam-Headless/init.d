@@ -59,7 +59,7 @@ for __steamapp in ${__steamapps:?}; do
     steam_name_dirty=$(grep "name" "${steamPath:?}/${__steamapp}" | cut -d '"' -f 4)
     steam_name=$(echo "${steam_name_dirty:?}" | sed -e 's/"//g')
 	if [[ ! -z ${steam_name:?} ]]; then
-        es_entry="${romsPath:?}/$(echo "${steam_name:?}" | sed -e 's/\//\\\//g').desktop"
+        es_entry="${romsPath:?}/$(echo ${steam_name:?} | sed -e 's#/#_#g').desktop"
         es_shortcut=$(CreateXDGDesktopShorcut ${steam_id:?} ${steam_name:?})
 
         echo "${es_shortcut:?}" > "${es_entry:?}"
