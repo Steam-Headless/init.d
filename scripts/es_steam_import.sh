@@ -5,7 +5,7 @@
 # File Created: Monday, 11th September 2023 3:57:47 pm
 # Author: Josh.5 (jsunnex@gmail.com)
 # -----
-# Last Modified: Saturday, 16th September 2023 10:17:17 am
+# Last Modified: Saturday, 16th September 2023 10:33:10 am
 # Modified By: Josh.5 (jsunnex@gmail.com)
 ###
 #
@@ -62,17 +62,15 @@ for steamPath in ${steamPaths}; do
 
     for __steamapp in ${__steamapps:?}; do
         steam_id=$(grep "appid" "${steamPath:?}/steamapps/${__steamapp}" | cut -d '"' -f 4)
-        steam_name_dirty=$(grep "name" "${steamPath:?}/steamapps/${__steamapp}" | cut -d '"' -f 4)
-        steam_name=$(echo "${steam_name_dirty:?}" | sed -e 's/"//g')
+        steam_name_dirty=$(grep "name" "${steamPath:?}/steamapps/${__steamapp}" | cut -d '"' -f 4 | sed  -e 's/"//g' -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
+        steam_name_clean=$(echo "${steam_name_dirty:?}" | sed -e 's/[^a-zA-Z0-9_.-]/_/g' -e 's/™//g')
         print_step_header "Found steam app '${steam_name_dirty:?}'"
-        if [[ ! -z ${steam_name:?} ]]; then
+        if [[ ! -z "${steam_name_dirty:?}" ]]; then
             print_step_header "Creating shortcut for steam app '${steam_name_dirty:?}'"
-            es_entry="${romsPath:?}/$(echo ${steam_name:?} | sed -e 's#/#_#g').desktop"
-            es_shortcut=$(CreateXDGDesktopShorcut ${steam_id:?} ${steam_name:?})
+            es_entry="${romsPath:?}/${steam_name_clean:?}.desktop"
+            es_shortcut=$(CreateXDGDesktopShorcut ${steam_id:?} ${steam_name_dirty:?})
 
             echo "${es_shortcut:?}" > "${es_entry:?}"
-        else
-            print_step_header "Shortcut for steam app '${steam_name_dirty:?}' already exists"
         fi
     done
 done
