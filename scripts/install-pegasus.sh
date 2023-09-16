@@ -5,7 +5,7 @@
 # File Created: Saturday, 16th September 2023 7:05:31 pm
 # Author: Josh.5 (jsunnex@gmail.com)
 # -----
-# Last Modified: Saturday, 16th September 2023 7:23:25 pm
+# Last Modified: Saturday, 16th September 2023 7:28:33 pm
 # Modified By: Josh.5 (jsunnex@gmail.com)
 ###
 #
@@ -38,7 +38,7 @@ package_executable="${USER_HOME:?}/Applications/${package_name:?}.AppImage"
 package_category="Game"
 print_package_name
 
-if [ ! -f "/tmp/.first-run-init-scripts" ] && [ ! -f "${USER_HOME:?}/.cache/init.d/installed_packages/.${package_name:?}" ]; then
+if [ ! -f "/tmp/.first-run-init-scripts" ] || [ ! -d "${USER_HOME:?}/.local/share/flatpak/app/org.pegasus_frontend.Pegasus" ]; then
     flatpak --user remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo 
     flatpak --user install --assumeyes --or-update org.pegasus_frontend.Pegasus
 fi
