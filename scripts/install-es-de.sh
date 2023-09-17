@@ -5,7 +5,7 @@
 # File Created: Wednesday, 23rd August 2023 7:16:02 pm
 # Author: Josh.5 (jsunnex@gmail.com)
 # -----
-# Last Modified: Monday, 11th September 2023 7:41:49 pm
+# Last Modified: Sunday, 17th September 2023 4:02:38 pm
 # Modified By: Josh.5 (jsunnex@gmail.com)
 ###
 #
@@ -35,7 +35,7 @@ exec_script_as_default_user
 package_name="EmulationStation-DE"
 package_description="EmulationStation Desktop Edition (ES-DE) is a frontend for browsing and launching games from your multi-platform game collection."
 package_icon_url="https://es-de.org/____impro/1/onewebmedia/ES-DE_logo.png?etag=%22621b-60428790%22&sourceContentType=image%2Fpng"
-package_executable="${USER_HOME:?}/Applications/${package_name:?}.AppImage"
+package_executable="${USER_HOME:?}/.local/bin/${package_name:?}.AppImage"
 package_category="Game"
 print_package_name
 
@@ -48,7 +48,7 @@ print_step_header "Latest ${package_name:?} version: ${__latest_package_version:
 
 
 # Only install if the latest version does not already exist locally
-if [ ! -f "${package_executable:?}" ] || [ ! -f "${USER_HOME:?}/.cache/init.d/installed_packages/.${package_name:?}-${__latest_package_version:?}" ]; then
+if [ ! -f "${package_executable:?}" ] || [ ! -f "${USER_HOME:?}/.local/share/${package_name:?}/.installed-${package_name:?}-${__latest_package_version:?}" ]; then
     # Fetch download links
     print_step_header "Fetching download link for ${package_name:?} version ${__latest_package_version:?}"
     __latest_package_files_json=$(wget -O - -o /dev/null https://gitlab.com/api/v4/projects/es-de%2Femulationstation-de/packages/${__latest_package_id:?}/package_files)
@@ -65,7 +65,8 @@ if [ ! -f "${package_executable:?}" ] || [ ! -f "${USER_HOME:?}/.cache/init.d/in
     ensure_menu_shortcut
 
     # Mark this version as installed
-    touch "${USER_HOME:?}/.cache/init.d/installed_packages/.${package_name:?}-${__latest_package_version:?}"
+    mkdir -p  "${USER_HOME:?}/.local/share/${package_name:?}"
+    touch "${USER_HOME:?}/.local/share/${package_name:?}/.installed-${package_name:?}-${__latest_package_version:?}"
 else
     print_step_header "Latest version of ${package_name:?} version ${__latest_package_version:?} already installed"
 fi
