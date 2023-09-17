@@ -5,7 +5,7 @@
 # File Created: Monday, 11th September 2023 3:57:47 pm
 # Author: Josh.5 (jsunnex@gmail.com)
 # -----
-# Last Modified: Sunday, 17th September 2023 4:24:09 pm
+# Last Modified: Sunday, 17th September 2023 4:30:34 pm
 # Modified By: Josh.5 (jsunnex@gmail.com)
 ###
 #
@@ -68,6 +68,7 @@ fi
 
 
 # Configure default settings
+mkdir -p "${USER_HOME:?}/.config/moondeckbuddy"
 if [ ! -f "${USER_HOME:?}/.config/moondeckbuddy/settings.json" ]; then
     cat << EOF > "${USER_HOME:?}/.config/moondeckbuddy/settings.json"
 {
@@ -85,6 +86,7 @@ EOF
 fi
 
 # Always launch application on startup
+mkdir -p "${USER_HOME:?}/.config/autostart"
 cat << EOF > "${USER_HOME:?}/.config/autostart/moondeckbuddy.desktop"
 [Desktop Entry]
 Type=Application
