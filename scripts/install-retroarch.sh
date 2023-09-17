@@ -5,7 +5,7 @@
 # File Created: Sunday, 27th August 2023 8:28:04 am
 # Author: Josh.5 (jsunnex@gmail.com)
 # -----
-# Last Modified: Monday, 11th September 2023 7:54:42 pm
+# Last Modified: Sunday, 17th September 2023 4:26:26 pm
 # Modified By: Josh.5 (jsunnex@gmail.com)
 ###
 #
@@ -50,7 +50,7 @@ print_step_header "Latest ${package_name:?} version: ${__latest_package_version:
 
 
 # Only install if the latest version does not already exist locally
-if [ ! -f "${package_executable:?}" ] || [ ! -f "${USER_HOME:?}/.cache/init.d/installed_packages/.${package_name:?}-${__latest_package_version:?}" ]; then
+if ([ ! -f "${package_executable:?}" ] || [ ! -f "/tmp/.user-script-${package_name,,}-installed" ]); then
     __install_dir="${USER_HOME:?}/.local/share/retroarch"
     # Download and extract package to Applications directory
     print_step_header "Downloading ${package_name:?} version ${__latest_package_version:?}"
@@ -90,7 +90,7 @@ if [ ! -f "${package_executable:?}" ] || [ ! -f "${USER_HOME:?}/.cache/init.d/in
     ensure_menu_shortcut
 
     # Mark this version as installed
-    touch "${USER_HOME:?}/.cache/init.d/installed_packages/.${package_name:?}-${__latest_package_version:?}"
+    touch "/tmp/.user-script-${package_name,,}-installed"
 else
     print_step_header "Latest version of ${package_name:?} version ${__latest_package_version:?} already installed"
 fi
