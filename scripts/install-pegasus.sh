@@ -5,7 +5,7 @@
 # File Created: Saturday, 16th September 2023 7:05:31 pm
 # Author: Josh.5 (jsunnex@gmail.com)
 # -----
-# Last Modified: Saturday, 16th September 2023 7:37:37 pm
+# Last Modified: Sunday, 17th September 2023 4:21:08 pm
 # Modified By: Josh.5 (jsunnex@gmail.com)
 ###
 #
@@ -34,14 +34,17 @@ exec_script_as_default_user
 package_name="Pegasus"
 package_description="A cross platform, customizable graphical frontend for launching emulators and managing your game collection."
 package_icon_url="https://pegasus-frontend.org/img/logo-700.png"
-package_executable="${USER_HOME:?}/Applications/${package_name:?}.AppImage"
+package_executable=""
 package_category="Game"
 print_package_name
 
-if ([ ! -f "/tmp/.first-run-user-init-scripts" ] || [ ! -d "${USER_HOME:?}/.local/share/flatpak/app/org.pegasus_frontend.Pegasus" ]); then
+if [ ! -f "/tmp/.user-script-${package_name,,}-installed" ]; then
     print_step_header "Install ${package_name:?} from Flathub"
     flatpak --user remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo 
     flatpak --user install --assumeyes --or-update org.pegasus_frontend.Pegasus
+
+    # Mark this package as installed
+    touch "/tmp/.user-script-${package_name,,}-installed"
 fi
 
 # Configure Sunshine entry
