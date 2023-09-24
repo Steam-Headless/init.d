@@ -42,10 +42,8 @@ print_package_name
 
 
 # Check for a new version to install
-__buildbot_html_content=$(curl --silent "https://buildbot.libretro.com/nightly/linux/x86_64/")
-__latest_package_href=$(echo "${__buildbot_html_content:?}" | grep -oE 'href="[^"]*_RetroArch\.7z"[^"]*"' | sort -t '/' -k 5,5 -k 4,4 -k 3,3 | tail -n 1 | cut -d '"' -f 2)
-__latest_package_version=$(echo "${__latest_package_href:?}" | awk -F'/' '{print $5}' | cut -d'_' -f1)
-__latest_package_url="https://buildbot.libretro.com${__latest_package_href:?}"
+__latest_package_version=1.16.0
+__latest_package_url="https://buildbot.libretro.com/stable/${__latest_package_version:?}/linux/x86_64/RetroArch.7z"
 print_step_header "Latest ${package_name:?} version: ${__latest_package_version:?}"
 
 
@@ -76,7 +74,7 @@ if ([ ! -f "${package_executable:?}" ] || [ ! -f "/tmp/.user-script-${package_na
 		--quiet -o /dev/null \
 		--no-verbose --show-progress \
 		--progress=bar:force:noscroll \
-		"https://buildbot.libretro.com/nightly/linux/x86_64/RetroArch_cores.7z"
+		"https://buildbot.libretro.com/stable/${__latest_package_version:?}/linux/x86_64/RetroArch_cores.7z"
 	pushd "${__install_dir:?}" &> /dev/null || { echo "Error: Failed to push directory to ${__install_dir:?}"; exit 1; }
 	7z x "${__install_dir:?}/RetroArch_cores.7z" -aoa
 	mkdir -p "${USER_HOME:?}/.config/retroarch"
