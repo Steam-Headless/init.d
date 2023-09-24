@@ -31,7 +31,7 @@ exec_script_as_default_user
 # Config
 package_name="VirtualHere"
 package_description="The server-side component of VirtualHere"
-package_executable="${USER_HOME:?}/.local/bin/${package_name:?}"
+package_executable="${USER_HOME:?}/.local/bin/${package_name,,}"
 package_category="Utility"
 print_package_name
 
