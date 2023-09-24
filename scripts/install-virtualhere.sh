@@ -84,6 +84,5 @@ fi
 
 sudo supervisorctl reread
 sudo supervisorctl update
-sudo supervisorctl start virtualhere
 
 echo "DONE"
