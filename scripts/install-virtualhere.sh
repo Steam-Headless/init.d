@@ -66,7 +66,7 @@ autostart=true
 autorestart=true
 startretries=50
 user=root
-directory=
+directory=${USER_HOME:?}/.local/bin
 command=${USER_HOME:?}/.local/bin/virtualhere
 environment=
 stopsignal=INT
@@ -79,6 +79,7 @@ stderr_logfile_backups=7
 EOF
 
 sudo cp -v /tmp/virtualhere.ini /etc/supervisor.d/virtualhere.ini
+rm /tmp/virtualhere.ini
 fi
 
 sudo supervisorctl reload
