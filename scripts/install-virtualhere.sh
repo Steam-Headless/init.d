@@ -25,11 +25,13 @@ set -euo pipefail
 # Import helpers
 source "${USER_HOME:?}/init.d/helpers/functions.sh"
 
+# Ensure this script is being executed as the default user
+exec_script_as_default_user
 
 # Config
 package_name="VirtualHere"
 package_description="The server-side component of VirtualHere"
-package_executable="${USER_HOME:?}/.local/bin/vhusbdx86_64"
+package_executable="${USER_HOME:?}/.local/bin/${package_name:?}"
 package_category="Utility"
 print_package_name
 
@@ -57,15 +59,15 @@ fi
 print_step_header "Enabeling ${package_name:?} supervisor unit"
 # Setup virtualhere supervised
 if [ ! -f "/etc/supervisor.d/virtualhere.ini" ]; then
-    cat << EOF > "/etc/supervisor.d/virtualhere.ini"
+    cat << EOF > "/tmp/virtualhere.ini"
 [program:virtualhere]
 priority=99
-autostart=false
+autostart=true
 autorestart=true
 startretries=50
 user=root
 directory=
-command=${USER_HOME:?}/.local/bin/${package_name,,}
+command=${USER_HOME:?}/.local/bin/virtualhere
 environment=
 stopsignal=INT
 stdout_logfile=/home/%(ENV_USER)s/.cache/log/virtualhere.log
@@ -75,8 +77,10 @@ stderr_logfile=/home/%(ENV_USER)s/.cache/log/virtualhere.err.log
 stderr_logfile_maxbytes=10MB
 stderr_logfile_backups=7
 EOF
+
+sudo cp -v /tmp/virtualhere.ini /etc/supervisor.d/virtualhere.ini
 fi
 
-supervisorctl start virtualhere
+sudo supervisorctl reload
 
 echo "DONE"
