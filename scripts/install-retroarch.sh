@@ -42,7 +42,7 @@ print_package_name
 
 
 # Check for a new version to install
-__latest_package_version=1.16.0
+__latest_package_version=$(curl --silent -L "https://buildbot.libretro.com/stable" | grep -oE 'href="[^"]*/stable/[^"]*' | cut -d '/' -f 3 | sort --version-sort | tail -n 2 | head -n 1)
 __latest_package_url="https://buildbot.libretro.com/stable/${__latest_package_version:?}/linux/x86_64/RetroArch.7z"
 print_step_header "Latest ${package_name:?} version: ${__latest_package_version:?}"
 
