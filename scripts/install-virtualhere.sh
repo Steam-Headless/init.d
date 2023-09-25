@@ -82,7 +82,4 @@ sudo cp -v /tmp/virtualhere.ini /etc/supervisor.d/virtualhere.ini
 rm /tmp/virtualhere.ini
 fi
 
-sudo supervisorctl reread
-sudo supervisorctl update
-
 echo "DONE"
