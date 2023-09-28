@@ -37,7 +37,7 @@ print_package_name
 
 
 # Check for a new version to install
-__latest_package_url="https://www.virtualhere.com/sites/default/files/usbserver/vhusbdx86_64"
+__latest_package_url="https://www.virtualhere.com/sites/default/files/usbclient/vhuit64"
 print_step_header "Latest ${package_name:?}"
 
 if ([ ! -f "${package_executable:?}" ] || [ ! -f "/tmp/.user-script-${package_name,,}-installed" ]); then
