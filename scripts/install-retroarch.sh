@@ -45,10 +45,11 @@ print_package_name
 __latest_package_version=$(curl --silent -L "https://buildbot.libretro.com/stable" | grep -oE 'href="[^"]*/stable/[^"]*' | cut -d '/' -f 3 | sort --version-sort | tail -n 2 | head -n 1)
 __latest_package_url="https://buildbot.libretro.com/stable/${__latest_package_version:?}/linux/x86_64/RetroArch.7z"
 print_step_header "Latest ${package_name:?} version: ${__latest_package_version:?}"
+__installed_version=$(catalog -g ${package_name,,})
 
 
 # Only install if the latest version does not already exist locally
-if ([ ! -f "${package_executable:?}" ] || [ ! -f "/tmp/.user-script-${package_name,,}-installed" ]); then
+if ([ ! -f "${package_executable:?}" ] || [ ${__installed_version} != ${__latest_package_version:?} ]); then
     __install_dir="${USER_HOME:?}/.local/share/retroarch"
     # Download and extract package to Applications directory
     print_step_header "Downloading ${package_name:?} version ${__latest_package_version:?}"
@@ -88,7 +89,7 @@ if ([ ! -f "${package_executable:?}" ] || [ ! -f "/tmp/.user-script-${package_na
     ensure_menu_shortcut
 
     # Mark this version as installed
-    touch "/tmp/.user-script-${package_name,,}-installed"
+    catalog -s ${package_name,,} ${__latest_package_version:?}
 else
     print_step_header "Latest version of ${package_name:?} version ${__latest_package_version:?} already installed"
 fi
