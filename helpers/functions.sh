@@ -277,7 +277,6 @@ function catalog {
     __catalog="${USER_HOME:?}/.cache/catalog.txt"
 
     if [ ! -z ${__catalog:?} ]; then
-        echo "Creating Catalog"
         touch ${__catalog:?}
     fi
 
@@ -285,15 +284,14 @@ function catalog {
         "-g")
            __app="${2}"
            __version=$(grep "^$__app=" $__catalog | cut -d '=' -f 2)
+		   echo ${__version}
         ;;
         "-s")
            __app="${2}"
            __version="${3}"
             if grep -q "^$__app=" $__catalog; then
-                echo "Updating ${__app:?} to Version ${__version:?}"
                 sed -i "s/^$__app=.*$/$__app=$__version/" $__catalog
             else
-                echo "Adding ${__app:?}=${__version:?}"
                 echo "$__app=$__version" >> $__catalog
             fi
         ;;
