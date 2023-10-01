@@ -73,7 +73,7 @@ for steamPath in ${steamPaths}; do
         if [ -f "${acf_file:?}" ]; then
             steam_id=$(grep '"appid"' "${acf_file:?}" | cut -d '"' -f 4)
             steam_name_dirty=$(grep "name" "${acf_file:?}" | cut -d '"' -f 4 | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')
-            steam_name_clean=$(echo "${steam_name_dirty:?}" | sed -e 's/[^a-zA-Z0-9_.-:]/_/g' -e 's/\u2122//g' -e 's#/#_#g')
+            steam_name_clean=$(echo "${steam_name_dirty:?}" | sed -e 's/[^a-zA-Z0-9_.-:]/_/g' -e 's/™//g' -e 's#/#_#g')
 
             print_step_header "Found steam app '${steam_name_dirty:?}'"
             if [[ ! -z "${steam_name_dirty:?}" ]]; then
