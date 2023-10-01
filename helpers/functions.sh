@@ -284,7 +284,7 @@ function catalog {
         "-g")
            __app="${2}"
            __version=$(grep "^$__app=" $__catalog | cut -d '=' -f 2)
-		   echo ${__version}
+           echo ${__version}
         ;;
         "-s")
            __app="${2}"
