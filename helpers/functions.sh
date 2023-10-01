@@ -270,3 +270,26 @@ function ensure_symlink {
         ln -snf "${__target_path:?}" "${__link_path:?}"
     fi
 }
+
+function catalog {
+    __mode="${1}"
+	__value="${2}"
+	__apps="${USER_HOME:?}/.cache/catalog.txt"
+
+    if [ ! -z ${__apps:?} ]; then
+        touch ${_apps:?}
+    fi
+
+    case ${__mode:?} in
+        "get")
+            __value=$(grep "^$key=" $__apps | cut -d '=' -f 2)
+        ;;
+        "set")
+            if grep -q "^$key=" $__apps; then
+                sed -i "s/^$key=.*$/$key=$__value/" $__apps
+            else
+                echo "$key=$value" >> $__apps
+            fi
+        ;;
+    esac
+}
