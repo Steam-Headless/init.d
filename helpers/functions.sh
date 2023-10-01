@@ -272,23 +272,29 @@ function ensure_symlink {
 }
 
 function catalog {
+    # Usage -s app version || -g app
     __mode="${1}"
-	__value="${2}"
-	__apps="${USER_HOME:?}/.cache/catalog.txt"
+    __catalog="${USER_HOME:?}/.cache/catalog.txt"
 
-    if [ ! -z ${__apps:?} ]; then
-        touch ${_apps:?}
+    if [ ! -z ${__catalog:?} ]; then
+        echo "Creating Catalog"
+        touch ${__catalog:?}
     fi
 
     case ${__mode:?} in
-        "get")
-            __value=$(grep "^$key=" $__apps | cut -d '=' -f 2)
+        "-g")
+           __app="${2}"
+           __version=$(grep "^$__app=" $__catalog | cut -d '=' -f 2)
         ;;
-        "set")
-            if grep -q "^$key=" $__apps; then
-                sed -i "s/^$key=.*$/$key=$__value/" $__apps
+        "-s")
+           __app="${2}"
+           __version="${3}"
+            if grep -q "^$__app=" $__catalog; then
+                echo "Updating ${__app:?} to Version ${__version:?}"
+                sed -i "s/^$__app=.*$/$__app=$__version/" $__catalog
             else
-                echo "$key=$value" >> $__apps
+                echo "Adding ${__app:?}=${__version:?}"
+                echo "$__app=$__version" >> $__catalog
             fi
         ;;
     esac
