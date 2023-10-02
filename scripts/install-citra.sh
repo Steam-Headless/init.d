@@ -47,10 +47,11 @@ __latest_package_version=$(echo ${__registry_package_json:?} | jq -r '.tag_name'
 __latest_package_id=$(echo ${__registry_package_json:?} | jq -r '.assets[] | select(.name | contains("appimage"))' | jq -r '.id' | head -n 1)
 __latest_package_url=$(echo ${__registry_package_json:?} | jq -r '.assets[] | select(.name | contains("appimage"))' | jq -r '.browser_download_url' | tail -n 1)
 print_step_header "Latest ${package_name:?} version: ${__latest_package_version:?}"
+__installed_version=$(catalog -g ${package_name,,})
 
 
 # Only install if the latest version does not already exist locally
-if ([ ! -f "${__install_dir:?}/${package_name,,}-${__latest_package_version:?}-linux_x64.tar.gz" ] || [ ! -f "/tmp/.user-script-${package_name,,}-installed" ]); then
+if ([ ! -f "${package_executable:?}" ] || [ ${__installed_version} != ${__latest_package_version:?} ]); then
 	__install_dir="${USER_HOME:?}/.local/share/${package_name,,}"
 	# Download Appimage to Applications directory
     print_step_header "Downloading ${package_name:?} version ${__latest_package_version:?}"
@@ -81,7 +82,7 @@ if ([ ! -f "${__install_dir:?}/${package_name,,}-${__latest_package_version:?}-l
     ensure_menu_shortcut
 
     # Mark this version as installed
-    touch "/tmp/.user-script-${package_name,,}-installed"
+    catalog -s ${package_name,,} ${__latest_package_version:?}
 else
     print_step_header "Latest version of ${package_name:?} version ${__latest_package_version:?} already installed"
 fi

@@ -44,10 +44,11 @@ __registry_package_json=$(wget -O - -o /dev/null https://api.github.com/repos/pi
 __latest_package_version=$(echo ${__registry_package_json:?} | jq -r ".assets[0] | .name" | cut -d "-" -f 4 | cut -d "." -f 1)
 __latest_package_id=$(echo ${__registry_package_json:?} | jq -r ".assets[0] | .name" | cut -d "-" -f 2,3)
 print_step_header "Latest ${package_name:?} version: ${__latest_package_version:?}"
+__installed_version=$(catalog -g ${package_name,,})
 
 
 # Only install if the latest version does not already exist locally
-if ([ ! -f "${package_executable:?}" ] || [ ! -f "/tmp/.user-script-${package_name,,}-installed" ]); then
+if ([ ! -f "${package_executable:?}" ] || [ ${__installed_version} != ${__latest_package_version:?} ]); then
     # Fetch download links
     print_step_header "Fetching download link for ${package_name:?} version ${__latest_package_version:?}"
     __latest_url=$(wget -O - -o /dev/null https://api.github.com/repos/pineappleEA/pineapple-src/releases/latest | jq -r ".assets[0] | .browser_download_url")
@@ -62,7 +63,7 @@ if ([ ! -f "${package_executable:?}" ] || [ ! -f "/tmp/.user-script-${package_na
     ensure_menu_shortcut
 
     # Mark this version as installed
-    touch "/tmp/.user-script-${package_name,,}-installed"
+    catalog -s ${package_name,,} ${__latest_package_version:?}
 else
     print_step_header "Latest version of ${package_name:?} version ${__latest_package_version:?} already installed"
 fi
