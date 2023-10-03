@@ -49,7 +49,7 @@ __installed_version=$(catalog -g ${package_name,,})
 
 
 # Only install if the latest version does not already exist locally
-if ([ ! -f "${package_executable:?}" ] || [ ${__installed_version} != ${__latest_package_version:?} ]); then
+if ([ ! -f "${package_executable:?}" ] || [ "${__installed_version:-X}" != "${__latest_package_version:?}" ]); then
     __install_dir="${USER_HOME:?}/.local/share/${package_name,,}"
     # Download and extract package to Applications directory
     print_step_header "Downloading ${package_name:?} version ${__latest_package_version:?}"
