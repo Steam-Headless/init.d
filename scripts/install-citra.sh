@@ -36,7 +36,7 @@ exec_script_as_default_user
 package_name="citra-canary"
 package_description="3DS Emulator"
 package_icon_url="https://cdn2.steamgriddb.com/file/sgdb-cdn/icon/075b24b68eb3cb44b3fa4e331d86db89.png"
-package_executable="${USER_HOME:?}/Applications/${package_name:?}.AppImage"
+package_executable="${USER_HOME:?}/.local/share/${package_name,,}/citra.AppImage"
 package_category="Game"
 print_package_name
 
@@ -137,35 +137,6 @@ pauseWhenInBackground\default=false
 EOF
 fi
 
-# Configure EmulationStation DE
-cat << 'EOF' > "${__emulation_path:?}/roms/n3ds/systeminfo.txt"
-System name:
-n3ds
-
-Full system name:
-Nintendo 3DS
-
-Supported file extensions:
-.3ds .3DS .3dsx .3DSX .app .APP .axf .AXF .cci .CCI .cxi .CXI .elf .ELF .7z .7Z .zip .ZIP
-
-Launch command:
-%EMULATOR_CITRA% %ROM%
-
-Alternative launch commands:
-%EMULATOR_RETROARCH% -L %CORE_RETROARCH%/citra_libretro.so %ROM%
-%EMULATOR_RETROARCH% -L %CORE_RETROARCH%/citra2018_libretro.so %ROM%
-
-Platform (for scraping):
-n3ds
-
-Theme folder:
-n3ds
-EOF
-if ! grep -ri "n3ds:" "${__emulation_path:?}/roms/systems.txt" &>/dev/null; then
-    print_step_header "Adding 'n3ds' path to '${__emulation_path:?}/roms/systems.txt'"
-    echo "n3ds: " >> "${__emulation_path:?}/roms/systems.txt"
-fi
-sed -i 's|^n3ds:.*$|n3ds: Nintendo 3DS|' "${__emulation_path:?}/roms/systems.txt"
 ensure_esde_alternative_emulator_configured "n3ds" "Citra (Standalone)"
 
 echo "DONE"
