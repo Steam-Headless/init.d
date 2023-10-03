@@ -48,7 +48,7 @@ __installed_version=$(catalog -g ${package_name,,})
 
 
 # Only install if the latest version does not already exist locally
-if ([ ! -f "${package_executable:?}" ] || [ ${__installed_version} != ${__latest_package_version:?} ]); then
+if ([ ! -f "${package_executable:?}" ] || [ "${__installed_version:-X}" != "${__latest_package_version:?}" ]); then
     # Fetch download links
     print_step_header "Fetching download link for ${package_name:?} version ${__latest_package_version:?}"
     __latest_url=$(wget -O - -o /dev/null https://api.github.com/repos/pineappleEA/pineapple-src/releases/latest | jq -r ".assets[0] | .browser_download_url")
