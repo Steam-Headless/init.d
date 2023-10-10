@@ -60,6 +60,9 @@ function addEntry {
 EOF
 }
 
+# Storage for posters
+mkdir -p ${USER_HOME:?}/.local/share/posters/
+
 # Get all games and ids
 for manifest in /mnt/games/SteamLibrary/steamapps/appmanifest_*.acf; do
   appid=$(basename "$manifest" | cut -d_ -f2 | cut -d. -f1)
