@@ -52,8 +52,14 @@ function addEntry {
       "detached": [
         "$2"
       ],
-      "exclude-global-prep-cmd": "false",
+      "exclude-global-prep-cmd": "true",
       "elevated": "false",
+      "prep-cmd": [
+        {
+            "do": "/usr/bin/xfce4-minimise-all-windows",
+            "undo": "/usr/bin/xfce4-close-all-windows"
+        }
+      ],
       "image-path": "$3",
       "working-dir": "/home/default"
     }
