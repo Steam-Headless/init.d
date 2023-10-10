@@ -1,11 +1,6 @@
 games=()
-steamgriddb_api="INSERTAPIKEYHERE"
+steamgriddb_api="INSERTSTEAMGRIDDBKEYHERE"
 sunshine_conf=${USER_HOME:?}/.config/sunshine/apps.json
-sunshine_tmp=/tmp/apps.json
-
-function removeEntries {
-    cat ${sunshine_tmp} | jq 'del(.apps[] | select(.output == "SH-run.txt"))'
-}
 
 function getCoverArt {
     GAME_NAME="$1"
@@ -48,20 +43,41 @@ function getCoverArt {
     fi
 }
 
+function addEntry {
+    cat <<EOF
+    {
+      "name": "$1",
+      "output": "SH-run.txt",
+      "cmd": "",
+      "detached": [
+        "$2"
+      ],
+      "exclude-global-prep-cmd": "false",
+      "elevated": "false",
+      "image-path": "$3",
+      "working-dir": "/home/default"
+    }
+EOF
+}
+
+# Get all games and ids
 for manifest in /mnt/games/SteamLibrary/steamapps/appmanifest_*.acf; do
   appid=$(basename "$manifest" | cut -d_ -f2 | cut -d. -f1)
   name=$(grep -oP '"name"\s+"\K[^"]+' "$manifest")
   games+=("$appid $name")
 done
 
-cp -v ${sunshine_conf:?} ${sunshine_tmp:?}
+# Remove previously added entries
+cat ${sunshine_conf} | jq 'del(.apps[] | select(.output == "SH-run.txt"))' > /tmp/sunshine.json 
+mv -f /tmp/sunshine.json ${sunshine_conf}
 
+# Add Entries
 for game in "${!games[@]}"
   do
     __game_name=$(echo ${games[$game]} | cut -d " " -f 2-)
     __game_id=$(echo ${games[$game]} | cut -d " " -f 1)
     __poster_path=${USER_HOME:?}/.local/share/posters/"${__game_name:?}".png
-    __game_run="/usr/bin/sunshine-run steam steam://rungameid/${__game_id:?}"
+    __game_run="/usr/bin/sunshine-run /usr/games/steam steam://rungameid/${__game_id:?}"
 
     if [ -f "${__poster_path:?}" ]; then
       echo "Found Poster for ${__game_name:?}"
@@ -71,18 +87,7 @@ for game in "${!games[@]}"
 	&& mv "${__game_name:?}".png ${USER_HOME:?}/.local/share/posters/
     fi
 
-    cat ${sunshine_tmp:?} | jq '.apps += [
-      { 
-        "name": "'"${__game_name:?}"'",
-        "output":"SH-run.txt",
-        "cmd": "",
-        "detached": "['"${__game_run:?}"']",
-        "exclude-global-prep-cmd": "false",
-        "elevated": "false",
-        "image-path": "'"${__poster_path:?}"'",
-        "working-dir": "/home/default"
-      } ]' > /tmp/sunshine.json
-    mv -f /tmp/sunshine.json ${sunshine_tmp:?}
-  done
-
-#cat ${sunshine_tmp:?}
+    sunshine_entry=$(addEntry "${__game_name:?}" "${__game_run:?}" "${__poster_path:?}")
+    cat ${sunshine_conf:?} | jq '.apps += ['"${sunshine_entry}"']' > /tmp/sunshine.json
+    mv -f /tmp/sunshine.json ${sunshine_conf:?}
+done
