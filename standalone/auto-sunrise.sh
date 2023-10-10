@@ -57,7 +57,11 @@ function addEntry {
       "prep-cmd": [
         {
             "do": "/usr/bin/xfce4-minimise-all-windows",
-            "undo": "/usr/bin/xfce4-close-all-windows"
+            "undo": "/usr/bin/sunshine-stop"
+        },
+        {
+          "do": "",
+          "undo": "/usr/bin/xfce4-close-all-windows"
         }
       ],
       "image-path": "$3",
@@ -90,7 +94,7 @@ for game in "${!games[@]}"
     __game_name=$(echo ${games[$game]} | cut -d " " -f 2-)
     __game_id=$(echo ${games[$game]} | cut -d " " -f 1)
     __poster_path=${USER_HOME:?}/.local/share/posters/"${__game_name:?}".png
-    __game_run="/usr/games/steam steam://rungameid/${__game_id:?}"
+    __game_run="/usr/bin/sunshine-run /usr/games/steam steam://rungameid/${__game_id:?}"
 
     if [ -f "${__poster_path:?}" ]; then
       echo "Found Poster for ${__game_name:?}"
