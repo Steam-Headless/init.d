@@ -3,6 +3,10 @@ steamgriddb_api="INSERTAPIKEYHERE"
 sunshine_conf=${USER_HOME:?}/.config/sunshine/apps.json
 sunshine_tmp=/tmp/apps.json
 
+function removeEntries {
+    cat ${sunshine_tmp} | jq 'del(.apps[] | select(.output == "SH-run.txt"))'
+}
+
 function getCoverArt {
     GAME_NAME="$1"
 
