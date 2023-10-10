@@ -64,7 +64,11 @@ EOF
 for manifest in /mnt/games/SteamLibrary/steamapps/appmanifest_*.acf; do
   appid=$(basename "$manifest" | cut -d_ -f2 | cut -d. -f1)
   name=$(grep -oP '"name"\s+"\K[^"]+' "$manifest")
-  games+=("$appid $name")
+  if grep -q -E "Proton|Runtime" <<< "$name"; then
+    echo "Not importing "$name""
+  else
+    games+=("$appid $name")
+  fi
 done
 
 # Remove previously added entries
