@@ -95,6 +95,10 @@ for game in "${!games[@]}"
     __game_name=${__game_name//\//}
     __game_name=${__game_name//\*/}
     __game_name=${__game_name//[^a-zA-Z0-9_ ]/}
+    if [ -z "${__game_name}" ]; then
+      echo "Not adding "$(echo ${games[$game]} | cut -d " " -f 2-)" due to special characters"
+      continue
+    fi
     __game_id=$(echo ${games[$game]} | cut -d " " -f 1)
     __poster_path=${USER_HOME:?}/.local/share/posters/"${__game_name:?}".png
     __game_run="/usr/bin/sunshine-run /usr/games/steam steam://rungameid/${__game_id:?}"
