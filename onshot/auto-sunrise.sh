@@ -94,7 +94,7 @@ for game in "${!games[@]}"
     __game_name=$(echo ${games[$game]} | cut -d " " -f 2-)
     __game_name=${__game_name//\//}
     __game_name=${__game_name//\*/}
-    __game_name=${__game_name//[^a-zA-Z0-9_ ]/}
+    __game_name=${__game_name//[^a-zA-Z0-9_\:\.\-\' ]/}
     if [ -z "${__game_name}" ]; then
       echo "Not adding "$(echo ${games[$game]} | cut -d " " -f 2-)" due to special characters"
       continue
