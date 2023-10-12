@@ -1,6 +1,7 @@
 games=()
-steamgriddb_api="INSERTSTEAMGRIDDBKEYHERE"
+steamgriddb_api="INSERTSTEAMGRIDDBAPIHERE"
 sunshine_conf=${USER_HOME:?}/.config/sunshine/apps.json
+poster_folder=${USER_HOME:?}/.local/share/posters
 
 function getCoverArt {
     GAME_NAME="$1"
@@ -70,48 +71,66 @@ function addEntry {
 EOF
 }
 
-# Storage for posters
-mkdir -p ${USER_HOME:?}/.local/share/posters/
+function removeEntries {
+  # Remove previously added entries
+  cat ${sunshine_conf} | jq 'del(.apps[] | select(.output == "SH-run.txt"))' > /tmp/sunshine.json 
+  mv -f /tmp/sunshine.json ${sunshine_conf}
+}
 
-# Get all games and ids
-for manifest in /mnt/games/SteamLibrary/steamapps/appmanifest_*.acf; do
-  appid=$(basename "$manifest" | cut -d_ -f2 | cut -d. -f1)
-  name=$(grep -oP '"name"\s+"\K[^"]+' "$manifest")
-  if grep -q -E "Proton|Runtime" <<< "$name"; then
-    echo "Not importing "$name""
-  else
-    games+=("$appid $name")
-  fi
-done
+modus_operandi=$(zenity --list  --title "Choose Function" --radiolist  --column "Mode" --column="Name" 1 "Add" 2 "Remove" 3 "Exit")
 
-# Remove previously added entries
-cat ${sunshine_conf} | jq 'del(.apps[] | select(.output == "SH-run.txt"))' > /tmp/sunshine.json 
-mv -f /tmp/sunshine.json ${sunshine_conf}
-
-# Add Entries
-for game in "${!games[@]}"
-  do
-    __game_name=$(echo ${games[$game]} | cut -d " " -f 2-)
-    __game_name=${__game_name//\//}
-    __game_name=${__game_name//\*/}
-    __game_name=${__game_name//[^a-zA-Z0-9_\:\.\-\' ]/}
-    if [ -z "${__game_name}" ]; then
-      echo "Not adding "$(echo ${games[$game]} | cut -d " " -f 2-)" due to special characters"
-      continue
+case $modus_operandi in
+  "Add")
+    removeEntries
+    if [ -d ${poster_folder:?} ]; then
+      mkdir -p ${poster_folder:?}
     fi
-    __game_id=$(echo ${games[$game]} | cut -d " " -f 1)
-    __poster_path=${USER_HOME:?}/.local/share/posters/"${__game_name:?}".png
-    __game_run="/usr/bin/sunshine-run /usr/games/steam steam://rungameid/${__game_id:?}"
+    # Get all games and ids
+    for manifest in /mnt/games/SteamLibrary/steamapps/appmanifest_*.acf; do
+      appid=$(basename "$manifest" | cut -d_ -f2 | cut -d. -f1)
+      name=$(grep -oP '"name"\s+"\K[^"]+' "$manifest")
+      if grep -q -E "Proton|Runtime" <<< "$name"; then
+        echo "Not importing "$name""
+      else
+        games+=("$appid $name")
+      fi
+    done
+    # Add Entries
+    for game in "${!games[@]}"
+      do
+        __game_name=$(echo ${games[$game]} | cut -d " " -f 2-)
+        __game_name=${__game_name//\//}
+        __game_name=${__game_name//\*/}
+        __game_name=${__game_name//[^a-zA-Z0-9_\:\.\-\' ]/}
+         if [ -z "${__game_name}" ]; then
+           echo "Not adding "$(echo ${games[$game]} | cut -d " " -f 2-)" due to special characters"
+           continue
+         fi
+      __game_id=$(echo ${games[$game]} | cut -d " " -f 1)
+      __poster_path=${USER_HOME:?}/.local/share/posters/"${__game_name:?}".png
+      __game_run="/usr/bin/sunshine-run /usr/games/steam steam://rungameid/${__game_id:?}"
 
-    if [ -f "${__poster_path:?}" ]; then
-      echo "Found poster for ${__game_name:?}"
-    else
-      echo "Downloading Poster for ${__game_name:?}"
-      getCoverArt "${__game_name:?}" \
-	&& mv "${__game_name:?}".png ${USER_HOME:?}/.local/share/posters/
-    fi
+       if [ -f "${__poster_path:?}" ]; then
+         echo "Found poster for ${__game_name:?}"
+       else
+         echo "Downloading Poster for ${__game_name:?}"
+         getCoverArt "${__game_name:?}" 
+         mv "${__game_name:?}".png ${USER_HOME:?}/.local/share/posters/
+       fi
 
-    sunshine_entry=$(addEntry "${__game_name:?}" "${__game_run:?}" "${__poster_path:?}")
-    cat ${sunshine_conf:?} | jq '.apps += ['"${sunshine_entry}"']' > /tmp/sunshine.json
-    mv -f /tmp/sunshine.json ${sunshine_conf:?}
-done
+       sunshine_entry=$(addEntry "${__game_name:?}" "${__game_run:?}" "${__poster_path:?}")
+       cat ${sunshine_conf:?} | jq '.apps += ['"${sunshine_entry}"']' > /tmp/sunshine.json
+       mv -f /tmp/sunshine.json ${sunshine_conf:?}
+    done | zenity --progress
+    zenity --info --title="Adding" --text="Added Entries to Sunshine";;
+  "Remove")
+    removeEntries
+    zenity --info --title="Removing" --text="Succesfully removed All added entries";;
+  *)
+    zenity --info --title="Exiting" --text="Exit Application";;
+esac
+
+
+
+
+
