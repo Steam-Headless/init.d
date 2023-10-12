@@ -77,6 +77,10 @@ function removeEntries {
   mv -f /tmp/sunshine.json ${sunshine_conf}
 }
 
+if [ "${steamgriddb_api:?}" == "INSERTSTEAMGRIDDBAPIHERE" ]; then
+  steamgriddb_api=$(zenity --entry --text="Please Enter StreamGridDBAPI key:")
+fi
+
 modus_operandi=$(zenity --list  --title "Choose Function" --radiolist  --column "Mode" --column="Name" 1 "Add" 2 "Remove" 3 "Exit")
 
 case $modus_operandi in
