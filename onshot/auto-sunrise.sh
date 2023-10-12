@@ -30,7 +30,7 @@ function getCoverArt {
     # Check if the poster art URL is valid
     if [ "$POSTER_URL" == "null" ]; then
       echo "Poster art not found for game: $GAME_NAME"
-      return 2
+      return 1
     fi
 
     # Download the poster art image from the URL
@@ -125,11 +125,11 @@ case $modus_operandi in
            mv "${__game_name:?}".png ${USER_HOME:?}/.local/share/posters/
          fi
        fi
-       #if [ -f "${__poster_path:?}"/"${__game_name:?}".png ]; then
+       if [ -f "${__poster_path:?}" ]; then
          sunshine_entry=$(addEntry "${__game_name:?}" "${__game_run:?}" "${__poster_path:?}")
-       #else
-       #  sunshine_entry=$(addEntry "${__game_name:?}" "${__game_run:?}")
-       #fi
+       else
+         sunshine_entry=$(addEntry "${__game_name:?}" "${__game_run:?}")
+       fi
        
        cat ${sunshine_conf:?} | jq '.apps += ['"${sunshine_entry}"']' > /tmp/sunshine.json
        mv -f /tmp/sunshine.json ${sunshine_conf:?}
