@@ -114,14 +114,18 @@ case $modus_operandi in
          echo "Found poster for ${__game_name:?}"
        else
          echo "Downloading Poster for ${__game_name:?}"
-         getCoverArt "${__game_name:?}" 
-         mv "${__game_name:?}".png ${USER_HOME:?}/.local/share/posters/
+         getCoverArt "${__game_name:?}"
        fi
-
-       sunshine_entry=$(addEntry "${__game_name:?}" "${__game_run:?}" "${__poster_path:?}")
+       if [ -f "${__game_name:?}".png ]; then
+         mv "${__game_name:?}".png ${USER_HOME:?}/.local/share/posters/
+         sunshine_entry=$(addEntry "${__game_name:?}" "${__game_run:?}" "${__poster_path:?}")
+       else
+         sunshine_entry=$(addEntry "${__game_name:?}" "${__game_run:?}")
+       fi
+       
        cat ${sunshine_conf:?} | jq '.apps += ['"${sunshine_entry}"']' > /tmp/sunshine.json
        mv -f /tmp/sunshine.json ${sunshine_conf:?}
-    done | zenity --progress
+    done | zenity --progress --auto-close
     zenity --info --title="Adding" --text="Added Entries to Sunshine";;
   "Remove")
     removeEntries
