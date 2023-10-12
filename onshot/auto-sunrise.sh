@@ -117,13 +117,15 @@ case $modus_operandi in
        else
          echo "Downloading Poster for ${__game_name:?}"
          getCoverArt "${__game_name:?}"
+         if [ -f "${__game_name:?}".png ]; then
+           mv "${__game_name:?}".png ${USER_HOME:?}/.local/share/posters/
+         fi
        fi
-       if [ -f "${__game_name:?}".png ]; then
-         mv "${__game_name:?}".png ${USER_HOME:?}/.local/share/posters/
+       #if [ -f "${__poster_path:?}"/"${__game_name:?}".png ]; then
          sunshine_entry=$(addEntry "${__game_name:?}" "${__game_run:?}" "${__poster_path:?}")
-       else
-         sunshine_entry=$(addEntry "${__game_name:?}" "${__game_run:?}")
-       fi
+       #else
+       #  sunshine_entry=$(addEntry "${__game_name:?}" "${__game_run:?}")
+       #fi
        
        cat ${sunshine_conf:?} | jq '.apps += ['"${sunshine_entry}"']' > /tmp/sunshine.json
        mv -f /tmp/sunshine.json ${sunshine_conf:?}
