@@ -96,8 +96,10 @@ case $modus_operandi in
       fi
     done
     # Add Entries
+    (
     for game in "${!games[@]}"
       do
+        echo "$((game * 100 / ${#games[@]}))"
         __game_name=$(echo ${games[$game]} | cut -d " " -f 2-)
         __game_name=${__game_name//\//}
         __game_name=${__game_name//\*/}
@@ -107,7 +109,7 @@ case $modus_operandi in
            continue
          fi
       __game_id=$(echo ${games[$game]} | cut -d " " -f 1)
-      __poster_path=${USER_HOME:?}/.local/share/posters/"${__game_name:?}".png
+      __poster_path=${poster_folder:?}/"${__game_name:?}".png
       __game_run="/usr/bin/sunshine-run /usr/games/steam steam://rungameid/${__game_id:?}"
 
        if [ -f "${__poster_path:?}" ]; then
@@ -125,16 +127,14 @@ case $modus_operandi in
        
        cat ${sunshine_conf:?} | jq '.apps += ['"${sunshine_entry}"']' > /tmp/sunshine.json
        mv -f /tmp/sunshine.json ${sunshine_conf:?}
-    done | zenity --progress --auto-close
-    zenity --info --title="Adding" --text="Added Entries to Sunshine";;
+    done
+    echo "100"
+    ) | zenity --progress --title="Adding Entries" --text="Importing" --auto-close
+    # Remove the above zenity section for terminal output and debugging
+    zenity --info --title="Adding" --text="Done";;
   "Remove")
     removeEntries
     zenity --info --title="Removing" --text="Succesfully removed All added entries";;
   *)
     zenity --info --title="Exiting" --text="Exit Application";;
 esac
-
-
-
-
-
