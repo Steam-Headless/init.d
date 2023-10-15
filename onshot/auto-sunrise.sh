@@ -87,9 +87,9 @@ modus_operandi=$(zenity --list  --title "Choose Function" --radiolist  --column 
 case $modus_operandi in
   "Add")
     removeEntries
-    if [ -d ${poster_folder:?} ]; then
-      mkdir -p ${poster_folder:?}
-    fi
+
+    mkdir -p ${poster_folder:?}
+
     # Get all games and ids
     for manifest in /mnt/games/SteamLibrary/steamapps/appmanifest_*.acf; do
       appid=$(basename "$manifest" | cut -d_ -f2 | cut -d. -f1)
