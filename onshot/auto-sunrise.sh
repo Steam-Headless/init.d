@@ -5,6 +5,7 @@ poster_folder=${USER_HOME:?}/.local/share/posters
 
 function getCoverArt {
     GAME_NAME="$1"
+    #GAME_ID="$2"
 
     # Encode the game name for URL
     GAME_NAME_ENCODED=$(printf %s "${GAME_NAME:?}" | jq -sRr @uri)
@@ -103,7 +104,8 @@ case $modus_operandi in
     (
     for game in "${!games[@]}"
       do
-        echo "$((game * 100 / ${#games[@]}))"
+        # Progress bar
+        #echo "$((game * 100 / ${#games[@]}))"
         __game_name=$(echo ${games[$game]} | cut -d " " -f 2-)
         __game_name=${__game_name//\//}
         __game_name=${__game_name//\*/}
@@ -116,11 +118,9 @@ case $modus_operandi in
       __poster_path=${poster_folder:?}/"${__game_name:?}".png
       __game_run="/usr/bin/sunshine-run /usr/games/steam steam://rungameid/${__game_id:?}"
 
-       if [ -f "${__poster_path:?}" ]; then
-         echo "Found poster for ${__game_name:?}"
-       else
+       if [ ! -f "${__poster_path:?}" ]; then
          echo "Downloading Poster for ${__game_name:?}"
-         getCoverArt "${__game_name:?}"
+         getCoverArt "${__game_name:?}" "${__game_id:?}"
          if [ -f "${__game_name:?}".png ]; then
            mv "${__game_name:?}".png ${USER_HOME:?}/.local/share/posters/
          fi
@@ -134,10 +134,11 @@ case $modus_operandi in
        cat ${sunshine_conf:?} | jq '.apps += ['"${sunshine_entry}"']' > /tmp/sunshine.json
        mv -f /tmp/sunshine.json ${sunshine_conf:?}
     done
-    echo "100"
-    ) | zenity --progress --title="Adding Entries" --text="Importing" --auto-close
+    # Progress Bar
+    #echo "100"
+    echo "Done."
+    ) | zenity --text-info --auto-scroll;;
     # Remove the above zenity section for terminal output and debugging
-    zenity --info --title="Adding" --text="Done";;
   "Remove")
     removeEntries
     zenity --info --title="Removing" --text="Succesfully removed All added entries";;
