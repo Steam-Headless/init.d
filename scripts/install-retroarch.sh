@@ -53,7 +53,8 @@ if ([ ! -f "${package_executable:?}" ] || [ "${__installed_version:-X}" != "${__
     __install_dir="${USER_HOME:?}/.local/share/retroarch"
     # Download and extract package to Applications directory
     print_step_header "Downloading ${package_name:?} version ${__latest_package_version:?}"
-    mkdir -p "${__install_dir:?}"
+    mkdir -p "${__install_dir:?}" \
+             "${USER_HOME:?}/.config/retroarch"
     wget -O "${__install_dir:?}/${package_name,,}-${__latest_package_version:?}-linux-x86_64.7z" \
         --quiet -o /dev/null \
         --no-verbose --show-progress \
@@ -68,7 +69,7 @@ if ([ ! -f "${package_executable:?}" ] || [ "${__installed_version:-X}" != "${__
     ln -snf "${__install_dir:?}/RetroArch-Linux-x86_64/RetroArch-Linux-x86_64.AppImage" "${package_executable:?}"
     popd &> /dev/null || { echo "Error: Failed to pop directory out of ${__install_dir:?}"; exit 1; }
 	
-    # Download cores if they do not exist, if they exist user can update them using the UI
+    # Download cores, if they exist user can update them using the UI
     if [ ! -f "${__install_dir:?}/RetroArch_cores.7z" ]; then
         print_step_header "Downloading and Extracting cores..."
 	wget -O "${__install_dir:?}/RetroArch_cores.7z" \
@@ -78,10 +79,35 @@ if ([ ! -f "${package_executable:?}" ] || [ "${__installed_version:-X}" != "${__
 		"https://buildbot.libretro.com/stable/${__latest_package_version:?}/linux/x86_64/RetroArch_cores.7z"
 	pushd "${__install_dir:?}" &> /dev/null || { echo "Error: Failed to push directory to ${__install_dir:?}"; exit 1; }
 	7z x "${__install_dir:?}/RetroArch_cores.7z" -aoa
-	mkdir -p "${USER_HOME:?}/.config/retroarch"
-	ln -snf "${USER_HOME:?}/.local/share/retroarch/RetroArch-Linux-x86_64/RetroArch-Linux-x86_64.AppImage.home/.config/retroarch/cores" "${USER_HOME:?}/.config/retroarch/"
+    mv -f "${__install_dir:?}/RetroArch-Linux-x86_64/RetroArch-Linux-x86_64.AppImage.home/.config/retroarch" "${USER_HOME:?}/.config/"
 	popd &> /dev/null || { echo "Error: Failed to pop directory out of ${__install_dir:?}"; exit 1; }
     fi
+
+    # Download Assets for a clean ui running retroarch native
+    print_step_header "Downloading and Extracting assets..."
+	wget -O "${__install_dir:?}/assets.zip" \
+		--quiet -o /dev/null \
+		--no-verbose --show-progress \
+		--progress=bar:force:noscroll \
+		"https://buildbot.libretro.com/assets/frontend/assets.zip"
+	pushd "${__install_dir:?}" &> /dev/null || { echo "Error: Failed to push directory to ${__install_dir:?}"; exit 1; }
+	unzip -d assets "${__install_dir:?}/assets.zip"
+	cp -rf "${USER_HOME:?}/.local/share/retroarch/assets" "${USER_HOME:?}/.config/retroarch/"
+    rm -r "${USER_HOME:?}/.local/share/retroarch/assets" "assets.zip"
+	popd &> /dev/null || { echo "Error: Failed to pop directory out of ${__install_dir:?}"; exit 1; }
+
+    # Download Autoconfig for automatic controller support
+    print_step_header "Downloading and Extracting assets..."
+	wget -O "${__install_dir:?}/autoconfig.zip" \
+		--quiet -o /dev/null \
+		--no-verbose --show-progress \
+		--progress=bar:force:noscroll \
+		"https://buildbot.libretro.com/assets/frontend/autoconfig.zip"
+	pushd "${__install_dir:?}" &> /dev/null || { echo "Error: Failed to push directory to ${__install_dir:?}"; exit 1; }
+	unzip -d autoconfig "${__install_dir:?}/autoconfig.zip"
+	cp -rf "${USER_HOME:?}/.local/share/retroarch/autoconfig" "${USER_HOME:?}/.config/retroarch/"
+    rm -r "${USER_HOME:?}/.local/share/retroarch/autoconfig" "autoconfig.zip"
+	popd &> /dev/null || { echo "Error: Failed to pop directory out of ${__install_dir:?}"; exit 1; }
 
     # Ensure this package has a start menu link (will create it if missing)
     print_step_header "Ensuring menu shortcut is present for ${package_name:?}"
@@ -96,26 +122,25 @@ fi
 
 # Generate RetroArch Emulation directory structure
 __emulation_path="/mnt/games/Emulation"
-__retroarch_home="${USER_HOME:?}/.local/share/retroarch/RetroArch-Linux-x86_64/RetroArch-Linux-x86_64.AppImage.home"
+__retroarch_home="${USER_HOME:?}/.config/retroarch"
 mkdir -p \
-    "${__retroarch_home:?}"/.config/retroarch \
+    "${__retroarch_home:?}" \
     "${__emulation_path:?}"/storage/retroarch/{cheats,shaders,config,saves,screenshots,states,system}
 
-ensure_symlink "${__emulation_path:?}/storage/retroarch/cheats" "${__retroarch_home:?}/.config/retroarch/cheats"
-ensure_symlink "${__emulation_path:?}/storage/retroarch/config" "${__retroarch_home:?}/.config/retroarch/config"
-ensure_symlink "${__emulation_path:?}/storage/retroarch/saves" "${__retroarch_home:?}/.config/retroarch/saves"
-ensure_symlink "${__emulation_path:?}/storage/retroarch/screenshots" "${__retroarch_home:?}/.config/retroarch/screenshots"
-ensure_symlink "${__emulation_path:?}/storage/retroarch/states" "${__retroarch_home:?}/.config/retroarch/states"
-ensure_symlink "${__emulation_path:?}/storage/retroarch/system" "${__retroarch_home:?}/.config/retroarch/system"
-ensure_symlink "${__emulation_path:?}/storage/retroarch/shaders" "${__retroarch_home:?}/.config/retroarch/shaders"
+ensure_symlink "${__emulation_path:?}/storage/retroarch/cheats" "${__retroarch_home:?}/cheats"
+ensure_symlink "${__emulation_path:?}/storage/retroarch/config" "${__retroarch_home:?}/config"
+ensure_symlink "${__emulation_path:?}/storage/retroarch/saves" "${__retroarch_home:?}/saves"
+ensure_symlink "${__emulation_path:?}/storage/retroarch/screenshots" "${__retroarch_home:?}/screenshots"
+ensure_symlink "${__emulation_path:?}/storage/retroarch/states" "${__retroarch_home:?}/states"
+ensure_symlink "${__emulation_path:?}/storage/retroarch/system" "${__retroarch_home:?}/system"
+ensure_symlink "${__emulation_path:?}/storage/retroarch/shaders" "${__retroarch_home:?}/shaders"
 
 # Create relative symlinks for the BIOS 
 ensure_symlink "../storage/retroarch/system" "${__emulation_path:?}/bios/retroarch"
 
 # Generate a default config if missing
-if [ ! -f "${__retroarch_home:?}/.config/retroarch/retroarch.cfg" ]; then
-    cat << EOF > "${__retroarch_home:?}/.config/retroarch/retroarch.cfg"
-assets_directory = "${__emulation_path:?}/storage/retroarch/assets"
+if [ ! -f "${__retroarch_home:?}/retroarch.cfg" ]; then
+    cat << EOF > "${__retroarch_home:?}/retroarch.cfg"
 cheat_database_path = "${__emulation_path:?}/storage/retroarch/cheats"
 config_save_on_exit = "true"
 input_menu_toggle_gamepad_combo = "2"
@@ -142,11 +167,5 @@ video_driver = "vulkan"
 video_fullscreen = "true"
 EOF
 fi
-
-#if [ ! -f "${__emulation_path:?}/storage/retroarch/config/mGBA/mGBA.slangp" ]; then
-#    cat << EOF > "${__emulation_path:?}/storage/retroarch/config/mGBA/mGBA.slangp"
-##reference "../../shaders/shaders_slang/presets/xsoft+scalefx-level2aa+sharpsmoother.slangp"
-#EOF
-#fi
 
 echo "DONE"
