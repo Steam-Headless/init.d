@@ -80,6 +80,7 @@ if ([ ! -f "${package_executable:?}" ] || [ "${__installed_version:-X}" != "${__
 	pushd "${__install_dir:?}" &> /dev/null || { echo "Error: Failed to push directory to ${__install_dir:?}"; exit 1; }
 	7z x "${__install_dir:?}/RetroArch_cores.7z" -aoa
     mv -f "${__install_dir:?}/RetroArch-Linux-x86_64/RetroArch-Linux-x86_64.AppImage.home/.config/retroarch" "${USER_HOME:?}/.config/"
+    rm -r "${__install_dir:?}/RetroArch-Linux-x86_64/RetroArch-Linux-x86_64.AppImage.home"
 	popd &> /dev/null || { echo "Error: Failed to pop directory out of ${__install_dir:?}"; exit 1; }
     fi
 
@@ -97,7 +98,7 @@ if ([ ! -f "${package_executable:?}" ] || [ "${__installed_version:-X}" != "${__
 	popd &> /dev/null || { echo "Error: Failed to pop directory out of ${__install_dir:?}"; exit 1; }
 
     # Download Autoconfig for automatic controller support
-    print_step_header "Downloading and Extracting assets..."
+    print_step_header "Downloading and Extracting controller autoconfig..."
 	wget -O "${__install_dir:?}/autoconfig.zip" \
 		--quiet -o /dev/null \
 		--no-verbose --show-progress \
