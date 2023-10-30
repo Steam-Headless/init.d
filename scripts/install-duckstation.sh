@@ -97,7 +97,7 @@ SaveStateOnExit = true
 CreateSaveStateBackups = true
 CompressSaveStates = true
 ConfirmPowerOff = false
-LoadDevicesFromSaveStates = true
+LoadDevicesFromSaveStates = false
 ApplyCompatibilitySettings = true
 ApplyGameSettings = true
 AutoLoadCheats = true
@@ -243,9 +243,9 @@ SearchDirectory = ${__emulation_path:?}/storage/duckstation/bios
 Card1Type = PerGameTitle
 Card2Type = None
 UsePlaylistTitle = true
-Directory = ${__emulation_path:?}/storage/duckstation/memcards 
-Card2Path = ${__emulation_path:?}/storage/duckstation/memcards/shared_card_2.mcd
-Card1Path = ${__emulation_path:?}/storage/duckstation/memcards/shared_card_1.mcd
+Directory = /mnt/games/Emulation/storage/duckstation/memcards
+Card2Path = /mnt/games/Emulation/storage/duckstation/memcards/shared_card_2.mcd
+Card1Path = /mnt/games/Emulation/storage/duckstation/memcards/shared_card_1.mcd
 
 
 [Cheevos]
@@ -314,33 +314,33 @@ RawInput = false
 
 [Pad1]
 Type = AnalogController
-Up = SDL-0/DPadUp
-Right = SDL-0/DPadRight
-Down = SDL-0/DPadDown
-Left = SDL-0/DPadLeft
-Triangle = SDL-0/Y
-Circle = SDL-0/B
-Cross = SDL-0/A
-Square = SDL-0/X
-Select = SDL-0/Back
-Start = SDL-0/Start
-L1 = SDL-0/LeftShoulder
-R1 = SDL-0/RightShoulder
-L2 = SDL-0/+LeftTrigger
-R2 = SDL-0/+RightTrigger
-L3 = SDL-0/LeftStick
-R3 = SDL-0/RightStick
-LLeft = SDL-0/-LeftX
-LRight = SDL-0/+LeftX
-LDown = SDL-0/+LeftY
-LUp = SDL-0/-LeftY
-RLeft = SDL-0/-RightX
-RRight = SDL-0/+RightX
-RDown = SDL-0/+RightY
-RUp = SDL-0/-RightY
-Analog = SDL-0/Guide
-SmallMotor = SDL-0/SmallMotor
-LargeMotor = SDL-0/LargeMotor
+Up = SDL-3/DPadUp
+Right = SDL-3/DPadRight
+Down = SDL-3/DPadDown
+Left = SDL-3/DPadLeft
+Triangle = SDL-3/Y
+Circle = SDL-3/B
+Cross = SDL-3/A
+Square = SDL-3/X
+Select = SDL-3/Back
+Start = SDL-3/Start
+L1 = SDL-3/LeftShoulder
+R1 = SDL-3/RightShoulder
+L2 = SDL-3/+LeftTrigger
+R2 = SDL-3/+RightTrigger
+L3 = SDL-3/LeftStick
+R3 = SDL-3/RightStick
+LLeft = SDL-3/-LeftX
+LRight = SDL-3/+LeftX
+LDown = SDL-3/+LeftY
+LUp = SDL-3/-LeftY
+RLeft = SDL-3/-RightX
+RRight = SDL-3/+RightX
+RDown = SDL-3/+RightY
+RUp = SDL-3/-RightY
+Analog = SDL-3/Guide
+SmallMotor = SDL-3/SmallMotor
+LargeMotor = SDL-3/LargeMotor
 
 
 [Pad2]
@@ -374,16 +374,16 @@ Type = None
 [Hotkeys]
 FastForward = Keyboard/Tab
 TogglePause = Keyboard/F9
-Screenshot = SDL-0/Start & SDL-0/DPadRight
-ToggleFullscreen = SDL-0/Start & SDL-0/DPadLeft
-OpenPauseMenu = SDL-0/Back & SDL-0/DPadUp
+Screenshot = SDL-3/Start & SDL-3/DPadRight
+ToggleFullscreen = SDL-3/Start & SDL-3/DPadLeft
+OpenPauseMenu = SDL-3/Back & SDL-3/DPadUp
 LoadSelectedSaveState = Keyboard/F1
 SaveSelectedSaveState = Keyboard/F2
 SelectPreviousSaveStateSlot = Keyboard/F3
 SelectNextSaveStateSlot = Keyboard/F4
-PowerOff = SDL-0/Back & SDL-0/DPadDown
-LoadGlobalState1 = SDL-0/Start & SDL-0/DPadDown
-SaveGlobalState1 = SDL-0/Start & SDL-0/DPadUp
+PowerOff = SDL-3/Back & SDL-3/DPadDown
+LoadGlobalState1 = SDL-3/Start & SDL-3/DPadDown
+SaveGlobalState1 = SDL-3/Start & SDL-3/DPadUp
 
 
 [GameList]
