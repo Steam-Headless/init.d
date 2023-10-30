@@ -243,9 +243,9 @@ SearchDirectory = ${__emulation_path:?}/storage/duckstation/bios
 Card1Type = PerGameTitle
 Card2Type = None
 UsePlaylistTitle = true
-Directory = /mnt/games/Emulation/storage/duckstation/memcards
-Card2Path = /mnt/games/Emulation/storage/duckstation/memcards/shared_card_2.mcd
-Card1Path = /mnt/games/Emulation/storage/duckstation/memcards/shared_card_1.mcd
+Directory = ${__emulation_path:?}/storage/duckstation/memcards
+Card2Path = ${__emulation_path:?}/storage/duckstation/memcards/shared_card_2.mcd
+Card1Path = ${__emulation_path:?}/storage/duckstation/memcards/shared_card_1.mcd
 
 
 [Cheevos]
