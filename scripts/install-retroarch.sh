@@ -78,7 +78,7 @@ if ([ ! -f "${package_executable:?}" ] || [ "${__installed_version:-X}" != "${__
         --progress=bar:force:noscroll \
         "https://buildbot.libretro.com/stable/${__latest_package_version:?}/linux/x86_64/RetroArch_cores.7z"
     7z x "${__download_dir:?}/RetroArch_cores.7z" -aoa
-    cp -rf "${__download_dir:?}/RetroArch-Linux-x86_64/RetroArch-Linux-x86_64.AppImage.home/.config/retroarch" "${USER_HOME:?}/.config/"
+    rsync -aP "${__download_dir:?}/RetroArch-Linux-x86_64/RetroArch-Linux-x86_64.AppImage.home/.config/retroarch" "${USER_HOME:?}/.config/"
     rm "${__download_dir:?}/RetroArch_cores.7z"
     
     # Download Assets for a clean ui running retroarch natively
@@ -89,7 +89,7 @@ if ([ ! -f "${package_executable:?}" ] || [ "${__installed_version:-X}" != "${__
 		--progress=bar:force:noscroll \
 		"https://buildbot.libretro.com/assets/frontend/assets.zip"
     unzip -d assets "${__download_dir:?}/assets.zip"
-	cp -rf "${__download_dir:?}/assets" "${USER_HOME:?}/.config/retroarch/"
+	rsync -aP "${__download_dir:?}/assets" "${USER_HOME:?}/.config/retroarch/"
     rm -r "${__download_dir:?}/assets" "assets.zip"
 
     # Download Autoconfig for automatic controller support
@@ -101,7 +101,7 @@ if ([ ! -f "${package_executable:?}" ] || [ "${__installed_version:-X}" != "${__
 		"https://buildbot.libretro.com/assets/frontend/autoconfig.zip"
 
 	unzip -d autoconfig "${__download_dir:?}/autoconfig.zip"
-	cp -rf "${__download_dir:?}/autoconfig" "${USER_HOME:?}/.config/retroarch/"
+	rsync -aP "${__download_dir:?}/autoconfig" "${USER_HOME:?}/.config/retroarch/"
     rm -r "${__download_dir:?}/autoconfig" "autoconfig.zip"
 
     # Cleanup Download Dir
