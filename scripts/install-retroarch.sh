@@ -50,12 +50,12 @@ __installed_version=$(catalog -g ${package_name,,})
 
 # Only install if the latest version does not already exist locally
 if ([ ! -f "${package_executable:?}" ] || [ "${__installed_version:-X}" != "${__latest_package_version:?}" ]); then
-    __install_dir="${USER_HOME:?}/.local/share/retroarch"
+    __download_dir="${USER_HOME:?}/Downloads"
     # Download and extract package to Applications directory
     print_step_header "Downloading ${package_name:?} version ${__latest_package_version:?}"
-    mkdir -p "${__install_dir:?}" \
+    mkdir -p "${__download_dir:?}" \
              "${USER_HOME:?}/.config/retroarch"
-    wget -O "${__install_dir:?}/${package_name,,}-${__latest_package_version:?}-linux-x86_64.7z" \
+    wget -O "${__download_dir:?}/${package_name,,}-${__latest_package_version:?}-linux-x86_64.7z" \
         --quiet -o /dev/null \
         --no-verbose --show-progress \
         --progress=bar:force:noscroll \
@@ -63,52 +63,51 @@ if ([ ! -f "${package_executable:?}" ] || [ "${__installed_version:-X}" != "${__
 
     # Install package
     print_step_header "Installing ${package_name:?} version ${__latest_package_version:?}"
-    pushd "${__install_dir:?}" &> /dev/null || { echo "Error: Failed to push directory to ${__install_dir:?}"; exit 1; }
-    7z x "${__install_dir:?}/${package_name,,}-${__latest_package_version:?}-linux-x86_64.7z" -aoa
-    mkdir -p "${USER_HOME:?}/.local/bin"
-    ln -snf "${__install_dir:?}/RetroArch-Linux-x86_64/RetroArch-Linux-x86_64.AppImage" "${package_executable:?}"
-    popd &> /dev/null || { echo "Error: Failed to pop directory out of ${__install_dir:?}"; exit 1; }
-	
-    # Download cores, if they exist user can update them using the UI
-    if [ ! -f "${__install_dir:?}/RetroArch_cores.7z" ]; then
-        print_step_header "Downloading and Extracting cores..."
-	wget -O "${__install_dir:?}/RetroArch_cores.7z" \
-		--quiet -o /dev/null \
-		--no-verbose --show-progress \
-		--progress=bar:force:noscroll \
-		"https://buildbot.libretro.com/stable/${__latest_package_version:?}/linux/x86_64/RetroArch_cores.7z"
-	pushd "${__install_dir:?}" &> /dev/null || { echo "Error: Failed to push directory to ${__install_dir:?}"; exit 1; }
-	7z x "${__install_dir:?}/RetroArch_cores.7z" -aoa
-    mv -f "${__install_dir:?}/RetroArch-Linux-x86_64/RetroArch-Linux-x86_64.AppImage.home/.config/retroarch" "${USER_HOME:?}/.config/"
-    rm -r "${__install_dir:?}/RetroArch-Linux-x86_64/RetroArch-Linux-x86_64.AppImage.home"
-	popd &> /dev/null || { echo "Error: Failed to pop directory out of ${__install_dir:?}"; exit 1; }
-    fi
-
-    # Download Assets for a clean ui running retroarch native
+    pushd "${__download_dir:?}" &> /dev/null || { echo "Error: Failed to push directory to ${__download_dir:?}"; exit 1; }
+    
+    # Move appimage to es-de default path
+    7z x "${__download_dir:?}/${package_name,,}-${__latest_package_version:?}-linux-x86_64.7z" -aoa
+    mv -f "${__download_dir:?}/RetroArch-Linux-x86_64/RetroArch-Linux-x86_64.AppImage" "${package_executable:?}"
+    rm "${__download_dir:?}/${package_name,,}-${__latest_package_version:?}-linux-x86_64.7z"
+    
+    # Always Download cores for a new release
+    print_step_header "Downloading and Extracting cores..."
+    wget -O "${__download_dir:?}/RetroArch_cores.7z" \
+        --quiet -o /dev/null \
+        --no-verbose --show-progress \
+        --progress=bar:force:noscroll \
+        "https://buildbot.libretro.com/stable/${__latest_package_version:?}/linux/x86_64/RetroArch_cores.7z"
+    7z x "${__download_dir:?}/RetroArch_cores.7z" -aoa
+    cp -rf "${__download_dir:?}/RetroArch-Linux-x86_64/RetroArch-Linux-x86_64.AppImage.home/.config/retroarch" "${USER_HOME:?}/.config/"
+    rm "${__download_dir:?}/RetroArch_cores.7z"
+    
+    # Download Assets for a clean ui running retroarch natively
     print_step_header "Downloading and Extracting assets..."
-	wget -O "${__install_dir:?}/assets.zip" \
+	wget -O "${__download_dir:?}/assets.zip" \
 		--quiet -o /dev/null \
 		--no-verbose --show-progress \
 		--progress=bar:force:noscroll \
 		"https://buildbot.libretro.com/assets/frontend/assets.zip"
-	pushd "${__install_dir:?}" &> /dev/null || { echo "Error: Failed to push directory to ${__install_dir:?}"; exit 1; }
-	unzip -d assets "${__install_dir:?}/assets.zip"
-	cp -rf "${USER_HOME:?}/.local/share/retroarch/assets" "${USER_HOME:?}/.config/retroarch/"
-    rm -r "${USER_HOME:?}/.local/share/retroarch/assets" "assets.zip"
-	popd &> /dev/null || { echo "Error: Failed to pop directory out of ${__install_dir:?}"; exit 1; }
+    unzip -d assets "${__download_dir:?}/assets.zip"
+	cp -rf "${__download_dir:?}/assets" "${USER_HOME:?}/.config/retroarch/"
+    rm -r "${__download_dir:?}/assets" "assets.zip"
 
     # Download Autoconfig for automatic controller support
     print_step_header "Downloading and Extracting controller autoconfig..."
-	wget -O "${__install_dir:?}/autoconfig.zip" \
+	wget -O "${__download_dir:?}/autoconfig.zip" \
 		--quiet -o /dev/null \
 		--no-verbose --show-progress \
 		--progress=bar:force:noscroll \
 		"https://buildbot.libretro.com/assets/frontend/autoconfig.zip"
-	pushd "${__install_dir:?}" &> /dev/null || { echo "Error: Failed to push directory to ${__install_dir:?}"; exit 1; }
-	unzip -d autoconfig "${__install_dir:?}/autoconfig.zip"
-	cp -rf "${USER_HOME:?}/.local/share/retroarch/autoconfig" "${USER_HOME:?}/.config/retroarch/"
-    rm -r "${USER_HOME:?}/.local/share/retroarch/autoconfig" "autoconfig.zip"
-	popd &> /dev/null || { echo "Error: Failed to pop directory out of ${__install_dir:?}"; exit 1; }
+
+	unzip -d autoconfig "${__download_dir:?}/autoconfig.zip"
+	cp -rf "${__download_dir:?}/autoconfig" "${USER_HOME:?}/.config/retroarch/"
+    rm -r "${__download_dir:?}/autoconfig" "autoconfig.zip"
+
+    # Cleanup Download Dir
+    rm -r "${__download_dir:?}/RetroArch-Linux-x86_64"
+
+    popd &> /dev/null || { echo "Error: Failed to pop directory out of ${__download_dir:?}"; exit 1; }
 
     # Ensure this package has a start menu link (will create it if missing)
     print_step_header "Ensuring menu shortcut is present for ${package_name:?}"
@@ -161,8 +160,8 @@ sort_savefiles_enable = "true"
 sort_savestates_by_content_enable = "false"
 sort_savestates_enable = "true"
 sort_screenshots_by_content_enable = "false"
-savestate_auto_load = "false"
-savestate_auto_save = "false"
+savestate_auto_load = "true"
+savestate_auto_save = "true"
 system_directory = "${__emulation_path:?}/storage/retroarch/system"
 video_driver = "vulkan"
 video_fullscreen = "true"
