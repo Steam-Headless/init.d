@@ -104,6 +104,17 @@ if ([ ! -f "${package_executable:?}" ] || [ "${__installed_version:-X}" != "${__
 	rsync -aP "${__download_dir:?}/autoconfig" "${USER_HOME:?}/.config/retroarch/"
     rm -r "${__download_dir:?}/autoconfig" "autoconfig.zip"
 
+    # Todo Add sling shaders
+    #print_step_header "Downloading and Extracting preset shaders..."
+    #wget -O "${__download_dir:?}/shaders_slang.zip" \
+	#	--quiet -o /dev/null \
+	#	--no-verbose --show-progress \
+	#	--progress=bar:force:noscroll \
+	#	"https://buildbot.libretro.com/assets/frontend/shaders_slang.zip"
+    #unzip -d shaders_slang "${__download_dir:?}/shaders_slang.zip"
+    #rsync -aP "${__download_dir:?}/shaders_slang" "${USER_HOME:?}/.config/retroarch/shaders/"
+    #rm -r "${__downlaod_dir:?}/shaders_slang.zip"
+
     # Cleanup Download Dir
     rm -r "${__download_dir:?}/RetroArch-Linux-x86_64"
 
