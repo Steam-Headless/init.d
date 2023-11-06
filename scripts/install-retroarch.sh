@@ -142,6 +142,7 @@ ensure_symlink "../storage/retroarch/system" "${__emulation_path:?}/bios/retroar
 if [ ! -f "${__retroarch_home:?}/retroarch.cfg" ]; then
     cat << EOF > "${__retroarch_home:?}/retroarch.cfg"
 cheat_database_path = "${__emulation_path:?}/storage/retroarch/cheats"
+all_users_control_menu = "true"
 config_save_on_exit = "true"
 input_menu_toggle_gamepad_combo = "2"
 input_quit_gamepad_combo = "9"
