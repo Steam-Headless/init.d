@@ -75,18 +75,22 @@ fi
 # Generate EmulationStation directory structure
 romsPath="/mnt/games/Emulation/roms"
 toolsPath="/mnt/games/Emulation/tools"
+if [ -d "${USER_HOME:?}"/.emulationstation ]; then
+    mv "${USER_HOME:?}"/.emulationstation "${USER_HOME:?}"/ES-DE
+fi
+
 mkdir -p \
-    "${USER_HOME:?}"/.emulationstation \
+    "${USER_HOME:?}"/ES-DE \
     "${romsPath:?}" \
     "${toolsPath:?}"/downloaded_media
 
 # Configure EmulationStation DE defaults
-if [ ! -f "${USER_HOME:?}/.emulationstation/es_settings.xml" ]; then
-    cat << 'EOF' > "${USER_HOME:?}/.emulationstation/es_settings.xml"
+if [ ! -f "${USER_HOME:?}/ES-DE/es_settings.xml" ]; then
+    cat << 'EOF' > "${USER_HOME:?}/ES-DE/es_settings.xml"
 <?xml version="1.0"?>
 <string name="MediaDirectory" value="/mnt/games/Emulation/tools/downloaded_media" />
 <string name="ROMDirectory" value="/mnt/games/Emulation/roms/" />
-<string name="ScreensaverSlideshowImageDir" value="~/.emulationstation/slideshow/custom_images" />
+<string name="ScreensaverSlideshowImageDir" value="~/ES-DE/slideshow/custom_images" />
 EOF
 fi
 
