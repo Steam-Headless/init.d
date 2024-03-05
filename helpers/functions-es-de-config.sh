@@ -12,7 +12,7 @@
 function ensure_esde_alternative_emulator_configured {
     __console_id=${1}
     __alternative_emulator_label=${@:2}
-    __xml_file="${USER_HOME:?}/.emulationstation/gamelists/${__console_id:?}/gamelist.xml"
+    __xml_file="${USER_HOME:?}/ES-DE/gamelists/${__console_id:?}/gamelist.xml"
 
     # Check if the alternativeEmulator element exists
     if [ -f "${__xml_file:?}" ]; then
