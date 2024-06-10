@@ -32,7 +32,7 @@ exec_script_as_default_user
 # Config
 package_name="Heroic"
 package_description="Heroic Games Launcher is an Open Source GOG and Epic games launcher."
-package_icon_url="https://heroicgameslauncher.com/_next/static/images/logo-29caca3fc66e11655d58060009610568.png"
+package_icon_url="https://cdn2.steamgriddb.com/icon_thumb/7cb5e67dcb46bf8e72775e508b9fd309.png"
 package_executable="${USER_HOME:?}/Applications/${package_name:?}.AppImage"
 package_category="Game"
 print_package_name
