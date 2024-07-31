@@ -34,7 +34,7 @@ exec_script_as_default_user
 package_name="Ryujinx"
 package_description="Nintendo Switch Emulator"
 package_icon_url="https://upload.wikimedia.org/wikipedia/commons/0/07/Ryujinx_Logo.png"
-package_executable="${USER_HOME:?}/.local/bin/${package_name,,}"
+package_executable="${USER_HOME:?}/.local/bin/${package_name}"
 package_category="Game"
 print_package_name
 
