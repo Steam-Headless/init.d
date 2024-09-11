@@ -93,10 +93,11 @@ for acf_file in "$STEAM_LIBRARY_DIR"/*.acf; do
 
             sunshine_entry=$(addEntry "$game_name" "$game_run" "$poster_folder/$appid.png")
             cat ${sunshine_conf:?} | jq '.apps += ['"${sunshine_entry}"']' > /tmp/sunshine.json
-            mv -f /tmp/sunshine.json ${sunshine_conf:?}
         fi
     fi
 done
+
+mv -f /tmp/sunshine.json ${sunshine_conf:?}
 
 echo "Sunshine configuration updated."
 echo "Please Restart Sunshine to apply changes."
