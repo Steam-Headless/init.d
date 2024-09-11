@@ -1,4 +1,8 @@
 #!/bin/bash
+# Run ./sunshine-steam-importer.sh remove 
+# to remove all added entries. Run with no arguments to add
+# Remember to restart sunshine after execution
+
 steamgriddb_api="INSERTSTEAMGRIDDBAPI"
 sunshine_conf=${USER_HOME:?}/.config/sunshine/apps.json
 poster_folder=${USER_HOME:?}/.local/share/posters
