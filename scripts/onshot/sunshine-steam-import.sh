@@ -49,6 +49,11 @@ function removeEntries {
 
 removeEntries
 
+# Exit the script here if the parameter remove is passed to the script
+if [ "$1" == "remove" ]; then
+  exit 0
+fi
+
 # Loop through all .acf files in the library folder
 for acf_file in "$STEAM_LIBRARY_DIR"/*.acf; do
     if [[ -f "$acf_file" ]]; then
@@ -64,16 +69,16 @@ for acf_file in "$STEAM_LIBRARY_DIR"/*.acf; do
 	            poster_url=$(get_poster "$appid")
 	            if [[ -n "poster_url" ]]; then
 	                curl -s "$poster_url" -o $poster_folder/"$appid"
-                    if [ $? -eq 0 ]; then
-                        convert $poster_folder/"$appid" -resize 600x900! -gravity South -fill white -undercolor '#00000080' -geometry +0-40 -pointsize 50 \
-                            -background none -size 580x caption:"$game_name" \
-                            -background none -alpha set -compose over -composite $poster_folder/"$appid".png
-                        echo "Downloaded and processed poster from Steam API."
-                        rm $poster_folder/"$appid"
-	                    echo "Saved poster as $appid.png"
-                    else
-                        echo "Failed to download poster."
-                    fi
+                    	if [ $? -eq 0 ]; then
+                        	convert $poster_folder/"$appid" -resize 600x900! -gravity South -fill white -undercolor '#00000080' -geometry +0-40 -pointsize 50 \
+                            		-background none -size 580x caption:"$game_name" \
+                            		-background none -alpha set -compose over -composite $poster_folder/"$appid".png
+                        	echo "Downloaded and processed poster from Steam API."
+                        	rm $poster_folder/"$appid"
+	                    	echo "Saved poster as $appid.png"
+                    	else
+                        	echo "Failed to download poster."
+                    	fi
 	            fi 
             else
                 echo "Poster already exists for $game_name"
