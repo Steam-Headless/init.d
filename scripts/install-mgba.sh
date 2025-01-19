@@ -42,10 +42,10 @@ print_package_name
 
 
 # Check for a new version to install
-__registry_package_json=$(wget -O - -o /dev/null https://api.github.com/repos/mgba-emu/mgba/releases/latest)
+__registry_package_json=$(wget --header="Accept: application/vnd.github+json" -O - -o /dev/null https://api.github.com/repos/mgba-emu/mgba/releases/latest)
 __latest_package_version=$(echo ${__registry_package_json:?} | jq -r '.tag_name')
-__latest_package_id=$(echo ${__registry_package_json:?} | jq -r '.assets[] | select(.name | test("\\.appimage$"; "i"))' | jq -r '.id')
-__latest_package_url=$(echo ${__registry_package_json:?} | jq -r '.assets[] | select(.name | test("\\.appimage$"; "i"))' | jq -r '.browser_download_url')
+__latest_package_id=$(echo "${__registry_package_json:?}" | jq -r '.assets[] | select(.name | endswith("-x64.appimage")) | .id' | head -n 1)
+__latest_package_url=$(echo "${__registry_package_json:?}" | jq -r '.assets[] | select(.name | endswith("-x64.appimage")) | .browser_download_url' | head -n>
 print_step_header "Latest ${package_name:?} version: ${__latest_package_version:?}"
 __installed_version=$(catalog -g ${package_name,,})
 
