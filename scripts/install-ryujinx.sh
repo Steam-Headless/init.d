@@ -40,12 +40,13 @@ print_package_name
 
 
 # Check for a new version to install
-__registry_package_json=$(wget -O - -o /dev/null https://api.github.com/repos/Ryujinx/release-channel-master/releases/latest)
+__registry_package_json=$(wget --header="Accept: application/vnd.github+json" -O - -o /dev/null https://api.github.com/repos/Ryubing/Ryujinx/releases/latest)
 __latest_package_version=$(echo ${__registry_package_json:?} | jq -r '.tag_name')
 __latest_package_id=$(echo "${__registry_package_json:?}" | jq -r '.assets[] | select(.name | endswith("-linux_x64.tar.gz") and startswith("ryujinx-")) | .id' | head -n 1)
 __latest_package_url=$(echo "${__registry_package_json:?}" | jq -r '.assets[] | select(.name | endswith("-linux_x64.tar.gz") and startswith("ryujinx-")) | .browser_download_url' | head -n 1)
 print_step_header "Latest ${package_name:?} version: ${__latest_package_version:?}"
 __installed_version=$(catalog -g ${package_name,,})
+
 
 
 # Only install if the latest version does not already exist locally
