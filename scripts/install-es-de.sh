@@ -5,7 +5,7 @@
 # File Created: Wednesday, 23rd August 2023 7:16:02 pm
 # Author: Josh.5 (jsunnex@gmail.com)
 # -----
-# Last Modified: Tuesday, 13th May 2025 12:13:46 pm
+# Last Modified: Tuesday, 13th May 2025 12:23:46 pm
 # Modified By: Josh.5 (jsunnex@gmail.com)
 ###
 #
@@ -69,7 +69,7 @@ fi
 # Generate EmulationStation directory structure
 roms_path="/mnt/games/Emulation/roms"
 tools_path="/mnt/games/Emulation/tools"
-gamelists_path="/mnt/games/Emulation/gamelist"
+gamelists_path="/mnt/games/Emulation/gamelists"
 downloaded_media_path="/mnt/games/Emulation/downloaded_media"
 if [ -d "${USER_HOME:?}"/.emulationstation ]; then
     mv "${USER_HOME:?}"/.emulationstation "${USER_HOME:?}"/ES-DE
