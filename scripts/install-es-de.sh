@@ -5,7 +5,7 @@
 # File Created: Wednesday, 23rd August 2023 7:16:02 pm
 # Author: Josh.5 (jsunnex@gmail.com)
 # -----
-# Last Modified: Monday, 12th May 2025 8:41:12 pm
+# Last Modified: Tuesday, 13th May 2025 12:11:52 pm
 # Modified By: Josh.5 (jsunnex@gmail.com)
 ###
 #
@@ -67,25 +67,48 @@ else
 fi
 
 # Generate EmulationStation directory structure
-romsPath="/mnt/games/Emulation/roms"
-toolsPath="/mnt/games/Emulation/tools"
-downloadedMediaPath="/mnt/games/Emulation/downloaded_media"
+roms_path="/mnt/games/Emulation/roms"
+tools_path="/mnt/games/Emulation/tools"
+gamelists_path="/mnt/games/Emulation/gamelist"
+downloaded_media_path="/mnt/games/Emulation/downloaded_media"
 if [ -d "${USER_HOME:?}"/.emulationstation ]; then
     mv "${USER_HOME:?}"/.emulationstation "${USER_HOME:?}"/ES-DE
 fi
 
 mkdir -p \
     "${USER_HOME:?}"/ES-DE \
-    "${romsPath:?}" \
-    "${toolsPath:?}" \
-    "${downloadedMediaPath:?}"
+    "${roms_path:?}" \
+    "${tools_path:?}" \
+    "${downloaded_media_path:?}"
+
+# Migrate gamelists path (this way we can use it with syncthing from a central location)
+default_gamelist_path="${USER_HOME:?}/ES-DE/gamelists"
+if [ -L "${default_gamelist_path:?}" ]; then
+    echo "Symlink already exists at ${default_gamelist_path:?} — skipping."
+elif [ -d "${gamelists_path:?}" ]; then
+    echo "Destination exists at ${gamelists_path:?} — setting up symlink."
+    if [[ -d "${default_gamelist_path:?}" ]]; then
+        backup_path="${default_gamelist_path:?}-backup"
+        echo "Existing directory found at ${default_gamelist_path:?} — backing it up to ${backup_path}"
+        mv "${default_gamelist_path:?}" "${backup_path}"
+        mkdir -p "${default_gamelist_path:?}"
+    fi
+    ln -s "${gamelists_path:?}" "${default_gamelist_path:?}"
+else
+    echo "Destination does not exist — attempting to move source..."
+    if mv "${default_gamelist_path:?}" "${gamelists_path:?}"; then
+        ln -s "${gamelists_path:?}" "${default_gamelist_path:?}"
+    else
+        echo -e "\e[1;31mERROR:\e[0m Failed to move ${default_gamelist_path:?} to ${gamelists_path:?}. Symlink not created."
+    fi
+fi
 
 # Configure EmulationStation DE defaults
 if [ ! -f "${USER_HOME:?}/ES-DE/es_settings.xml" ]; then
     cat <<EOF >"${USER_HOME:?}/ES-DE/es_settings.xml"
 <?xml version="1.0"?>
-<string name="MediaDirectory" value="${downloadedMediaPath:?}" />
-<string name="ROMDirectory" value="${romsPath:?}/" />
+<string name="MediaDirectory" value="${downloaded_media_path:?}" />
+<string name="ROMDirectory" value="${roms_path:?}/" />
 <string name="ScreensaverSlideshowImageDir" value="~/ES-DE/slideshow/custom_images" />
 EOF
 fi
