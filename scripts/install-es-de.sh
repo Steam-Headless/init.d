@@ -5,7 +5,7 @@
 # File Created: Wednesday, 23rd August 2023 7:16:02 pm
 # Author: Josh.5 (jsunnex@gmail.com)
 # -----
-# Last Modified: Tuesday, 13th May 2025 12:11:52 pm
+# Last Modified: Tuesday, 13th May 2025 12:13:46 pm
 # Modified By: Josh.5 (jsunnex@gmail.com)
 ###
 #
@@ -104,12 +104,11 @@ else
 fi
 
 # Configure EmulationStation DE defaults
-if [ ! -f "${USER_HOME:?}/ES-DE/es_settings.xml" ]; then
-    cat <<EOF >"${USER_HOME:?}/ES-DE/es_settings.xml"
+if [ ! -f "${USER_HOME:?}/ES-DE/settings/es_settings.xml" ]; then
+    cat <<EOF >"${USER_HOME:?}/ES-DE/settings/es_settings.xml"
 <?xml version="1.0"?>
 <string name="MediaDirectory" value="${downloaded_media_path:?}" />
 <string name="ROMDirectory" value="${roms_path:?}/" />
-<string name="ScreensaverSlideshowImageDir" value="~/ES-DE/slideshow/custom_images" />
 EOF
 fi
 
