@@ -62,6 +62,7 @@ BLACKLIST=(
   "Linux Runtime"
   "Redistributables"
   "Desktop Mode"
+  "Soundtrack"
 )
 
 # Colors
