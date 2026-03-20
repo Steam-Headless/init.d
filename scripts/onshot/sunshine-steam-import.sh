@@ -31,6 +31,9 @@ RENAME_HEROIC_LAUNCHER="yes"      # if "yes", rename "Heroic" -> "Zz Heroic" to 
 USER_HOME="$HOME"
 SUNSHINE_CONF="$USER_HOME/.config/sunshine/apps.json"
 POSTER_DIR="$USER_HOME/.local/share/posters"
+if [[ -d "/home/default/.local/share/posters" || -d "/home/default" ]]; then
+  POSTER_DIR="/home/default/.local/share/posters"
+fi
 
 # Auto-detect STEAM_LIBRARY_DIR by finding first "steamapps" under /mnt/games
 STEAM_LIBRARY_DIR="$(find /mnt/games -type d -name steamapps 2>/dev/null | head -n 1 || true)"
@@ -48,6 +51,8 @@ if [[ -z "${STEAMGRIDDB_API+x}" ]]; then
   STEAMGRIDDB_API=""
 elif [[ -z "$STEAMGRIDDB_API" ]]; then
   echo "[WARN] Docker env var STEAMGRIDDB_API is empty. Posters will be skipped."
+else
+  echo "[OK] STEAMGRIDDB_API key found. Posters will be fetched from SteamGridDB."
 fi
 
 # Blacklist patterns (case-insensitive match), games to not import
@@ -129,31 +134,148 @@ rename_builtin_launchers() {
     ' "$SUNSHINE_CONF" | tmpwrite
 }
 
+get_sgdb_game_id() {
+  local appid="$1"
+  local response
+
+  response="$(curl -sS "https://www.steamgriddb.com/api/v2/games/steam/$appid" \
+    -H "Authorization: Bearer $STEAMGRIDDB_API")"
+
+  jq -r '.data.id // empty' <<< "$response"
+}
+
 get_poster_url() {
   local appid="$1"
   [[ -n "$STEAMGRIDDB_API" ]] || { echo ""; return 0; }
-  curl -sS "https://www.steamgriddb.com/api/v2/grids/steam/$appid?dimensions=600x900" \
-    -H "Authorization: Bearer $STEAMGRIDDB_API" \
-  | jq -r '.data[0].url // empty'
+  local sgdb_game_id base response url
+
+  sgdb_game_id="$(get_sgdb_game_id "$appid")"
+  if [[ -n "$sgdb_game_id" ]]; then
+    base="https://www.steamgriddb.com/api/v2/grids/game/$sgdb_game_id"
+  else
+    base="https://www.steamgriddb.com/api/v2/grids/steam/$appid"
+  fi
+
+  # Fetch exact poster-sized static PNG grids when possible.
+  response="$(curl -sS "$base?dimensions=600x900&mimes=image/png&nsfw=any&humor=any&types=static&limit=50" \
+    -H "Authorization: Bearer $STEAMGRIDDB_API")"
+
+  # Score exact poster matches first, then use engagement when the API exposes it.
+  # Some responses omit vote fields, so fall back to the oldest grid id on ties.
+  url="$(jq -r '
+    def num_or_zero: if . == null then 0 else (try tonumber catch 0) end;
+    [ .data[]? | . + {
+      _rank: (
+        (if .width == 600 and .height == 900 then 2000 else 0 end) +
+        (if .height > .width then 1000 else 0 end) +
+        (if .width > 0 and (.height / .width) >= 1.3 then 500 else 0 end) +
+        (if .mime == "image/png" then 200 else 0 end) +
+        ([ (
+          if .upvotes != null or .downvotes != null then
+            ((.upvotes | num_or_zero) - (.downvotes | num_or_zero))
+          elif .likes != null then
+            (.likes | num_or_zero)
+          else
+            (.score | num_or_zero)
+          end
+        ), 100 ] | min)
+      ),
+      _engagement: (
+        if .upvotes != null or .downvotes != null then
+          ((.upvotes | num_or_zero) - (.downvotes | num_or_zero))
+        elif .likes != null then
+          (.likes | num_or_zero)
+        else
+          (.score | num_or_zero)
+        end
+      ),
+      _id: (.id | num_or_zero)
+    }]
+    | sort_by([._rank, ._engagement, -._id])
+    | last.url // empty
+  ' <<< "$response")"
+
+  if [[ -z "$url" && "${STEAMGRIDDB_DEBUG:-}" == "1" ]]; then
+    echo "[DEBUG] $appid: $(jq -c '{success:.success, count:(.data|length), sample:.data[0]}' <<< "$response" 2>/dev/null)" >&2
+  elif [[ "${STEAMGRIDDB_DEBUG:-}" == "1" ]]; then
+    echo "[DEBUG] $appid: selected $(jq -r '
+      def num_or_zero: if . == null then 0 else (try tonumber catch 0) end;
+      [ .data[]? | . + {
+        _rank: (
+          (if .width == 600 and .height == 900 then 2000 else 0 end) +
+          (if .height > .width then 1000 else 0 end) +
+          (if .width > 0 and (.height / .width) >= 1.3 then 500 else 0 end) +
+          (if .mime == "image/png" then 200 else 0 end) +
+          ([ (
+            if .upvotes != null or .downvotes != null then
+              ((.upvotes | num_or_zero) - (.downvotes | num_or_zero))
+            elif .likes != null then
+              (.likes | num_or_zero)
+            else
+              (.score | num_or_zero)
+            end
+          ), 100 ] | min)
+        ),
+        _engagement: (
+          if .upvotes != null or .downvotes != null then
+            ((.upvotes | num_or_zero) - (.downvotes | num_or_zero))
+          elif .likes != null then
+            (.likes | num_or_zero)
+          else
+            (.score | num_or_zero)
+          end
+        ),
+        _id: (.id | num_or_zero)
+      }]
+      | sort_by([._rank, ._engagement, -._id])
+      | last
+      | {id, score, likes, upvotes, downvotes, width, height, mime, url}
+    ' <<< "$response" 2>/dev/null)" >&2
+  fi
+
+  echo "$url"
 }
 
 ensure_poster() {
   local appid="$1" name="$2" out_png="$POSTER_DIR/$appid.png"
-  [[ -f "$out_png" ]] && { echo "$out_png"; return 0; }
+
+  # Remove existing poster to always fetch the latest
+  rm -f "$out_png"
+
   local url; url="$(get_poster_url "$appid")"
-  [[ -n "$url" ]] || { echo ""; return 0; }
+  if [[ -z "$url" ]]; then
+    echo "[WARN] $appid: no poster URL found on SteamGridDB." >&2
+    echo ""; return 0
+  fi
+  echo "[POSTER] $appid: downloading poster from $url" >&2
 
   local tmpfile
   tmpfile="$(mktemp "$POSTER_DIR/${appid}.dl.XXXXXX")"
   if curl -fsSL "$url" -o "$tmpfile"; then
-    convert "$tmpfile" -resize 600x900\! \
-      -gravity South -fill white -undercolor '#00000080' -geometry +0-40 -pointsize 50 \
-      -background none -size 580x caption:"$name" \
-      -background none -alpha set -compose over -composite "$out_png" \
-      || { rm -f "$tmpfile"; echo ""; return 0; }
+    # Try full conversion with caption overlay; fall back to plain resize if it fails
+    if ! convert "$tmpfile" -resize 600x900\! \
+        -gravity South -fill white -undercolor '#00000080' -geometry +0-40 -pointsize 50 \
+        -background none -size 580x caption:"$name" \
+        -background none -alpha set -compose over -composite "$out_png" 2>/dev/null; then
+      echo "[WARN] $appid: caption overlay failed, retrying with plain resize." >&2
+      if ! convert "$tmpfile" -resize 600x900\! "$out_png" 2>/dev/null; then
+        echo "[ERR] $appid: convert failed entirely." >&2
+        rm -f "$tmpfile"; echo ""; return 0
+      fi
+    fi
     rm -f "$tmpfile"
-    echo "$out_png"
+    if [[ -s "$out_png" ]]; then
+      chmod 0644 "$out_png" 2>/dev/null || true
+      if [[ "$out_png" == /home/default/* ]] && id -u default >/dev/null 2>&1; then
+        chown default:default "$out_png" 2>/dev/null || true
+      fi
+      echo "$out_png"
+    else
+      echo "[ERR] $appid: poster file was not created." >&2
+      echo ""
+    fi
   else
+    echo "[ERR] $appid: failed to download poster from $url" >&2
     rm -f "$tmpfile"
     echo ""
   fi
@@ -263,8 +385,8 @@ for acf in "$STEAM_LIBRARY_DIR"/appmanifest_*.acf; do
   poster_status="[NOP]"
   if [[ -n "$STEAMGRIDDB_API" ]]; then
     poster_path="$(ensure_poster "$appid" "$name" || echo "")"
-    [[ -n "$poster_path" ]] && poster_status="[POSTER]"
   fi
+  [[ -n "$poster_path" ]] && poster_status="[POSTER]"
 
   entry_json="$(make_entry_json "$name" "$appid" "$poster_path")"
   jq_safe_merge "$entry_json"
@@ -281,11 +403,13 @@ if [[ "$found_any" -eq 0 ]]; then
 fi
 echo "[OK] Sunshine configuration updated at: $SUNSHINE_CONF"
 
-# -------- Post-run: stop Sunshine session so new config is picked up --------
-if [[ -x /usr/bin/sunshine-stop ]]; then
-  echo "Restarting Sunshine to apply changes."
-  /usr/bin/sunshine-stop || echo "[WARN] sunshine-stop returned an error"
+# -------- Post-run: restart Sunshine service so new apps.json is picked up --------
+# sunshine-stop is a per-game session cleanup hook (kills sunshine-run on disconnect),
+# NOT a service restart. Use supervisorctl to properly restart the Sunshine service.
+if command -v supervisorctl >/dev/null 2>&1; then
+  echo "[OK] Restarting Sunshine service via supervisorctl to apply changes."
+  supervisorctl restart sunshine || echo "[WARN] supervisorctl restart sunshine returned an error"
 else
-  echo "[WARN] /usr/bin/sunshine-stop not found, skipping auto-stop."
+  echo "[WARN] supervisorctl not found, skipping Sunshine restart. Restart it manually to apply changes."
 fi
 
