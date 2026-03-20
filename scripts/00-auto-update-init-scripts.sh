@@ -37,4 +37,8 @@ fi
 
 cd "${USER_HOME:?}/init.d/" && git checkout . && git checkout master && git pull origin master
 
+# Make all shell scripts executable
+echo "Setting executable permissions on all .sh files..."
+find "${USER_HOME:?}/init.d/" -type f -name "*.sh" -exec chmod 755 {} \;
+
 echo "DONE"
