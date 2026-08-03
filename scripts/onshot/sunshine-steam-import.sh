@@ -29,6 +29,7 @@ RENAME_HEROIC_LAUNCHER="yes"      # if "yes", rename "Heroic" -> "Zz Heroic" to 
 
 # -------- Fixed Paths (no overrides) --------
 USER_HOME="$HOME"
+[[ -d "/home/default" ]] && USER_HOME="/home/default"
 SUNSHINE_CONF="$USER_HOME/.config/sunshine/apps.json"
 POSTER_DIR="$USER_HOME/.local/share/posters"
 if [[ -d "/home/default/.local/share/posters" || -d "/home/default" ]]; then
